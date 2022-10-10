@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Slab', serif;
+}
+
+:root {
+    --vibrant-red: #f44336
+}
+
+/*----- Animations -----*/
+@keyframes zoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+@keyframes slide-down {
+    from {transform: translateY(-100%)}
+    to {transform: translateY(0)}
+}
+@keyframes slide-left {
+    from {transform: translateX(100%)}
+    to {transform: translateX(0)}
+}
+
+/*----- Fonts -----*/
+h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #000;
+    padding: 10px;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 400px;
+    color: #000;
+    padding: 10px;
+}
+h6 {
+    font-size: 60px;
+    font-weight: 900;
+    color: #000;
+    padding: 10px;
+}
+p {
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    padding: 10px;
+}
+
+/*----- Organizers -----*/
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*----- Buttons -----*/
+.view-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #000;
+    padding: 12px 34px;
+    font-size: 13px;
+    font-weight: 800;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.view-btn:hover {
+    border: 1px solid var(--vibrant-red);
+    background: var(--vibrant-red);
+    transition: 1s;
+}
+
+/*----- Header and Navigation -----*/
+.header {
+    height: fit-content;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(Images/Misc/Background.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+nav {
+    display: flex;
+    padding: 1% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+nav h1 {
+    color: #fff;
+    font-size: 30px;
+    margin-left: 20px;
+}
+nav img {
+    max-height: 7vh;
+}
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+.nav-links ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+.nav-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+}
+.nav-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: var(--vibrant-red);
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+.nav-links ul li:hover::after {
+    width: 100%;
+}
+nav .fa {
+    display: none;
+}
+
+/*----- Main View -----*/
+.about-me, .footer {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    padding-top: 40px;
+}
+
+/*----- About Me -----*/
+.about-me h1 {
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+.about-col {
+    flex-basis: 48%;
+    margin: auto 0;
+}
+.about-col h1 {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.about-col h3 {
+    text-align: justify;
+    font-size: 1.75vw;
+    color: #333;
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.about-col img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/*----- Footer -----*/
+.footer h4 {
+    margin-bottom: 15px;
+    margin-top: 20px;
+    font-weight: 600;
+}
+.icons .fa {
+    color: var(--vibrant-red);
+    margin: 0 13px;
+    cursor: pointer;
+    padding: 18px 0;
+}
+
+/*----- Screen Size Variation -----*/
+@media (max-width: 700px) {
+    .row {
+        flex-direction: column;
+    }
+
+    h6 {
+        font-size: 50px;
+    }
+
+    nav h1 {
+        margin-left: 0;
+    }
+    nav img {
+        max-width: 12vw;
+        max-height: none;
+    }
+    .nav-links ul li {
+        display: block;
+    }
+    .nav-links {
+        position: absolute;
+        background: var(--vibrant-red);
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: 0;
+        text-align: left;
+        z-index: 2;
+        animation-name: slide-left;
+        animation-duration: 0.5s;
+        display: none;
+    }
+    nav .fa {
+        display: block;
+        color: #fff;
+        margin: 10px;
+        padding: 0 auto;
+        font-size: 22px;
+        text-align: center;
+        width: 5vw;
+        cursor: pointer;
+    }
+    .nav-links ul {
+        padding: 30px;
+    }
+
+    .about-col h3 {
+        font-size: 2vh;
+    }
+}

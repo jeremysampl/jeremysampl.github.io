@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="with=device-width, initial-scale=1.0">
+    <title>Website</title>
+    <link rel="stylesheet" href="StockAssist-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!----- Header ----->
+<section class="header">
+    <nav>
+        <img src="Images/Misc/JS Logo.png">
+        <h1>Jeremy Sampl</h1>
+        <div class="nav-links" id="navLinks">
+            <i class="fa fa-times" onclick="hideMenu()"></i>
+            <ul>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/index.html">HOME</a></li>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/about.html">ABOUT</a></li>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/projects.html">PROJECTS</a></li>
+                <li><a href="">EXPERIENCE</a></li>
+                <li><a href="">CONTACT</a></li>
+            </ul>
+        </div>
+        <i class="fa fa-bars" onclick="showMenu()"></i>
+    </nav>
+</section>
+
+<!----- Project Showcase ----->
+
+<section class="project-showcase">
+    <h6>StockAssist</h6>
+
+    <h1>Overview</h1>
+    <p>StockAssist is an small-scale inventory management system that improves productivity by keeping track of a small business' customers, categories, products, and orders.
+        However, this product does much more than that.<br><br>
+        It also automatically keeps track of inventory counts, calculates totals, and dynamically changes information across the system at once.<br><br>
+        This means that changing the name of a customer will immediately show up on all of their orders and any modifications made to a certain product will be reflected in
+        any outstanding order as well. This saves the user a substantial amount of time and effort.<br><br>
+        This system also allows multiple users in which the data is stored completely separately between users.
+    </p>
+</section>
+
+<!----- Programming Languages ----->
+<section class="languages">
+    <h1>Programming Languages</h1>
+    <p>This program was written in the following language(s):</p>
+
+    <div class="row">
+        <div class="language-col">
+        </div>
+        <div class="language-col">
+            <h1>Java</h1>
+            <img src="Images/Languages/Java.png">
+            <h3>100%</h3>
+        </div>
+        <div class="language-col">
+        </div>
+    </div>
+</section>
+
+<section class="gallery">
+    <h1>Gallery</h1>
+    <p>Click on any image to enlarge it and obtain more information.</p>
+
+    <div class="row">
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Login Page</h1>
+                <img src="Images/Projects/Inventory Manager/Login.png" onclick="zoomImage(this)"
+                alt="The login page of the program. This is where users are able to login with an existing account,
+                given they have the right username and password, or create a new account with a unique username and their password of choice.">
+            </div>
+        </div>
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Home Screen</h1>
+                <img src="Images/Projects/Inventory Manager/Home.png" onclick="zoomImage(this)"
+                alt="The user's dashboard. This is the hub which allows the user to access all parts of the program.">
+            </div>
+        </div>
+    </div>
+
+    <div class="expand-gallery" id="expandGallery">
+    <div class="row">
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>User List (Admin)</h1>
+                <img src="Images/Projects/Inventory Manager/Users.png" onclick="zoomImage(this)"
+                alt="This page allows the administrator to view, add, edit, delete and organize users.">
+            </div>
+        </div>
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Customers Panel</h1>
+                <img src="Images/Projects/Inventory Manager/Customers.png" onclick="zoomImage(this)"
+                alt="This panel allows the user to view, add, edit, remove and organize their customers.
+                Customers contain contact information and can be associated to orders.">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Categories Panel</h1>
+                <img src="Images/Projects/Inventory Manager/Categories.png" onclick="zoomImage(this)"
+                alt="This panel allows the user to organize their products with categories that they may create, edit, remove and organize at any point.">
+            </div>
+        </div>
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Products Panel</h1>
+                <img src="Images/Projects/Inventory Manager/Products.png" onclick="zoomImage(this)"
+                alt="This panel allows the user to create products with binding information such as its price and its category.
+                This is also where product stock is kept track of.">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Order Tables</h1>
+                <img src="Images/Projects/Inventory Manager/Orders.png" onclick="zoomImage(this)"
+                alt="These are the order tables. The top table shows the user the list of current orders with information such as the customer and price of the order.
+                The bottom table shows the products inside the order selected from the top table. This allows the user to easily view all order information at a glance.">
+            </div>
+        </div>
+        <div class="project-col-margin">
+            <div class="project-col">
+                <h1>Create New Order Screen</h1>
+                <img src="Images/Projects/Inventory Manager/New Order.png" onclick="zoomImage(this)"
+                alt="This page is where the user makes a new order. The user must simply select a customer from their list and then add the products to the order.
+                As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products.">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!----- Arrows To Expand/Collapse Gallery ----->
+    <i class="fa fa-arrow-down" onclick="showGallery()" id="arrowDown"></i>
+    <i class="fa fa-arrow-up" onclick="hideGallery()" id="arrowUp"></i>
+
+    <!----- Enlarged Images ----->
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="caption"></div>
+    </div>
+</section>
+
+<section class="github">
+    <h1>GitHub</h1>
+    <p>This project and its source code can be found in its entirity on GitHub:</p>
+    <div class="image">
+         <a href="https://github.com/jeremysampl/inventory-system"><img src="Images/Misc/GitHub Logo.png"></a>
+        <p>https://github.com/jeremysampl/inventory-system</p>
+    </div>
+</section>
+
+<!----- Footer ----->
+<section class="footer">
+    <h4>About Me</h4>
+    <p>A McMaster University Computer Science CO-OP student with a passion for coding and learning.</p>
+    <div class="icons">
+        <a href="https://www.facebook.com/jeremysampl/"><i class ="fa fa-facebook"></i></a>
+        <a href="https://instagram.com/jeremysampl/"><i class ="fa fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/jeremysampl/"><i class ="fa fa-linkedin"></i></a>
+        <a href="https://github.com/jeremysampl"><i class ="fa fa-github"></i></a>
+    </div>
+    <p>This website was completely made by myself using JavaScript, CSS, and HTML.</p>
+</section>
+
+<!----- Javascript for Toggle Menu ----->
+<script>
+    var navLinks = document.getElementById("navLinks");
+
+    function showMenu() {
+        navLinks.style.display = "unset";
+    }
+    function hideMenu() {
+        navLinks.style.display = "none";
+    }
+</script>
+
+<!----- Javascript for Expand Gallery ----->
+<script>
+    var expandGallery = document.getElementById("expandGallery");
+    var arrowUp = document.getElementById("arrowUp");
+    var arrowDown = document.getElementById("arrowDown");
+
+    function showGallery() {
+        expandGallery.style.display = "unset";
+        arrowDown.style.display = "none";
+        arrowUp.style.display = "unset";
+    }
+    function hideGallery() {
+        expandGallery.style.display = "none";
+        arrowDown.style.display = "unset";
+        arrowUp.style.display = "none";
+    }
+</script>
+
+<!----- Javascript for Enlarge Images ----->
+<script>
+    var modal = document.getElementById("modal");
+    var img = document.getElementById("zoomImg");
+    var modalImg = document.getElementById("modalImg");
+    var captionText = document.getElementById("caption");
+
+    function zoomImage(el) {
+        modal.style.display = "block";
+        modalImg.src = el.src;
+        captionText.innerHTML = el.alt;
+    }
+
+    var span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function() { 
+        modal.style.display = "none";
+    }
+</script>
+
+</body>
+</html>

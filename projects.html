@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="with=device-width, initial-scale=1.0">
+    <title>Website</title>
+    <link rel="stylesheet" href="projects-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!----- Header ----->
+<section class="header">
+    <nav>
+        <img src="Images/Misc/JS Logo.png">
+        <h1>Jeremy Sampl</h1>
+        <div class="nav-links" id="navLinks">
+            <i class="fa fa-times" onclick="hideMenu()"></i>
+            <ul>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/index.html">HOME</a></li>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/about.html">ABOUT</a></li>
+                <li><a href="file:///C:/Users/Jerem/Documents/Website/projects.html">PROJECTS</a></li>
+                <li><a href="">EXPERIENCE</a></li>
+                <li><a href="">CONTACT</a></li>
+            </ul>
+        </div>
+        <i class="fa fa-bars" onclick="showMenu()"></i>
+    </nav>
+</section>
+
+<!----- Project Showcase ----->
+
+<section class="project-showcase">
+    <h6>My Projects</h6>
+
+    <div class="row">
+        <div class="project-col-margin">
+            <a href="file:///C:/Users/Jerem/Documents/Website/StockAssist.html">
+                <div class="project-col">
+                    <h1>StockAssist</h1>
+                    <img src="Images/Projects/Inventory Manager/Home.png">
+                </div>
+            </a>
+        </div>
+        <div class="project-col-margin">
+            <a href="">
+                <div class="project-col">
+                    <h1>Terra Exodus</h1>
+                    <img src="Images/Projects/Terra Exodus/Gameplay.png">
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="project-col-margin">
+            <a href="">
+                <div class="project-col">
+                    <h1>Black Jack</h1>
+                    <img src="Images/Projects/Tic Tac Toe/Gameplay.png">
+                </div>
+            </a>
+        </div>
+        <div class="project-col-margin">
+            <a href="">
+                <div class="project-col">
+                    <h1>Tic Tac Toe</h1>
+                    <img src="Images/Projects/Black Jack/Lose.png">
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!----- Footer ----->
+<section class="footer">
+    <h4>About Me</h4>
+    <p>A McMaster University Computer Science CO-OP student with a passion for coding and learning.</p>
+    <div class="icons">
+        <a href="https://www.facebook.com/jeremysampl/"><i class ="fa fa-facebook"></i></a>
+        <a href="https://instagram.com/jeremysampl/"><i class ="fa fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/jeremysampl/"><i class ="fa fa-linkedin"></i></a>
+        <a href="https://github.com/jeremysampl"><i class ="fa fa-github"></i></a>
+    </div>
+    <p>This website was completely made by myself using JavaScript, CSS, and HTML.</p>
+</section>
+
+<!----- Javascript for Toggle Menu ----->
+<script>
+    var navLinks = document.getElementById("navLinks");
+
+    function showMenu() {
+        navLinks.style.display = "unset";
+    }
+    function hideMenu() {
+        navLinks.style.display = "none";
+    }
+</script>
+
+</body>
+</html>
