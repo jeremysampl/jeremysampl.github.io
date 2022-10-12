@@ -187,11 +187,12 @@ nav .fa {
 /*----- Project Showcase -----*/
 .project-col {
     flex-basis: 48%;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    margin-top: 15px;
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
     transition: 0.5s;
+    padding: 10px;
+    padding-bottom: 5px;
+    margin: 10px 0;
+    background-color: #000;
 }
 .project-col-margin {
     flex-basis: 48%;
@@ -202,6 +203,7 @@ nav .fa {
 }
 .project-col img {
     width: 100%;
+    border-radius: 5px;
 }
 .project-col:hover {
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
@@ -211,8 +213,9 @@ nav .fa {
     width: 100;
     padding: 0;
     font-size: 26px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #fff;
     transition: 500ms;
 }
 .project-col:hover h1 {
