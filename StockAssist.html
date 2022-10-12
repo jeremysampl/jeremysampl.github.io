@@ -31,12 +31,33 @@
     </nav>
 </section>
 
-<!----- Project Showcase ----->
-
-<section class="project-showcase">
+<!----- Overview ----->
+<section class="overview">
     <h6>StockAssist</h6>
 
     <h1>Overview</h1>
+    <div class="row">
+        <div class="three-col">
+            <h1>Database</h1>
+            <i class="fa fa-database"></i>
+            <p>Allows the storing of inventory, customers, categories, and products.</p>
+        </div>
+        <div class="three-col">
+            <h1>Auto Sync</h1>
+            <i class="fa fa-refresh"></i>
+            <p>Automatically syncs data throughout the system at the same time.</p>
+        </div>
+        <div class="three-col">
+            <h1>Elegant GUI</h1>
+            <i class="fa fa-object-group"></i>
+            <p>The user interface provides the user with a simple but refined GUI.</p>
+        </div>
+    </div>
+</section>
+
+<!----- Description ----->
+<section class="description">
+    <h1>Description</h1>
     <p>StockAssist is an small-scale inventory management system that improves productivity by keeping track of a small business' customers, categories, products, and orders.
         However, this product does much more than that.<br><br>
         It also automatically keeps track of inventory counts, calculates totals, and dynamically changes information across the system at once.<br><br>
@@ -52,18 +73,17 @@
     <p>This program was written in the following language(s):</p>
 
     <div class="row">
-        <div class="language-col">
-        </div>
-        <div class="language-col">
+        <div></div>
+        <div class="three-col">
             <h1>Java</h1>
             <img src="Images/Languages/Java.png">
             <h3>100%</h3>
         </div>
-        <div class="language-col">
-        </div>
+        <div></div>
     </div>
 </section>
 
+<!----- Gallery ----->
 <section class="gallery">
     <h1>Gallery</h1>
     <p>Click on any image to enlarge it and obtain more information.</p>
@@ -86,7 +106,7 @@
         </div>
     </div>
 
-    <div class="expand-gallery" id="expandGallery">
+    <div class="expand-gallery" id="galleryExpand">
     <div class="row">
         <div class="project-col-margin">
             <div class="project-col">
@@ -144,8 +164,9 @@
     </div>
 
     <!----- Arrows To Expand/Collapse Gallery ----->
-    <i class="fa fa-arrow-down" onclick="showGallery()" id="arrowDown"></i>
-    <i class="fa fa-arrow-up" onclick="hideGallery()" id="arrowUp"></i>
+    <i class="fa fa-arrow-down" onclick="expandRow('gallery')" id="galleryDown"></i>
+    <i class="fa fa-arrow-up" onclick="hideRow('gallery')" id="galleryUp"></i>
+    
 
     <!----- Enlarged Images ----->
     <div id="modal" class="modal">
@@ -174,10 +195,10 @@
         <a href="https://www.linkedin.com/in/jeremysampl/"><i class ="fa fa-linkedin"></i></a>
         <a href="https://github.com/jeremysampl"><i class ="fa fa-github"></i></a>
     </div>
-    <p>This website was completely made by myself using JavaScript, CSS, and HTML.</p>
+    <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript for Toggle Menu ----->
+<!----- Javascript to Toggle Menu ----->
 <script>
     var navLinks = document.getElementById("navLinks");
 
@@ -189,25 +210,27 @@
     }
 </script>
 
-<!----- Javascript for Expand Gallery ----->
+<!----- Javascript for Expanding a Section ----->
 <script>
-    var expandGallery = document.getElementById("expandGallery");
-    var arrowUp = document.getElementById("arrowUp");
-    var arrowDown = document.getElementById("arrowDown");
-
-    function showGallery() {
-        expandGallery.style.display = "unset";
+    function expandRow(section) {
+        var expand = document.getElementById(section + "Expand");
+        var arrowUp = document.getElementById(section + "Up");
+        var arrowDown = document.getElementById(section + "Down");
+        expand.style.display = "block";
         arrowDown.style.display = "none";
-        arrowUp.style.display = "unset";
+        arrowUp.style.display = "block";
     }
-    function hideGallery() {
-        expandGallery.style.display = "none";
-        arrowDown.style.display = "unset";
+    function hideRow(section) {
+        var expand = document.getElementById(section + "Expand");
+        var arrowUp = document.getElementById(section + "Up");
+        var arrowDown = document.getElementById(section + "Down");
+        expand.style.display = "none";
+        arrowDown.style.display = "block";
         arrowUp.style.display = "none";
     }
 </script>
 
-<!----- Javascript for Enlarge Images ----->
+<!----- Javascript for Enlarging Images ----->
 <script>
     var modal = document.getElementById("modal");
     var img = document.getElementById("zoomImg");

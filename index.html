@@ -30,12 +30,12 @@
 <div class="title">
     <h6>Jeremy Sampl's Portfolio</h6>
     <p>Welcome to my personal website.</p>
-    <a href="" class="view-btn">Click to Know More</a>
+    <a href="https://jeremysampl.com/index#skills" class="view-btn">Click to Know More</a>
 </div>
 </section>
 
 <!----- Skills ----->
-<section class="skills">
+<section class="skills" id="skills">
     <h1>Featured Skills</h1>
     <p>My most prominent skills.</p>
 
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <a href="" class="view-btn">View All Skills</a>
+    <a href="https://jeremysampl.com/about" class="view-btn">Learn More</a>
 </section>
 
 <!----- Project Showcase ----->
@@ -109,24 +109,44 @@
     <p>I have significant experience in the following languages:</p>
 
     <div class="row">
-        <div class="language-col">
+        <div class="three-col">
             <h1>Java</h1>
             <img src="Images/Languages/Java.png">
             <p>My first and most proficient language. My most sophisticated project to date is written in Java.</p>
         </div>
-        <div class="language-col">
+        <div class="three-col">
             <h1>Python</h1>
             <img src="Images/Languages/Python.png">
             <p>My second and currently most used language. I have created many small projects in Python.</p>
         </div>
-        <div class="language-col">
+        <div class="three-col">
             <h1>C#</h1>
             <img src="Images/Languages/C Sharp.png">
             <p>My skills from Java have been very easily transferred to C#.</p>
         </div>
     </div>
 
-    <a href="" class="view-btn">View All Languages</a>
+    <div class="expand-languages" id="languagesExpand">
+    <p>I also have moderate experience building websites with:</p>
+    <div class="row">
+        <div class="three-col">
+            <h1>HTML</h1>
+            <img src="Images/Languages/HTML.png">
+        </div>
+        <div class="three-col">
+            <h1>CSS</h1>
+            <img src="Images/Languages/CSS.png">
+        </div>
+        <div class="three-col">
+            <h1>JavaScript</h1>
+            <img src="Images/Languages/JavaScript.png">
+        </div>
+    </div>
+    </div>
+
+    <!----- Arrows To Expand/Collapse Languages ----->
+    <i class="fa fa-arrow-down" onclick="expandRow('languages')" id="languagesDown"></i>
+    <i class="fa fa-arrow-up" onclick="hideRow('languages')" id="languagesUp"></i>
 </section>
 
 <!----- Footer ----->
@@ -139,7 +159,7 @@
         <a href="https://www.linkedin.com/in/jeremysampl/"><i class ="fa fa-linkedin"></i></a>
         <a href="https://github.com/jeremysampl"><i class ="fa fa-github"></i></a>
     </div>
-    <p>This website was completely made by myself using JavaScript, CSS, and HTML.</p>
+    <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
 <!----- Javascript for Toggle Menu ----->
@@ -151,6 +171,26 @@
     }
     function hideMenu() {
         navLinks.style.display = "none";
+    }
+</script>
+
+<!----- Javascript for Expanding a Section ----->
+<script>
+    function expandRow(section) {
+        var expand = document.getElementById(section + "Expand");
+        var arrowUp = document.getElementById(section + "Up");
+        var arrowDown = document.getElementById(section + "Down");
+        expand.style.display = "block";
+        arrowDown.style.display = "none";
+        arrowUp.style.display = "block";
+    }
+    function hideRow(section) {
+        var expand = document.getElementById(section + "Expand");
+        var arrowUp = document.getElementById(section + "Up");
+        var arrowDown = document.getElementById(section + "Down");
+        expand.style.display = "none";
+        arrowDown.style.display = "block";
+        arrowUp.style.display = "none";
     }
 </script>
 

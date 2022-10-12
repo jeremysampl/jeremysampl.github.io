@@ -5,7 +5,7 @@
 }
 
 :root {
-    --vibrant-red: #f44336
+    --secondary-color: #f44336
 }
 
 /*----- Animations -----*/
@@ -54,6 +54,24 @@ p {
     display: flex;
     justify-content: space-between;
 }
+.three-col {
+    flex-basis: 32%;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+    transition: 500ms;
+    margin-top: 15px;
+}
+.three-col img {
+    width: 100%;
+}
+.three-col .fa {
+    font-size: 20vh;
+    color: var(--secondary-color);
+}
+.three-col:hover {
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5)
+}
 
 /*----- Buttons -----*/
 .view-btn {
@@ -61,6 +79,7 @@ p {
     text-decoration: none;
     color: #000;
     border: 1px solid #000;
+    border-radius: 5px;
     padding: 12px 34px;
     font-size: 13px;
     font-weight: 800;
@@ -70,8 +89,8 @@ p {
     margin-top: 20px;
 }
 .view-btn:hover {
-    border: 1px solid var(--vibrant-red);
-    background: var(--vibrant-red);
+    border: 1px solid var(--secondary-color);
+    background: var(--secondary-color);
     transition: 1s;
 }
 
@@ -118,7 +137,7 @@ nav img {
     content: '';
     width: 0%;
     height: 2px;
-    background: var(--vibrant-red);
+    background: var(--secondary-color);
     display: block;
     margin: auto;
     transition: 0.5s;
@@ -131,31 +150,16 @@ nav .fa {
 }
 
 /*----- Main View -----*/
-.languages, .project-showcase, .gallery, .github {
+.overview, .description, .languages, .gallery, .github {
     width: 80%;
     margin: auto;
     text-align: center;
-    padding-top: 40px;
-}
-
-/*----- Programming Languages -----*/
-.language-col {
-    flex-basis: 32%;
-    position: relative;
-    border-radius: 10px;
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
-    transition: 500ms;
-    margin-top: 15px;
-}
-.language-col img {
-    width: 100%;
-}
-.language-col:hover {
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5)
+    margin: 10px auto;
+    padding: 10px 0;
 }
 
 /*----- Project Showcase -----*/
-.project-showcase p {
+.description p {
     font-size: 18px;
     border-radius: 10px;
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
@@ -206,13 +210,14 @@ nav .fa {
 .gallery .fa {
     font-size: 50px;
     margin-top: 10px;
+    display: block;
 }
 .gallery .fa-arrow-up {
     display: none;
 }
 .gallery .fa-arrow-down:hover, .gallery .fa-arrow-up:hover {
-    color: rgb(88, 88, 88);
-    -webkit-text-stroke-width: 5px;
+    color: var(--secondary-color);
+    -webkit-text-stroke-width: 4px;
     -webkit-text-stroke-color: #000;
 }
 
@@ -252,14 +257,16 @@ nav .fa {
     position: absolute;
     top: 1vh;
     right: 35px;
-    color: #f1f1f1;
+    color: #fff;
     font-size: 40px;
     font-weight: bold;
     transition: 0.3s;
 }
 .close:hover,
 .close:focus {
-    color: #bbb;
+    color: var(--secondary-color);
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
     text-decoration: none;
     cursor: pointer;
 }
@@ -284,7 +291,7 @@ nav .fa {
     color: #fff;
 }
 .icons .fa {
-    color: var(--vibrant-red);
+    color: var(--secondary-color);
     margin: 0 13px;
     cursor: pointer;
     padding: 18px 0;
@@ -312,7 +319,7 @@ nav .fa {
     }
     .nav-links {
         position: absolute;
-        background: var(--vibrant-red);
+        background: var(--secondary-color);
         height: 100vh;
         width: 200px;
         top: 0;
