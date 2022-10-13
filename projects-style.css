@@ -30,7 +30,7 @@ h1 {
     padding: 10px;
 }
 h3 {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 400px;
     color: #000;
     padding: 10px;
@@ -50,6 +50,9 @@ p {
 }
 
 /*----- Organizers -----*/
+body {
+    margin-top: 8vh;
+}
 .row {
     display: flex;
     justify-content: space-between;
@@ -97,21 +100,24 @@ p {
     background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(Images/Misc/Background.jpg);
     background-position: center;
     background-size: cover;
-    position: relative;
+    position: fixed;
+    top: 0;
+    z-index: 1;
 }
 nav {
     display: flex;
-    padding: 1% 6%;
+    padding: 1vh 5vw;
     justify-content: space-between;
     align-items: center;
 }
 nav h1 {
     color: #fff;
     font-size: 30px;
+    padding: 0;
     margin-left: 20px;
 }
-nav img {
-    max-height: 7vh;
+nav a, nav img {
+    height: 6vh;
 }
 .nav-links {
     flex: 1;
@@ -179,16 +185,15 @@ nav .fa {
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
     background-color: #000;
 }
-.project-col h1 {
+.project-col h3 {
     width: 100;
     padding: 0;
-    font-size: 26px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #fff;
     transition: 500ms;
 }
-.project-col:hover h1 {
+.project-col:hover h3 {
     color:#fff;
     background-color: #000;
 }
@@ -220,22 +225,36 @@ nav .fa {
         flex-direction: column;
     }
 
+    h1 {
+        font-size: 8vw;
+    }
+    h3 {
+        font-size: 6vw;
+    }
     h6 {
-        font-size: 50px;
+        font-size: 13vw;
+    }
+    p {
+        font-size: 3.5vw;
     }
 
+    body {
+        margin-top: 15vw;
+    }
+    nav {
+        padding: 2vw 5vw;
+    }
     nav h1 {
         margin-left: 0;
     }
-    nav img {
-        max-width: 12vw;
-        max-height: none;
+    nav a, nav img {
+        height: 11vw;
     }
     .nav-links ul li {
         display: block;
     }
     .nav-links {
-        position: absolute;
+        position: fixed;
         background: var(--secondary-color);
         height: 100vh;
         width: 200px;

@@ -14,8 +14,8 @@
     to {transform: scale(1)}
 }
 @keyframes slide-down {
-    from {transform: translateY(-100%)}
-    to {transform: translateY(0)}
+    from {transform: translateY(-100%); opacity: 0.0;}
+    to {transform: translateY(0); opacity: 1.0}
 }
 @keyframes slide-left {
     from {transform: translateX(100%)}
@@ -30,7 +30,7 @@ h1 {
     padding: 10px;
 }
 h3 {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 400px;
     color:#000;
     padding: 10px;
@@ -106,7 +106,7 @@ nav {
     align-items: center;
 }
 nav img {
-    width: 150px;
+    height: 20vh;
 }
 .nav-links {
     flex: 1;
@@ -209,16 +209,15 @@ nav .fa {
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
     background-color: #000;
 }
-.project-col h1 {
+.project-col h3 {
     width: 100;
     padding: 0;
-    font-size: 26px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #fff;
     transition: 500ms;
 }
-.project-col:hover h1 {
+.project-col:hover h3 {
     color:#fff;
     background-color: #000;
 }
@@ -275,13 +274,23 @@ nav .fa {
         flex-direction: column;
     }
 
+    h1 {
+        font-size: 8vw;
+    }
+    h3 {
+        font-size: 6vw;
+    }
     h6 {
-        font-size: 50px;
+        font-size: 13vw;
     }
-    .title h1 {
-        font-size: 20px;
+    p {
+        font-size: 3.5vw;
     }
+
     
+    nav a, nav img {
+        height: 35vw;
+    }
     .nav-links ul li {
         display: block;
     }
@@ -302,7 +311,10 @@ nav .fa {
         display: block;
         color: #fff;
         margin: 10px;
+        padding: 0 auto;
         font-size: 22px;
+        text-align: center;
+        width: 5vw;
         cursor: pointer;
     }
     .nav-links ul {
