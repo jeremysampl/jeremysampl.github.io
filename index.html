@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="with=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
     <link rel="icon" href="Images/Misc/JS Logo.png">
     <link rel="stylesheet" href="index-style.css">
@@ -21,7 +21,7 @@
                 <li><a href="https://jeremysampl.com/about">ABOUT</a></li>
                 <li><a href="https://jeremysampl.com/projects">PROJECTS</a></li>
                 <li><a href="">EXPERIENCE</a></li>
-                <li><a href="">CONTACT</a></li>
+                <li><a href="https://jeremysampl.com/contact">CONTACT</a></li>
             </ul>
         </div>
         <i class="fa fa-bars" onclick="showMenu()"></i>
@@ -145,8 +145,8 @@
     </div>
 
     <!----- Arrows To Expand/Collapse Languages ----->
-    <i class="fa fa-arrow-down" onclick="expandRow('languages')" id="languagesDown"></i>
-    <i class="fa fa-arrow-up" onclick="hideRow('languages')" id="languagesUp"></i>
+    <i class="fa fa-arrow-down" onclick="expandRow('languages', true)" id="languagesDown"></i>
+    <i class="fa fa-arrow-up" onclick="expandRow('languages', false)" id="languagesUp"></i>
 </section>
 
 <!----- Footer ----->
@@ -162,35 +162,32 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript for Toggle Menu ----->
+<!----- Javascript to Toggle Menu ----->
 <script>
-    var navLinks = document.getElementById("navLinks");
-
     function showMenu() {
-        navLinks.style.display = "unset";
+        navLinks.style.transform = "translateX(0)";
     }
     function hideMenu() {
-        navLinks.style.display = "none";
+        navLinks.style.transform = "translateX(100%)";
     }
 </script>
 
 <!----- Javascript for Expanding a Section ----->
 <script>
-    function expandRow(section) {
-        var expand = document.getElementById(section + "Expand");
-        var arrowUp = document.getElementById(section + "Up");
-        var arrowDown = document.getElementById(section + "Down");
-        expand.style.display = "block";
-        arrowDown.style.display = "none";
-        arrowUp.style.display = "block";
-    }
-    function hideRow(section) {
-        var expand = document.getElementById(section + "Expand");
-        var arrowUp = document.getElementById(section + "Up");
-        var arrowDown = document.getElementById(section + "Down");
-        expand.style.display = "none";
-        arrowDown.style.display = "block";
-        arrowUp.style.display = "none";
+    function expandRow(section, expanded) {
+        const expand = document.getElementById(section + "Expand");
+        const arrowUp = document.getElementById(section + "Up");
+        const arrowDown = document.getElementById(section + "Down");
+
+        if (expanded) {
+            expand.style.display = "block";
+            arrowDown.style.display = "none";
+            arrowUp.style.display = "block";
+        } else {
+            expand.style.display = "none";
+            arrowDown.style.display = "block";
+            arrowUp.style.display = "none";
+        }
     }
 </script>
 

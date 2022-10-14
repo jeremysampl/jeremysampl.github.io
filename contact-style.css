@@ -28,7 +28,7 @@ h1 {
 h3 {
     font-size: 26px;
     font-weight: 400px;
-    color:#000;
+    color: #000;
     padding: 10px;
 }
 h6 {
@@ -61,6 +61,10 @@ p {
 .three-col img {
     width: 100%;
 }
+.three-col .fa {
+    font-size: 20vh;
+    color: var(--secondary-color);
+}
 .three-col:hover {
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.5)
 }
@@ -87,22 +91,34 @@ p {
 }
 
 /*----- Header and Navigation -----*/
+body {
+    margin-top: 8vh;
+}
 .header {
-    min-height: 100vh;
+    height: fit-content;
     width: 100%;
     background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(Images/Misc/Background.jpg);
     background-position: center;
     background-size: cover;
-    position: relative;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    transition: 0.5s;
 }
 nav {
     display: flex;
-    padding: 2% 6%;
+    padding: 1vh 5vw;
     justify-content: space-between;
     align-items: center;
 }
-nav img {
-    height: 20vh;
+nav h1 {
+    color: #fff;
+    font-size: 30px;
+    padding: 0;
+    margin-left: 20px;
+}
+nav a, nav img {
+    height: 6vh;
 }
 .nav-links {
     flex: 1;
@@ -137,111 +153,19 @@ nav .fa {
     display: none;
 }
 
-/*----- Title -----*/
-.title {
-    width: 90%;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    text-align: center;
-}
-.title h6 {
-    color: #fff;
-}
-.title p {
-    margin: 10px 0 40px;
-    font-size: 14px;
-}
-.title .view-btn {
-    color: #fff;
-    border-color: #fff;
-}
-
 /*----- Main View -----*/
-.skills, .project-showcase, .languages {
+.contact {
     width: 80%;
     margin: auto;
     text-align: center;
     margin: 10px auto;
     padding: 10px 0;
 }
-
-/*----- Skills -----*/
-.skill-col {
-    flex-basis: 31%;
-    background: #ffcdcd;
-    border-radius: 10px;
-    padding: 20px 12px;
-    box-sizing: border-box;
-    margin-top: 15px;
-}
-.skill-col:hover {
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
-}
-
-/*----- Project Showcase -----*/
-.project-col {
-    flex-basis: 48%;
-    border-radius: 10px;
-    transition: 0.5s;
-    padding: 10px;
-    padding-bottom: 5px;
-    margin: 10px 0;
-    background-color: #000;
-}
-.project-col-margin {
-    flex-basis: 48%;
-    margin: auto;
-}
-.project-col-margin a {
+.contact a {
     text-decoration: none;
 }
-.project-col img {
-    width: 100%;
-    border-radius: 5px;
-}
-.project-col:hover {
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
-    background-color: #000;
-}
-.project-col h3 {
-    width: 100;
-    padding: 0;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background-color: #fff;
-    transition: 500ms;
-}
-.project-col:hover h3 {
-    color:#fff;
-    background-color: #000;
-}
-
-/*----- Programming Languages -----*/
-.expand-languages {
-    display: none;
-}
-.expand-languages p {
-    margin-top: 20px;
-}
-.expand-languages .three-col {
-    animation-name: slide-down;
-    animation-duration: 1s;
-}
-.languages .fa {
-    font-size: 50px;
-    margin-top: 10px;
-    display: block;
-}
-.languages .fa-arrow-up {
-    display: none;
-}
-.languages .fa-arrow-down:hover, .languages .fa-arrow-up:hover {
-    color: var(--secondary-color);
-    -webkit-text-stroke-width: 4px;
-    -webkit-text-stroke-color: #000;
+.row {
+    margin-bottom: 30px;
 }
 
 /*----- Footer -----*/
@@ -266,7 +190,7 @@ nav .fa {
 }
 
 /*----- Screen Size Variation -----*/
-@media(max-width: 700px) {
+@media (max-width: 700px) {
     .row {
         flex-direction: column;
     }
@@ -284,15 +208,23 @@ nav .fa {
         font-size: 3.5vw;
     }
 
-    
+    body {
+        margin-top: 15vw;
+    }
+    nav {
+        padding: 2vw 5vw;
+    }
+    nav h1 {
+        margin-left: 0;
+    }
     nav a, nav img {
-        height: 35vw;
+        height: 11vw;
     }
     .nav-links ul li {
         display: block;
     }
     .nav-links {
-        position: absolute;
+        position: fixed;
         background: var(--secondary-color);
         height: 100vh;
         width: 200px;
@@ -314,9 +246,5 @@ nav .fa {
     }
     .nav-links ul {
         padding: 30px;
-    }
-    
-    .language-col {
-        margin-bottom: 25px;
     }
 }

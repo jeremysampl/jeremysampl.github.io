@@ -17,10 +17,6 @@
     from {transform: translateY(-100%)}
     to {transform: translateY(0)}
 }
-@keyframes slide-left {
-    from {transform: translateX(100%)}
-    to {transform: translateX(0)}
-}
 
 /*----- Fonts -----*/
 h1 {
@@ -103,6 +99,7 @@ body {
     position: fixed;
     top: 0;
     z-index: 1;
+    transition: 0.5s;
 }
 nav {
     display: flex;
@@ -122,6 +119,7 @@ nav a, nav img {
 .nav-links {
     flex: 1;
     text-align: right;
+    transition: 0.5s;
 }
 .nav-links ul li {
     list-style: none;
@@ -262,9 +260,7 @@ nav .fa {
         right: 0;
         text-align: left;
         z-index: 2;
-        animation-name: slide-left;
-        animation-duration: 0.5s;
-        display: none;
+        transform: translateX(100%);
     }
     nav .fa {
         display: block;

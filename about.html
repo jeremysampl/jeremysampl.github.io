@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="with=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
     <link rel="icon" href="Images/Misc/JS Logo.png">
     <link rel="stylesheet" href="about-style.css">
@@ -13,7 +13,7 @@
 <body>
 
 <!----- Header ----->
-<section class="header">
+<section class="header" id="header">
     <nav>
         <a href="https://jeremysampl.com"><img src="Images/Misc/JS Logo.png"></a>
         <h1>Jeremy Sampl</h1>
@@ -24,7 +24,7 @@
                 <li><a href="fhttps://jeremysampl.com/about">ABOUT</a></li>
                 <li><a href="https://jeremysampl.com/projects">PROJECTS</a></li>
                 <li><a href="">EXPERIENCE</a></li>
-                <li><a href="">CONTACT</a></li>
+                <li><a href="https://jeremysampl.com/contact">CONTACT</a></li>
             </ul>
         </div>
         <i class="fa fa-bars" onclick="showMenu()"></i>
@@ -69,15 +69,40 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript for Toggle Menu ----->
+<!----- Javascript to Toggle Menu ----->
 <script>
-    var navLinks = document.getElementById("navLinks");
-
     function showMenu() {
-        navLinks.style.display = "unset";
+        navLinks.style.transform = "translateX(0)";
     }
     function hideMenu() {
-        navLinks.style.display = "none";
+        navLinks.style.transform = "translateX(100%)";
+    }
+</script>
+
+<!----- Javascript for Hiding Mobile Nav Bar on Scroll ----->
+<script>
+    {
+    var prevScrollY = window.scrollY
+    window.addEventListener('scroll', (e) => { 
+        if (window.innerWidth <= 700) {
+            const scrollY = window.scrollY;
+    
+            if (scrollY < prevScrollY && prevScrollY - scrollY > window.innerHeight / 100) {
+                showHeader();
+            } else if (scrollY - prevScrollY > window.innerHeight / 40) {
+                hideHeader();
+                hideMenu();
+            }
+            prevScrollY = scrollY;
+        } 
+    })
+    }
+
+    function hideHeader() {
+        header.style.transform = "translateY(-100%)";
+    }
+    function showHeader() {
+        header.style.transform = "translateY(0)";
     }
 </script>
 
