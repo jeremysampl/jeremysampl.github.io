@@ -34,26 +34,26 @@
 <!----- Overview ----->
 <section class="overview">
     <div class="title">
-        <h6>StockAssist</h6>
-        <h3>Inventory Management System</h3>
+        <h6>Tic Tac Toe</h6>
+        <h3>Classic Paper/Pencil Game</h3>
     </div>
 
     <h1>Overview</h1>
     <div class="row">
         <div class="three-col">
-            <h1>Database</h1>
-            <i class="fa fa-database"></i>
-            <p>Allows the storing of customers, categories, products and orders.</p>
+            <h1>Simple</h1>
+            <i class="fa fa-hand-pointer-o"></i>
+            <p>Simply tap/click to play.</p>
         </div>
         <div class="three-col">
-            <h1>Auto Sync</h1>
-            <i class="fa fa-refresh"></i>
-            <p>Automatically syncs data throughout the system at the same time.</p>
-        </div>
-        <div class="three-col">
-            <h1>Elegant GUI</h1>
+            <h1>Modern UI</h1>
             <i class="fa fa-object-group"></i>
-            <p>The user interface provides the user with a simple but refined GUI.</p>
+            <p>An aestetically pleasing modern-looking user interface.</p>
+        </div>
+        <div class="three-col">
+            <h1>Amusing</h1>
+            <i class="fa fa-smile-o"></i>
+            <p>Who does not like a game of tic tac toe?</p>
         </div>
     </div>
 </section>
@@ -62,12 +62,11 @@
 <section class="description">
     <h1>Description</h1>
     <p>
-        StockAssist is a small-scale inventory management system that improves productivity by keeping track of a small business' customers, categories, products and orders.
-        However, this product does much more than that.<br><br>
-        It also automatically keeps track of inventory counts, calculates totals, and dynamically changes information across the system at once.<br><br>
-        This means that changing the name of a customer will immediately show up on all of their orders and any modifications made to a certain product will be reflected in
-        any outstanding order as well. This saves the user a substantial amount of time and effort.<br><br>
-        This system also allows multiple users in which their data is stored completely separately between them.
+        This recreation of the classic tic tac toe game was simply created as a starter project when I was learning C# and XAML.<br><br>
+        The game works the exact same as the original.<br>
+        Players, one being O's and the other X's, take turns placing their letters in a 3x3 grid.<br>
+        The first player to make a full row, column or diagonal wins the game.<br>
+        However, it is common to tie the game in which the grid is filled but no one won.
     </p>
 </section>
 
@@ -77,13 +76,16 @@
     <p>This program is written in the following language(s):</p>
 
     <div class="row">
-        <div></div>
         <div class="three-col">
-            <h1>Java</h1>
-            <img src="Images/Languages/Java.png">
-            <h3>100%</h3>
+            <h1>C#</h1>
+            <img src="Images/Languages/C Sharp.png">
+            <h3>60%</h3>
         </div>
-        <div></div>
+        <div class="three-col">
+            <h1>XAML</h1>
+            <img src="Images/Languages/XAML.png">
+            <h3>40%</h3>
+        </div>
     </div>
 </section>
 
@@ -95,82 +97,19 @@
     <div class="row">
         <div class="project-col-margin">
             <div class="project-col">
-                <h3>Login Page</h3>
-                <img src="Images/Projects/Inventory Manager/Login.png" onclick="zoomImage(this)"
-                alt="The login page of the program. This is where users are able to login with an existing account,
-                given they have the right username and password, or create a new account with a unique username and their password of choice.">
+                <h3>Gameplay</h3>
+                <img src="Images/Projects/Tic Tac Toe/Gameplay.png" onclick="zoomImage(this)"
+                alt="The game contains a modern looking user interface.">
             </div>
         </div>
         <div class="project-col-margin">
             <div class="project-col">
-                <h3>Home Screen</h3>
-                <img src="Images/Projects/Inventory Manager/Home.png" onclick="zoomImage(this)"
-                alt="The user's dashboard. This is the hub which allows the user to access all parts of the program.">
+                <h3>Gameplay</h3>
+                <img src="Images/Projects/Tic Tac Toe/Gameplay2.png" onclick="zoomImage(this)"
+                alt="Obtain three in a row, column or diagonal to win.">
             </div>
         </div>
     </div>
-
-    <div class="expand-gallery" id="galleryExpand">
-    <div class="row">
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>User List (Admin)</h3>
-                <img src="Images/Projects/Inventory Manager/Users.png" onclick="zoomImage(this)"
-                alt="This page allows the administrator to view, add, edit, delete and organize users.">
-            </div>
-        </div>
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>Customers Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Customers.png" onclick="zoomImage(this)"
-                alt="This panel allows the user to view, add, edit, remove and organize their customers.
-                Customers contain contact information and can be associated to orders.">
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>Categories Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Categories.png" onclick="zoomImage(this)"
-                alt="This panel allows the user to organize their products with categories that they may create, edit, remove and organize at any point.">
-            </div>
-        </div>
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>Products Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Products.png" onclick="zoomImage(this)"
-                alt="This panel allows the user to create products with binding information such as its price and its category.
-                This is also where product stock is kept track of.">
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>Order Tables</h3>
-                <img src="Images/Projects/Inventory Manager/Orders.png" onclick="zoomImage(this)"
-                alt="These are the order tables. The top table shows the user the list of current orders with information such as the customer and price of the order.
-                The bottom table shows the products inside the order selected from the top table. This allows the user to easily view all order information at a glance.">
-            </div>
-        </div>
-        <div class="project-col-margin">
-            <div class="project-col">
-                <h3>Create Order Screen</h3>
-                <img src="Images/Projects/Inventory Manager/New Order.png" onclick="zoomImage(this)"
-                alt="This page is where the user makes a new order. The user must simply select a customer from their list and then add the products to the order.
-                As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products and the order total.">
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!----- Arrows To Expand/Collapse Gallery ----->
-    <i class="fa fa-arrow-down" onclick="expandRow('gallery', true)" id="galleryDown"></i>
-    <i class="fa fa-arrow-up" onclick="expandRow('gallery', false)" id="galleryUp"></i>
-    
 
     <!----- Enlarged Images ----->
     <div id="modal" class="modal">
@@ -183,8 +122,8 @@
 <section class="github">
     <p>This project and its source code can be found in its entirety on GitHub:</p>
     <div class="image">
-         <a href="https://github.com/jeremysampl/inventory-system"><img src="Images/Misc/GitHub Logo.png"></a>
-        <p>https://github.com/jeremysampl/inventory-system</p>
+         <a href="https://github.com/jeremysampl/tictactoe"><img src="Images/Misc/GitHub Logo.png"></a>
+        <p>https://github.com/jeremysampl/tictactoe</p>
     </div>
 </section>
 
