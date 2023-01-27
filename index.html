@@ -4,11 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
     <link rel="icon" href="Images/Misc/JS Logo.png">
-    <link rel="stylesheet" href="index-style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 <section class="header">
@@ -64,7 +63,7 @@
 
     <div class="row">
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/StockAssist">
+            <a href="https://jeremysampl.com/projects/StockAssist">
                 <div class="project-col">
                     <h3>StockAssist</h3>
                     <img src="Images/Projects/Inventory Manager/Home.png">
@@ -72,7 +71,7 @@
             </a>
         </div>
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/TerraExodus">
+            <a href="https://jeremysampl.com/projects/TerraExodus">
                 <div class="project-col">
                     <h3>Terra Exodus</h3>
                     <img src="Images/Projects/Terra Exodus/Gameplay.png">
@@ -143,34 +142,8 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript to Toggle Menu ----->
-<script>
-    function showMenu() {
-        navLinks.style.transform = "translateX(0)";
-    }
-    function hideMenu() {
-        navLinks.style.transform = "translateX(100%)";
-    }
-</script>
-
-<!----- Javascript for Expanding a Section ----->
-<script>
-    function expandRow(section, expanded) {
-        const expand = document.getElementById(section + "Expand");
-        const arrowUp = document.getElementById(section + "Up");
-        const arrowDown = document.getElementById(section + "Down");
-
-        if (expanded) {
-            expand.style.display = "block";
-            arrowDown.style.display = "none";
-            arrowUp.style.display = "block";
-        } else {
-            expand.style.display = "none";
-            arrowDown.style.display = "block";
-            arrowUp.style.display = "none";
-        }
-    }
-</script>
+<script src="js/menu-options.js"></script>
+<script src="js/expand-section.js"></script>
 
 </body>
 </html>

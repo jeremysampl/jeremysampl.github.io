@@ -1,0 +1,51 @@
+/*----- Main View -----*/
+.project-showcase {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px 0;
+}
+
+/*----- Project Showcase -----*/
+.project-col {
+    flex-basis: 48%;
+    border-radius: 10px;
+    transition: 0.5s;
+    padding: 10px;
+    padding-bottom: 5px;
+    margin: 10px 0;
+    background-color: #000;
+}
+.project-col-margin {
+    flex-basis: 48%;
+    margin: auto;
+}
+.project-col-margin a {
+    text-decoration: none;
+}
+.project-col img {
+    width: 100%;
+    border-radius: 5px;
+}
+.project-col:hover {
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
+    background-color: #000;
+}
+.project-col h3 {
+    width: 100;
+    padding: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #fff;
+    transition: 500ms;
+}
+.project-col:hover h3 {
+    color:#fff;
+    background-color: #000;
+}
+
+/*----- Screen Size Variation -----*/
+@media (max-width: 700px) {
+    
+}

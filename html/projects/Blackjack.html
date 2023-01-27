@@ -3,19 +3,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
-    <link rel="icon" href="Images/Misc/JS Logo.png">
-    <link rel="stylesheet" href="project-style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="../../Images/Misc/JS Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/nav.css">
+    <link rel="stylesheet" href="../../css/project.css">
 </head>
 <body>
 
 <!----- Header ----->
 <section class="header" id="header">
     <nav>
-        <a href="https://jeremysampl.com"><img src="Images/Misc/JS Logo.png"></a>
+        <a href="https://jeremysampl.com"><img src="../../Images/Misc/JS Logo.png"></a>
         <h1>Jeremy Sampl</h1>
         <div class="nav-links" id="navLinks">
             <i class="fa fa-times" onclick="hideMenu()"></i>
@@ -81,7 +80,7 @@
         <div></div>
         <div class="three-col">
             <h1>Python</h1>
-            <img src="Images/Languages/Python.png">
+            <img src="../../Images/Languages/Python.png">
             <h3>100%</h3>
         </div>
         <div></div>
@@ -97,14 +96,14 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Unlucky Loss</h3>
-                <img src="Images/Projects/Blackjack/Lose2.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Blackjack/Lose2.png" onclick="zoomImage(this)"
                 alt="A common upsetting loss in blackjack.">
             </div>
         </div>
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Win</h3>
-                <img src="Images/Projects/Blackjack/Win.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Blackjack/Win.png" onclick="zoomImage(this)"
                 alt="This is an example of how a player could win in blackjack.">
             </div>
         </div>
@@ -115,14 +114,14 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Hit/Hold</h3>
-                <img src="Images/Projects/Blackjack/HitOrHold.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Blackjack/HitOrHold.png" onclick="zoomImage(this)"
                 alt="The player may choose to hit (pick up another card) or hold.">
             </div>
         </div>
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Typical Loss</h3>
-                <img src="Images/Projects/Blackjack/Lose.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Blackjack/Lose.png" onclick="zoomImage(this)"
                 alt="A typical loss in blackjack. The player went over 21 while trying to obtain higher.">
             </div>
         </div>
@@ -145,7 +144,7 @@
 <section class="github">
     <p>This project and its source code can be found in its entirety on GitHub:</p>
     <div class="image">
-         <a href="https://github.com/jeremysampl/blackjack"><img src="Images/Misc/GitHub Logo.png"></a>
+         <a href="https://github.com/jeremysampl/blackjack"><img src="../../Images/Misc/GitHub Logo.png"></a>
         <p>https://github.com/jeremysampl/blackjack</p>
     </div>
 </section>
@@ -163,78 +162,10 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript to Toggle Menu ----->
-<script>
-    function showMenu() {
-        navLinks.style.transform = "translateX(0)";
-    }
-    function hideMenu() {
-        navLinks.style.transform = "translateX(100%)";
-    }
-</script>
-
-<!----- Javascript for Hiding Mobile Nav Bar on Scroll ----->
-<script>
-    {
-    var prevScrollY = window.scrollY
-    window.addEventListener('scroll', (e) => { 
-        if (window.innerWidth <= 700) {
-            const scrollY = window.scrollY;
-    
-            if (scrollY < prevScrollY && prevScrollY - scrollY > window.innerHeight / 100) {
-                showHeader();
-            } else if (scrollY - prevScrollY > window.innerHeight / 40) {
-                hideHeader();
-                hideMenu();
-            }
-            prevScrollY = scrollY;
-        } 
-    })
-    }
-
-    function hideHeader() {
-        header.style.transform = "translateY(-100%)";
-    }
-    function showHeader() {
-        header.style.transform = "translateY(0)";
-    }
-</script>
-
-<!----- Javascript for Expanding a Section ----->
-<script>
-    function expandRow(section, expanded) {
-        const expand = document.getElementById(section + "Expand");
-        const arrowUp = document.getElementById(section + "Up");
-        const arrowDown = document.getElementById(section + "Down");
-
-        if (expanded) {
-            expand.style.display = "block";
-            arrowDown.style.display = "none";
-            arrowUp.style.display = "block";
-        } else {
-            expand.style.display = "none";
-            arrowDown.style.display = "block";
-            arrowUp.style.display = "none";
-        }
-    }
-</script>
-
-<!----- Javascript for Enlarging Images ----->
-<script>
-    function zoomImage(el) {
-        if (window.innerWidth <= 700) {
-            hideMenu();
-        }
-        modal.style.display = "block";
-        modalImg.src = el.src;
-        caption.innerHTML = el.alt;
-    }
-
-    const span = document.getElementsByClassName("close")[0];
-    span.onclick = function() { 
-        modal.style.display = "none";
-    }
-</script>
+<script src="../../js/menu-options.js"></script>
+<script src="../../js/mobile-nav-bar.js"></script>
+<script src="../../js/expand-section.js"></script>
+<script src="../../js/enlarge-image.js"></script>
 
 </body>
 </html>

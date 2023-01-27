@@ -1,0 +1,40 @@
+/*----- Main View -----*/
+.about-me {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px 0;
+}
+
+/*----- About Me -----*/
+.about-me h1 {
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+.about-col {
+    flex-basis: 48%;
+    margin: auto 0;
+}
+.about-col h1 {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.about-col h3 {
+    text-align: justify;
+    font-size: 1.75vw;
+    color: #333;
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.about-col img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/*----- Screen Size Variation -----*/
+@media (max-width: 700px) {
+    .about-col h3 {
+        font-size: 2vh;
+    }
+}

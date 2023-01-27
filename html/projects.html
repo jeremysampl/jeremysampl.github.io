@@ -3,19 +3,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
-    <link rel="icon" href="Images/Misc/JS Logo.png">
-    <link rel="stylesheet" href="projects-style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="../Images/Misc/JS Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/projects.css">
 </head>
 <body>
 
 <!----- Header ----->
 <section class="header" id="header">
     <nav>
-        <a href="https://jeremysampl.com"><img src="Images/Misc/JS Logo.png"></a>
+        <a href="https://jeremysampl.com"><img src="../Images/Misc/JS Logo.png"></a>
         <h1>Jeremy Sampl</h1>
         <div class="nav-links" id="navLinks">
             <i class="fa fa-times" onclick="hideMenu()"></i>
@@ -39,18 +38,18 @@
 
     <div class="row">
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/StockAssist">
+            <a href="https://jeremysampl.com/projects/StockAssist">
                 <div class="project-col">
                     <h3>StockAssist</h3>
-                    <img src="Images/Projects/Inventory Manager/Home.png">
+                    <img src="../Images/Projects/Inventory Manager/Home.png">
                 </div>
             </a>
         </div>
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/TerraExodus">
+            <a href="https://jeremysampl.com/projects/TerraExodus">
                 <div class="project-col">
                     <h3>Terra Exodus</h3>
-                    <img src="Images/Projects/Terra Exodus/Gameplay.png">
+                    <img src="../Images/Projects/Terra Exodus/Gameplay.png">
                 </div>
             </a>
         </div>
@@ -58,18 +57,18 @@
 
     <div class="row">
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/TicTacToe">
+            <a href="https://jeremysampl.com/projects/TicTacToe">
                 <div class="project-col">
                     <h3>Tic Tac Toe</h3>
-                    <img src="Images/Projects/Tic Tac Toe/Gameplay.png">
+                    <img src="../Images/Projects/Tic Tac Toe/Gameplay.png">
                 </div>
             </a>
         </div>
         <div class="project-col-margin">
-            <a href="https://jeremysampl.com/Blackjack">
+            <a href="https://jeremysampl.com/projects/Blackjack">
                 <div class="project-col">
                     <h3>Black Jack</h3>
-                    <img src="Images/Projects/Blackjack/Lose.png">
+                    <img src="../Images/Projects/Blackjack/Lose.png">
                 </div>
             </a>
         </div>
@@ -91,42 +90,8 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript to Toggle Menu ----->
-<script>
-    function showMenu() {
-        navLinks.style.transform = "translateX(0)";
-    }
-    function hideMenu() {
-        navLinks.style.transform = "translateX(100%)";
-    }
-</script>
-
-<!----- Javascript for Hiding Mobile Nav Bar on Scroll ----->
-<script>
-    {
-    var prevScrollY = window.scrollY
-    window.addEventListener('scroll', (e) => { 
-        if (window.innerWidth <= 700) {
-            const scrollY = window.scrollY;
-    
-            if (scrollY < prevScrollY && prevScrollY - scrollY > window.innerHeight / 100) {
-                showHeader();
-            } else if (scrollY - prevScrollY > window.innerHeight / 40) {
-                hideHeader();
-                hideMenu();
-            }
-            prevScrollY = scrollY;
-        } 
-    })
-    }
-
-    function hideHeader() {
-        header.style.transform = "translateY(-100%)";
-    }
-    function showHeader() {
-        header.style.transform = "translateY(0)";
-    }
-</script>
+<script src="../js/menu-options.js"></script>
+<script src="../js/mobile-nav-bar.js"></script>
 
 </body>
 </html>

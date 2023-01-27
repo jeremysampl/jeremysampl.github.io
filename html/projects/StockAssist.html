@@ -3,19 +3,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
-    <link rel="icon" href="Images/Misc/JS Logo.png">
-    <link rel="stylesheet" href="project-style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="../../Images/Misc/JS Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/nav.css">
+    <link rel="stylesheet" href="../../css/project.css">
 </head>
 <body>
 
 <!----- Header ----->
 <section class="header" id="header">
     <nav>
-        <a href="https://jeremysampl.com"><img src="Images/Misc/JS Logo.png"></a>
+        <a href="https://jeremysampl.com"><img src="../../Images/Misc/JS Logo.png"></a>
         <h1>Jeremy Sampl</h1>
         <div class="nav-links" id="navLinks">
             <i class="fa fa-times" onclick="hideMenu()"></i>
@@ -80,7 +79,7 @@
         <div></div>
         <div class="three-col">
             <h1>Java</h1>
-            <img src="Images/Languages/Java.png">
+            <img src="../../Images/Languages/Java.png">
             <h3>100%</h3>
         </div>
         <div></div>
@@ -96,7 +95,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Login Page</h3>
-                <img src="Images/Projects/Inventory Manager/Login.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Login.png" onclick="zoomImage(this)"
                 alt="The login page of the program. This is where users are able to login with an existing account,
                 given they have the right username and password, or create a new account with a unique username and their password of choice.">
             </div>
@@ -104,7 +103,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Home Screen</h3>
-                <img src="Images/Projects/Inventory Manager/Home.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Home.png" onclick="zoomImage(this)"
                 alt="The user's dashboard. This is the hub which allows the user to access all parts of the program.">
             </div>
         </div>
@@ -115,14 +114,14 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>User List (Admin)</h3>
-                <img src="Images/Projects/Inventory Manager/Users.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Users.png" onclick="zoomImage(this)"
                 alt="This page allows the administrator to view, add, edit, delete and organize users.">
             </div>
         </div>
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Customers Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Customers.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Customers.png" onclick="zoomImage(this)"
                 alt="This panel allows the user to view, add, edit, remove and organize their customers.
                 Customers contain contact information and can be associated to orders.">
             </div>
@@ -133,14 +132,14 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Categories Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Categories.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Categories.png" onclick="zoomImage(this)"
                 alt="This panel allows the user to organize their products with categories that they may create, edit, remove and organize at any point.">
             </div>
         </div>
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Products Panel</h3>
-                <img src="Images/Projects/Inventory Manager/Products.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Products.png" onclick="zoomImage(this)"
                 alt="This panel allows the user to create products with binding information such as its price and its category.
                 This is also where product stock is kept track of.">
             </div>
@@ -151,7 +150,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Order Tables</h3>
-                <img src="Images/Projects/Inventory Manager/Orders.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/Orders.png" onclick="zoomImage(this)"
                 alt="These are the order tables. The top table shows the user the list of current orders with information such as the customer and price of the order.
                 The bottom table shows the products inside the order selected from the top table. This allows the user to easily view all order information at a glance.">
             </div>
@@ -159,7 +158,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Create Order Screen</h3>
-                <img src="Images/Projects/Inventory Manager/New Order.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Inventory Manager/New Order.png" onclick="zoomImage(this)"
                 alt="This page is where the user makes a new order. The user must simply select a customer from their list and then add the products to the order.
                 As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products and the order total.">
             </div>
@@ -183,7 +182,7 @@
 <section class="github">
     <p>This project and its source code can be found in its entirety on GitHub:</p>
     <div class="image">
-         <a href="https://github.com/jeremysampl/inventory-system"><img src="Images/Misc/GitHub Logo.png"></a>
+         <a href="https://github.com/jeremysampl/inventory-system"><img src="../../Images/Misc/GitHub Logo.png"></a>
         <p>https://github.com/jeremysampl/inventory-system</p>
     </div>
 </section>
@@ -201,78 +200,10 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript to Toggle Menu ----->
-<script>
-    function showMenu() {
-        navLinks.style.transform = "translateX(0)";
-    }
-    function hideMenu() {
-        navLinks.style.transform = "translateX(100%)";
-    }
-</script>
-
-<!----- Javascript for Hiding Mobile Nav Bar on Scroll ----->
-<script>
-    {
-    var prevScrollY = window.scrollY
-    window.addEventListener('scroll', (e) => { 
-        if (window.innerWidth <= 700) {
-            const scrollY = window.scrollY;
-    
-            if (scrollY < prevScrollY && prevScrollY - scrollY > window.innerHeight / 100) {
-                showHeader();
-            } else if (scrollY - prevScrollY > window.innerHeight / 40) {
-                hideHeader();
-                hideMenu();
-            }
-            prevScrollY = scrollY;
-        } 
-    })
-    }
-
-    function hideHeader() {
-        header.style.transform = "translateY(-100%)";
-    }
-    function showHeader() {
-        header.style.transform = "translateY(0)";
-    }
-</script>
-
-<!----- Javascript for Expanding a Section ----->
-<script>
-    function expandRow(section, expanded) {
-        const expand = document.getElementById(section + "Expand");
-        const arrowUp = document.getElementById(section + "Up");
-        const arrowDown = document.getElementById(section + "Down");
-
-        if (expanded) {
-            expand.style.display = "block";
-            arrowDown.style.display = "none";
-            arrowUp.style.display = "block";
-        } else {
-            expand.style.display = "none";
-            arrowDown.style.display = "block";
-            arrowUp.style.display = "none";
-        }
-    }
-</script>
-
-<!----- Javascript for Enlarging Images ----->
-<script>
-    function zoomImage(el) {
-        if (window.innerWidth <= 700) {
-            hideMenu();
-        }
-        modal.style.display = "block";
-        modalImg.src = el.src;
-        caption.innerHTML = el.alt;
-    }
-
-    const span = document.getElementsByClassName("close")[0];
-    span.onclick = function() { 
-        modal.style.display = "none";
-    }
-</script>
+<script src="../../js/menu-options.js"></script>
+<script src="../../js/mobile-nav-bar.js"></script>
+<script src="../../js/expand-section.js"></script>
+<script src="../../js/enlarge-image.js"></script>
 
 </body>
 </html>

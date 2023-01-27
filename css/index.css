@@ -1,0 +1,128 @@
+/*----- Header and Navigation -----*/
+body {
+    margin-top: 0;
+}
+.header {
+    min-height: 100vh;
+    position: relative;
+}
+nav {
+    padding: 2% 6%;
+}
+nav img {
+    height: 20vh;
+}
+
+/*----- Title -----*/
+.title {
+    width: 90%;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+.title h6 {
+    color: #fff;
+}
+.title p {
+    margin: 10px 0 40px;
+    font-size: 14px;
+}
+.title .view-btn {
+    color: #fff;
+    border-color: #fff;
+}
+
+/*----- Main View -----*/
+.skills, .project-showcase, .languages {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px 0;
+}
+
+/*----- Skills -----*/
+.skill-col {
+    flex-basis: 31%;
+    background: #ffcdcd;
+    border-radius: 10px;
+    padding: 20px 12px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+.skill-col:hover {
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+}
+
+/*----- Project Showcase -----*/
+.project-col {
+    flex-basis: 48%;
+    border-radius: 10px;
+    transition: 0.5s;
+    padding: 10px;
+    padding-bottom: 5px;
+    margin: 10px 0;
+    background-color: #000;
+}
+.project-col-margin {
+    flex-basis: 48%;
+    margin: auto;
+}
+.project-col-margin a {
+    text-decoration: none;
+}
+.project-col img {
+    width: 100%;
+    border-radius: 5px;
+}
+.project-col:hover {
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
+    background-color: #000;
+}
+.project-col h3 {
+    width: 100;
+    padding: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #fff;
+    transition: 500ms;
+}
+.project-col:hover h3 {
+    color:#fff;
+    background-color: #000;
+}
+
+/*----- Programming Languages -----*/
+.expand-languages {
+    display: none;
+}
+.expand-languages p {
+    margin-top: 20px;
+}
+.expand-languages .three-col {
+    animation-name: slide-down;
+    animation-duration: 1s;
+}
+.languages .fa {
+    font-size: 50px;
+    margin-top: 10px;
+    display: block;
+}
+.languages .fa-arrow-up {
+    display: none;
+}
+.languages .fa-arrow-down:hover, .languages .fa-arrow-up:hover {
+    color: var(--secondary-color);
+    -webkit-text-stroke-width: 4px;
+    -webkit-text-stroke-color: #000;
+}
+
+/*----- Screen Size Variation -----*/
+@media(max-width: 700px) {
+    .language-col {
+        margin-bottom: 25px;
+    }
+}

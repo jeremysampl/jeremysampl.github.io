@@ -3,19 +3,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeremy Sampl's Portfolio</title>
-    <link rel="icon" href="Images/Misc/JS Logo.png">
-    <link rel="stylesheet" href="project-style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="../../Images/Misc/JS Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/nav.css">
+    <link rel="stylesheet" href="../../css/project.css">
 </head>
 <body>
 
 <!----- Header ----->
 <section class="header" id="header">
     <nav>
-        <a href="https://jeremysampl.com"><img src="Images/Misc/JS Logo.png"></a>
+        <a href="https://jeremysampl.com"><img src="../../Images/Misc/JS Logo.png"></a>
         <h1>Jeremy Sampl</h1>
         <div class="nav-links" id="navLinks">
             <i class="fa fa-times" onclick="hideMenu()"></i>
@@ -81,7 +80,7 @@
         <div></div>
         <div class="three-col">
             <h1>Python</h1>
-            <img src="Images/Languages/Python.png">
+            <img src="../../Images/Languages/Python.png">
             <h3>100%</h3>
         </div>
         <div></div>
@@ -97,7 +96,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Choices</h3>
-                <img src="Images/Projects/Terra Exodus/Choices.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Choices.png" onclick="zoomImage(this)"
                 alt="This is an example of the choices that the player has to make as they are making their way through the storyline.
                 This allows a little bit of customizability to the end gameplay.">
             </div>
@@ -105,7 +104,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Gameplay</h3>
-                <img src="Images/Projects/Terra Exodus/Gameplay2.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Gameplay2.png" onclick="zoomImage(this)"
                 alt="The player's mission is to shoot down all the enemies while avoiding the bombs that they drop
                 in order to successfully defend against the enemies.">
             </div>
@@ -117,7 +116,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Gameplay</h3>
-                <img src="Images/Projects/Terra Exodus/Gameplay3.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Gameplay3.png" onclick="zoomImage(this)"
                 alt="Cross-mapping a display screen over another keeping track of collision zones allows for collisions between objects to take place.
                 In this case the missile is about to collide with the enemy plane.">
             </div>
@@ -125,7 +124,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Gameplay</h3>
-                <img src="Images/Projects/Terra Exodus/Gameplay.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Gameplay.png" onclick="zoomImage(this)"
                 alt="The player must avoid getting hit by bombs dropped by the enemies. If they get hit too many times, they could lose the game.">
             </div>
         </div>
@@ -135,7 +134,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Welcome Screen</h3>
-                <img src="Images/Projects/Terra Exodus/Welcome.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Welcome.png" onclick="zoomImage(this)"
                 alt="This is the displayed welcome screen to the player when the game is started.
                 The user is able to adjust the size of the canvas of the game in order to fit their needs.">
             </div>
@@ -143,7 +142,7 @@
         <div class="project-col-margin">
             <div class="project-col">
                 <h3>Storyline</h3>
-                <img src="Images/Projects/Terra Exodus/Storyline.png" onclick="zoomImage(this)"
+                <img src="../../Images/Projects/Terra Exodus/Storyline.png" onclick="zoomImage(this)"
                 alt="This is an example of the type of storyline that is found in this game.">
             </div>
         </div>
@@ -166,7 +165,7 @@
 <section class="github">
     <p>This project and its source code can be found in its entirety on GitHub:</p>
     <div class="image">
-         <a href="https://github.com/jeremysampl/ascii-shooter"><img src="Images/Misc/GitHub Logo.png"></a>
+         <a href="https://github.com/jeremysampl/ascii-shooter"><img src="../../Images/Misc/GitHub Logo.png"></a>
         <p>https://github.com/jeremysampl/ascii-shooter</p>
     </div>
 </section>
@@ -184,78 +183,10 @@
     <p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
 </section>
 
-<!----- Javascript to Toggle Menu ----->
-<script>
-    function showMenu() {
-        navLinks.style.transform = "translateX(0)";
-    }
-    function hideMenu() {
-        navLinks.style.transform = "translateX(100%)";
-    }
-</script>
-
-<!----- Javascript for Hiding Mobile Nav Bar on Scroll ----->
-<script>
-    {
-    var prevScrollY = window.scrollY
-    window.addEventListener('scroll', (e) => { 
-        if (window.innerWidth <= 700) {
-            const scrollY = window.scrollY;
-    
-            if (scrollY < prevScrollY && prevScrollY - scrollY > window.innerHeight / 100) {
-                showHeader();
-            } else if (scrollY - prevScrollY > window.innerHeight / 40) {
-                hideHeader();
-                hideMenu();
-            }
-            prevScrollY = scrollY;
-        } 
-    })
-    }
-
-    function hideHeader() {
-        header.style.transform = "translateY(-100%)";
-    }
-    function showHeader() {
-        header.style.transform = "translateY(0)";
-    }
-</script>
-
-<!----- Javascript for Expanding a Section ----->
-<script>
-    function expandRow(section, expanded) {
-        const expand = document.getElementById(section + "Expand");
-        const arrowUp = document.getElementById(section + "Up");
-        const arrowDown = document.getElementById(section + "Down");
-
-        if (expanded) {
-            expand.style.display = "block";
-            arrowDown.style.display = "none";
-            arrowUp.style.display = "block";
-        } else {
-            expand.style.display = "none";
-            arrowDown.style.display = "block";
-            arrowUp.style.display = "none";
-        }
-    }
-</script>
-
-<!----- Javascript for Enlarging Images ----->
-<script>
-    function zoomImage(el) {
-        if (window.innerWidth <= 700) {
-            hideMenu();
-        }
-        modal.style.display = "block";
-        modalImg.src = el.src;
-        caption.innerHTML = el.alt;
-    }
-
-    const span = document.getElementsByClassName("close")[0];
-    span.onclick = function() { 
-        modal.style.display = "none";
-    }
-</script>
+<script src="../../js/menu-options.js"></script>
+<script src="../../js/mobile-nav-bar.js"></script>
+<script src="../../js/expand-section.js"></script>
+<script src="../../js/enlarge-image.js"></script>
 
 </body>
 </html>
