@@ -1,0 +1,19 @@
+.footer {
+    background-color: #000;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+    padding: 10px 0;
+}
+.footer h4 {
+    margin-bottom: 15px;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+.icons .fa {
+    color: var(--secondary-color);
+    margin: 0 13px;
+    cursor: pointer;
+    padding: 18px 0;
+}
