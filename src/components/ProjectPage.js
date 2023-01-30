@@ -45,7 +45,7 @@ export default function ProjectPage({ project, overview, languages, gallery }) {
                 <div></div>
                 <div class="three-col">
                     <h1>Java</h1>
-                    <img src="../Images/Languages/Java.png"/>
+                    <img src="../Images/Languages/Java.png" alt="Java"/>
                     <h3>100%</h3>
                 </div>
                 <div></div>
