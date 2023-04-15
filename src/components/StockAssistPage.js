@@ -35,7 +35,7 @@ export default function StockAssistPage() {
         languageCount: 1,
         l1: {
           name: "Java",
-          icon: "Misc/Java.png",
+          icon: "Java.png",
           percent: "100"
         }
       }}
@@ -86,6 +86,9 @@ export default function StockAssistPage() {
           description: `This page is where the user makes a new order. The user must simply select a customer from their list and then add the products to the order.
           As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products and the order total.`
         }
+      }}
+      github = {{
+        repository: "inventory-system"
       }}
     />
   );

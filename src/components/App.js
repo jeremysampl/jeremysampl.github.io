@@ -7,6 +7,9 @@ import HomePage from './HomePage';
 import AboutPage from './AboutPage';
 import ProjectsPage from './ProjectsPage';
 import StockAssistPage from './StockAssistPage';
+import TerraExodusPage from './TerraExodusPage';
+import TicTacToePage from './TicTacToePage';
+import BlackjackPage from './BlackjackPage';
 
 export default function App() {
   return (
@@ -18,6 +21,9 @@ export default function App() {
           <Route path="/about" element={<AboutPage />}/>
           <Route path="/projects" element={<ProjectsPage />}/>
           <Route path="/projects/StockAssist" element={<StockAssistPage />}/>
+          <Route path="/projects/TerraExodus" element={<TerraExodusPage />}/>
+          <Route path="/projects/TicTacToe" element={<TicTacToePage />}/>
+          <Route path="/projects/Blackjack" element={<BlackjackPage />}/>
         </Routes>
         <Footer />
       </BrowserRouter>

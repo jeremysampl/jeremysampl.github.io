@@ -3,7 +3,7 @@ import '../styles/project.css';
 import ModalBox from './ModalBox';
 import ModalView from './ModalView'
 
-export default function ProjectPage({ project, overview, languages, gallery }) {
+export default function ProjectPage({ project, overview, languages, gallery, github }) {
   return (
     <>
         <section class="overview">
@@ -42,17 +42,13 @@ export default function ProjectPage({ project, overview, languages, gallery }) {
             <p>This program is written in the following language(s):</p>
 
             <div class="row">
-                <div></div>
-                <div class="three-col">
-                    <h1>Java</h1>
-                    <img src="../Images/Languages/Java.png" alt="Java"/>
-                    <h3>100%</h3>
-                </div>
-                <div></div>
+                {languages.languageCount === 1 ? <> <div></div> {showLanguage(languages.l1)} <div></div> </> : <></>}
+                
+                {languages.languageCount === 2 ? <> {showLanguage(languages.l1)} {showLanguage(languages.l2)} </> : <></>}
+
+                {languages.languageCount === 3 ? <> {showLanguage(languages.l1)} {showLanguage(languages.l2)} {showLanguage(languages.l3)} </> : <></>}
             </div>
         </section>
-
-        
 
         <section class="gallery">
             <h1>Gallery</h1>
@@ -60,16 +56,33 @@ export default function ProjectPage({ project, overview, languages, gallery }) {
 
             <ModalBox gallery={gallery} />
 
-            <i class="fa fa-arrow-down" onClick={() => expandRow('gallery', true)} id="galleryDown"></i>
-            <i class="fa fa-arrow-up" onClick={() => expandRow('gallery', false)} id="galleryUp"></i>
+            {gallery.imageCount > 2 ? <>
+                <i class="fa fa-arrow-down" onClick={() => expandRow('gallery', true)} id="galleryDown"></i>
+                <i class="fa fa-arrow-up" onClick={() => expandRow('gallery', false)} id="galleryUp"></i>
+            </> : <></>}
         </section>
 
         <ModalView />
+
+        <section class="github">
+            <p>This project and its source code can be found in its entirety on GitHub:</p>
+            <div class="image">
+                <a href={"https://github.com/jeremysampl/" + github.repository}><img src="../../Images/Misc/GitHub Logo.png" alt="GitHub Logo"/></a>
+                <p>{"https://github.com/jeremysampl/" + github.repository}</p>
+            </div>
+        </section>
     </>
   );
 }
 
-function showLanguages(languages) {
+function showLanguage(language) {
+    return (
+        <div class="three-col">
+            <h1>{language.name}</h1>
+            <img src={"../Images/Languages/" + language.icon} alt="Java"/>
+            <h3>{language.percent + "%"}</h3>
+        </div>
+    )
 }
 
 function expandRow(section, expanded) {
