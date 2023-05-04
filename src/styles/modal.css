@@ -46,3 +46,15 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+/*----- Screen Size Variation -----*/
+@media (max-width: 700px) {
+    .modal {
+        padding: 10vh 0;
+    }
+    .modal-content {
+        width: 100vw;
+        height: auto;
+        max-height: 75vh;
+    }
+}

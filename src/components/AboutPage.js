@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/about.css';
 
 export default function AboutPage() {
-  return (
-    <>
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
+
+    return (
         <section class="about-me">
             <h6>About Me</h6>
             <div class="row">
                 <div class="about-col">
                     <div class="about-col-margin">
-                        <img src="../Images/Misc/Profile Picture.jpg"/>
+                        <img src="../Images/Misc/Profile Picture.jpg" alt="LinkedIn profile icon"/>
                         <h1>Jeremy Sampl</h1>
                     </div>
                 </div>
@@ -27,6 +30,5 @@ export default function AboutPage() {
                 </div>
             </div>
         </section>
-    </>
-  );
+    );
 }

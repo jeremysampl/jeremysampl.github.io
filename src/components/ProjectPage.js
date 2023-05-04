@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/project.css';
 import ModalBox from './ModalBox';
-import ModalView from './ModalView'
+import ModalView from './ModalView';
+import ThreeBox from './ThreeBox';
 
 export default function ProjectPage({ project, overview, languages, gallery, github }) {
-  return (
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
+  
+    return (
     <>
         <section class="overview">
             <div class="title">
@@ -13,23 +18,7 @@ export default function ProjectPage({ project, overview, languages, gallery, git
             </div>
 
             <h1>Overview</h1>
-            <div class="row">
-                <div class="three-col">
-                    <h1>{overview.box1.title}</h1>
-                    <i class={"fa fa-" + overview.box1.icon}></i>
-                    <p>{overview.box1.description}</p>
-                </div>
-                <div class="three-col">
-                    <h1>{overview.box2.title}</h1>
-                    <i class={"fa fa-" + overview.box2.icon}></i>
-                    <p>{overview.box2.description}</p>
-                </div>
-                <div class="three-col">
-                    <h1>{overview.box3.title}</h1>
-                    <i class={"fa fa-" + overview.box3.icon}></i>
-                    <p>{overview.box3.description}</p>
-                </div>
-            </div>
+            {<ThreeBox box1 = {overview.box1} box2 = {overview.box2} box3 = {overview.box3} />}
         </section>
 
         <section class="description">

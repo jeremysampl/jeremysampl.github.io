@@ -5,7 +5,7 @@ export default function ModalView() {
   return (
     <div id="modal" class="modal">
         <span class="close" onClick={closeModal}>&times;</span>
-        <img class="modal-content" id="modalImg"/>
+        <img class="modal-content" id="modalImg" alt="Showcase"/>
         <div id="caption"></div>
     </div>
   );
