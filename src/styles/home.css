@@ -1,10 +1,22 @@
 /*----- Main View -----*/
-.skills, .project-showcase, .languages {
-    width: 80%;
-    margin: auto;
+#main-page-background:not(a) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 93vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(../../public/Images/Misc/Background.jpg);
+    background-position: center;
+    background-size: cover;
     text-align: center;
-    margin: 10px auto;
-    padding: 10px 0;
+    vertical-align: middle;
+    align-items: center;
+}
+#main-page-background h1 {
+    color: #fff;
+}
+#main-page-background a {
+    width: fit-content;
 }
 
 /*----- Skills -----*/
@@ -18,44 +30,6 @@
 }
 .skill-col:hover {
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
-}
-
-/*----- Project Showcase -----*/
-.project-col {
-    flex-basis: 48%;
-    border-radius: 10px;
-    transition: 0.5s;
-    padding: 10px;
-    padding-bottom: 5px;
-    margin: 10px 0;
-    background-color: #000;
-}
-.project-col-margin {
-    flex-basis: 48%;
-    margin: auto;
-}
-.project-col-margin a {
-    text-decoration: none;
-}
-.project-col img {
-    width: 100%;
-    border-radius: 5px;
-}
-.project-col:hover {
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
-    background-color: #000;
-}
-.project-col h3 {
-    width: 100;
-    padding: 0;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background-color: #fff;
-    transition: 500ms;
-}
-.project-col:hover h3 {
-    color:#fff;
-    background-color: #000;
 }
 
 /*----- Programming Languages -----*/

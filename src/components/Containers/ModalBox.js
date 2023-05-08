@@ -1,4 +1,5 @@
 import React from 'react';
+import ProjectDisplay from '../Containers/ProjectDisplay';
 
 export default function ModalBox({ gallery }) {
   return (getHTML(gallery));
@@ -13,21 +14,11 @@ function getHTML(gallery) {
         const image2 = eval("gallery.image" + String(i + 1));
         const html = 
             <div class="row">
-                <div class="project-col-margin">
-                    <div class="project-col" onClick={() => zoomImage(image1.path, image1.description)}>
-                        <h3>{image1.title}</h3>
-                        <img src={'../Images/Projects/' + image1.path} alt={image1.description}/>
-                    </div>
-                </div>
-                <div class="project-col-margin">
-                    <div class="project-col" onClick={() => zoomImage(image2.path, image2.description)}>
-                        <h3>{image2.title}</h3>
-                        <img src={'../Images/Projects/' + image2.path} alt={image2.description}/>
-                    </div>
-                </div>
+                <ProjectDisplay project={{ name: image1.title, image: image1.path }} onClick={() => zoomImage(image1.path, image1.description)} />
+                <ProjectDisplay project={{ name: image2.title, image: image2.path }} onClick={() => zoomImage(image2.path, image2.description)} />
             </div>;
         if (i > 2) {
-            output.push(<div class="expand-gallery">{html}</div>);
+            output.push(<div className="expand-gallery">{html}</div>);
         } else {
             output.push(html);
         }    

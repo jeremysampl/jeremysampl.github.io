@@ -1,0 +1,44 @@
+import React, { useEffect } from 'react';
+import '../../styles/home.css';
+import ProjectDisplay from '../Containers/ProjectDisplay';
+import SimpleButton from '../Buttons/SimpleButton';
+import LanguageDisplay from '../Containers/LanguageDisplay';
+
+export default function HomePage() {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, []);
+
+	return (
+		<>
+			<div id="main-page-background">
+				<h1>Jeremy Sampl's Portfolio</h1>
+				<p>Welcome to my personal website.</p>
+				<SimpleButton text="Click to Know More" url="#skills" color="#fff" />
+			</div>
+
+			<section className="section" id="skills">
+				<h2>Featured Skills</h2>
+				<p>My most prominent skills.</p>
+
+				<SimpleButton text="Learn More" url="/about" color="#000" />
+
+				<h2>My Projects</h2>
+				<p>A showcase of my most sphisticated programs.</p>
+				<div className="row">
+					<ProjectDisplay isModal={false} project={{ name: 'StockAssist', url: 'StockAssist', image: 'Inventory Manager/Home.png' }} />
+					<ProjectDisplay isModal={false} project={{ name: 'Terra Exodus', url: 'TerraExodus', image: 'Terra Exodus/Gameplay.png' }} />
+				</div>
+				<SimpleButton text="View All Projects" url="/projects" color="#000" />
+
+				<h2>Programming Languages</h2>
+				<p>I have significant experience in the following languages:</p>
+				<LanguageDisplay
+					l1={{ name: "Java", icon: "Java.png", percent: "My first and most proficient language. My most sophisticated project to date is written in Java." }}
+					l2={{ name: "Python", icon: "Python.png", percent: "My second and currently most used language. I have created many small projects in Python." }}
+					l3={{ name: "C#", icon: "C Sharp.png", percent: "My skills from Java have been very easily transferred to C#, however I am still learning it." }}
+				/>
+			</section>
+		</>
+	);
+}

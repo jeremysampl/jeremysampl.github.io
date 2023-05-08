@@ -1,13 +1,11 @@
 /*----- Header and Navigation -----*/
 body {
-    margin-top: 8vh;
+    margin-top: 7vh;
 }
 .header {
-    height: fit-content;
+    height: 7vh;
     width: 100%;
-    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(../../public/Images/Misc/Background.jpg);
-    background-position: center;
-    background-size: cover;
+    background-color: #000;
     position: fixed;
     top: 0;
     z-index: 1;
@@ -26,7 +24,7 @@ nav h1 {
     margin-left: 20px;
 }
 nav a, nav img {
-    height: 6vh;
+    height: 5vh;
 }
 .nav-links {
     flex: 1;
@@ -70,7 +68,7 @@ nav .fa {
         margin-left: 0;
     }
     nav a, nav img {
-        height: 11vw;
+        height: 5vh;
     }
     .nav-links ul li {
         display: block;

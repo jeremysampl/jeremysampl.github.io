@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../styles/about.css';
+import '../../styles/about.css';
 
 export default function AboutPage() {
     useEffect(() => {
@@ -7,17 +7,17 @@ export default function AboutPage() {
       }, [])
 
     return (
-        <section class="about-me">
-            <h6>About Me</h6>
-            <div class="row">
-                <div class="about-col">
-                    <div class="about-col-margin">
+        <section className="about-me">
+            <h1>About Me</h1>
+            <div className="row">
+                <div className="about-col">
+                    <div className="about-col-margin">
                         <img src="../Images/Misc/Profile Picture.jpg" alt="LinkedIn profile icon"/>
-                        <h1>Jeremy Sampl</h1>
+                        <h2>Jeremy Sampl</h2>
                     </div>
                 </div>
-                <div class="about-col">
-                    <div class="about-col-margin">
+                <div className="about-col">
+                    <div className="about-col-margin">
                         <h3>
                             Hello there! My name is Jeremy Sampl and I am a current undergraduate computer science student at McMaster University.<br/><br/>
                             I'd consider myself to be an extremely motivated individual with a passion for coding and learning.

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/header.css';
+import '../../styles/header.css';
 
 export default function Header() {
     return (
-        <section class="header" id="header">
+        <section className="header" id="header">
             <nav>
                 <Link to="/"><img src="../Images/Misc/JS Logo.png" alt="Logo"/></Link>
                 <h1>Jeremy Sampl</h1>
-                <div class="nav-links" id="navLinks">
-                    <i class="fa fa-times" onClick={hideMenu}></i>
+                <div className="nav-links" id="navLinks">
+                    <i className="fa fa-times" onClick={hideMenu}></i>
                     <ul>
                         <li><Link to="/" onClick={hideMenu}>HOME</Link></li>
                         <li><Link to="/about" onClick={hideMenu}>ABOUT</Link></li>
@@ -18,7 +18,7 @@ export default function Header() {
                         <li><Link to="/contact" onClick={hideMenu}>CONTACT</Link></li>
                     </ul>
                 </div>
-                <i class="fa fa-bars" onClick={showMenu}></i>
+                <i className="fa fa-bars" onClick={showMenu}></i>
             </nav>
         </section>
     );

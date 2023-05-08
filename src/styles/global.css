@@ -7,6 +7,13 @@
 :root {
     --secondary-color: #f44336
 }
+.section {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px 0;
+}
 
 /*----- Animations -----*/
 @keyframes zoom {
@@ -20,21 +27,22 @@
 
 /*----- Fonts -----*/
 h1 {
+    font-size: 60px;
+    font-weight: 900;
+    color: #000;
+    padding: 10px;
+}
+h2 {
     font-size: 36px;
     font-weight: 600;
     color: #000;
     padding: 10px;
+    margin-top: 10px;
 }
 h3 {
     font-size: 26px;
     font-weight: 400px;
     color:#000;
-    padding: 10px;
-}
-h6 {
-    font-size: 60px;
-    font-weight: 900;
-    color: #000;
     padding: 10px;
 }
 p {
@@ -50,20 +58,6 @@ p {
     display: flex;
     justify-content: space-between;
 }
-.three-col {
-    flex-basis: 32%;
-    position: relative;
-    border-radius: 10px;
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
-    transition: 500ms;
-    margin-top: 15px;
-}
-.three-col img {
-    width: 100%;
-}
-.three-col:hover {
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5)
-}
 
 /*----- Screen Size Variation -----*/
 @media(max-width: 700px) {
@@ -72,13 +66,13 @@ p {
     }
 
     h1 {
+        font-size: 13vw;
+    }
+    h2 {
         font-size: 8vw;
     }
     h3 {
         font-size: 6vw;
-    }
-    h6 {
-        font-size: 13vw;
     }
     p {
         font-size: 3.5vw;
