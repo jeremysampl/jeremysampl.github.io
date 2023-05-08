@@ -19,7 +19,7 @@ export default function ProjectPage({ project, overview, languages, gallery, git
             </div>
 
             <h2>Overview</h2>
-            {<ThreeBox box1 = {overview.box1} box2 = {overview.box2} box3 = {overview.box3} />}
+            <ThreeBox box1 = {overview.box1} box2 = {overview.box2} box3 = {overview.box3} />
         </section>
 
         <section className="description">

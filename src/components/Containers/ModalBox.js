@@ -27,10 +27,10 @@ function getHTML(gallery) {
 }
 
 function zoomImage(path, description) {
-    const modal = document.getElementById("modal")
-    const modalImg = document.getElementById("modalImg")
-    const caption = document.getElementById("caption")
-    modal.style.display = "block";
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImg");
+    const caption = document.getElementById("caption");
+    modal.style.display = "flex";
     modalImg.src = "../Images/Projects/" + path;
     caption.innerHTML = description;
 }

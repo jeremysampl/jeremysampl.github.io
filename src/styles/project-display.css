@@ -8,6 +8,7 @@
     cursor: pointer;
     margin: auto;
     text-decoration: none;
+    width: fit-content;
 }
 .project-col img {
     width: 100%;
