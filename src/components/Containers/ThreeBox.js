@@ -41,5 +41,4 @@ function CreateBox({box}) {
 			</div>
 		);
 	}
-	
 }

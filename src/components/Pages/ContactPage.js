@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ThreeBox from '../Containers/ThreeBox';
+import Spacer from '../Containers/Spacer';
 
 export default function ContactPage() {
 	useEffect(() => {
@@ -16,6 +17,7 @@ export default function ContactPage() {
 				box3 = {{ title: "Phone", icon: "phone", description: "Please contact me through other means first." }}
 			/>
 
+			<Spacer height="30" />
 			<h1>Other Socials</h1>
 			<p>Other ways to get to know me:</p>
 			<ThreeBox

@@ -4,6 +4,7 @@ import ModalBox from '../Containers/ModalBox';
 import ModalView from '../Views/ModalView';
 import ThreeBox from '../Containers/ThreeBox';
 import LanguageDisplay from '../Containers/LanguageDisplay';
+import DropDownDisplay from '../Containers/DropDownDisplay';
 
 export default function ProjectPage({ project, overview, languages, gallery, github }) {
     useEffect(() => {
@@ -36,13 +37,8 @@ export default function ProjectPage({ project, overview, languages, gallery, git
         <section className="gallery">
             <h2>Gallery</h2>
             <p>Click on any image to enlarge it and obtain more information.</p>
-
-            <ModalBox gallery={gallery} />
-
-            {gallery.imageCount > 2 ? <>
-                <i className="fa fa-arrow-down" onClick={() => expandRow('gallery', true)} id="galleryDown"></i>
-                <i className="fa fa-arrow-up" onClick={() => expandRow('gallery', false)} id="galleryUp"></i>
-            </> : null}
+            <ModalBox gallery={Object.values(gallery).slice(0,2)} />
+            {Object.values(gallery).length > 2 ? <DropDownDisplay expansion={<ModalBox gallery={Object.values(gallery).slice(2)}/>} /> : null}
         </section>
 
         <ModalView />
@@ -56,24 +52,4 @@ export default function ProjectPage({ project, overview, languages, gallery, git
         </section>
     </section>
   );
-}
-
-function expandRow(section, expanded) {
-    const elements = document.getElementsByClassName("expand-" + section);
-    const arrowUp = document.getElementById(section + "Up");
-    const arrowDown = document.getElementById(section + "Down");
-
-    if (expanded) {
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].style.display = "block";
-        }
-        arrowDown.style.display = "none";
-        arrowUp.style.display = "block";
-    } else {
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].style.display = "none";
-        }
-        arrowDown.style.display = "block";
-        arrowUp.style.display = "none";
-    }
 }

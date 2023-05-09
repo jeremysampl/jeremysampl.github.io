@@ -1,8 +1,11 @@
-import React from 'react';
-import '../../styles/projects.css';
+import React, { useEffect } from 'react';
 import ProjectDisplay from '../Containers/ProjectDisplay';
 
 export default function ProjectsPage() {
+	useEffect(() => {
+        window.scrollTo(0, 0)
+      }, []);
+
 	return (
 		<>
 			<section className="project-showcase section">
@@ -16,7 +19,7 @@ export default function ProjectsPage() {
 
 				<div className="row">
 					<ProjectDisplay isModal={false} project={{ name: 'Tic Tac Toe', url: 'TicTacToe', image: 'Tic Tac Toe/Gameplay.png' }} />
-					<ProjectDisplay isModal={false} project={{ name: 'Black Jack', url: 'Blackjack', image: 'Blackjack/Lose.png' }} />
+					<ProjectDisplay isModal={false} project={{ name: 'Blackjack', url: 'Blackjack', image: 'Blackjack/Lose.png' }} />
 				</div>
 
 				<h3>More projects are currently being worked on!</h3>

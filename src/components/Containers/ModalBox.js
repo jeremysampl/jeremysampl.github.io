@@ -6,22 +6,16 @@ export default function ModalBox({ gallery }) {
 }
 
 function getHTML(gallery) {
-    var output = [];
-    for (let i = 1; i < gallery.imageCount; i += 2) {
-        // eslint-disable-next-line
-        const image1 = eval("gallery.image" + String(i));
-        // eslint-disable-next-line
-        const image2 = eval("gallery.image" + String(i + 1));
-        const html = 
-            <div class="row">
-                <ProjectDisplay project={{ name: image1.title, image: image1.path }} onClick={() => zoomImage(image1.path, image1.description)} />
-                <ProjectDisplay project={{ name: image2.title, image: image2.path }} onClick={() => zoomImage(image2.path, image2.description)} />
+    const data = Object.values(gallery);
+    let output = [];
+
+    for (let i = 0; i < data.length; i += 2) {
+        const html =
+            <div className="row">
+                <ProjectDisplay project={{ name: data[i]["title"], image: data[i]["path"] }} onClick={() => zoomImage(data[i]["path"], data[i]["description"])} />
+                <ProjectDisplay project={{ name: data[i + 1]["title"], image: data[i + 1]["path"] }} onClick={() => zoomImage(data[i + 1]["path"], data[i + 1]["description"])} />
             </div>;
-        if (i > 2) {
-            output.push(<div className="expand-gallery">{html}</div>);
-        } else {
-            output.push(html);
-        }    
+        output.push(<>{html}</>);
     }
     return (output);
 }

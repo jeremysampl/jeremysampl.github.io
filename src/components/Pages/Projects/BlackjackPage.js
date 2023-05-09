@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectPage from './ProjectPage';
+import ProjectPage from '../ProjectPage';
 
 export default function BlackjackPage() {
 	return (
@@ -44,7 +44,6 @@ export default function BlackjackPage() {
 			}
 		}}
 		gallery = {{
-			imageCount: 4,
 			image1: {
 			title: "Unlucky Loss",
 			path: "Blackjack/Lose2.png",

@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectPage from './ProjectPage';
+import ProjectPage from '../ProjectPage';
 
 export default function StockAssistPage() {
 	return (
@@ -40,7 +40,6 @@ export default function StockAssistPage() {
 			}
 		}}
 		gallery = {{
-			imageCount: 8,
 			image1: {
 			title: "Login Page",
 			path: "Inventory Manager/Login.png",

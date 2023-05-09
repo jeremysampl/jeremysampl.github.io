@@ -45,8 +45,3 @@
 .github .image img {
     max-width: 70%;
 }
-
-/*----- Screen Size Variation -----*/
-@media (max-width: 700px) {
-    
-}

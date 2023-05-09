@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectPage from './ProjectPage';
+import ProjectPage from '../ProjectPage';
 
 export default function TerraExodusPage() {
 	return (
@@ -44,7 +44,6 @@ export default function TerraExodusPage() {
 			}
 		}}
 		gallery = {{
-			imageCount: 6,
 			image1: {
 			title: "Choices",
 			path: "Terra Exodus/Choices.png",

@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectPage from './ProjectPage';
+import ProjectPage from '../ProjectPage';
 
 export default function TicTacToePage() {
 	return (
@@ -47,7 +47,6 @@ export default function TicTacToePage() {
 			}
 		}}
 		gallery = {{
-			imageCount: 2,
 			image1: {
 			title: "Gameplay",
 			path: "Tic Tac Toe/Gameplay.png",

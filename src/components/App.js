@@ -6,10 +6,10 @@ import Footer from './Nav/Footer';
 import HomePage from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage';
 import ProjectsPage from './Pages/ProjectsPage';
-import StockAssistPage from './Pages/StockAssistPage';
-import TerraExodusPage from './Pages/TerraExodusPage';
-import TicTacToePage from './Pages/TicTacToePage';
-import BlackjackPage from './Pages/BlackjackPage';
+import StockAssistPage from './Pages/Projects/StockAssistPage';
+import TerraExodusPage from './Pages/Projects/TerraExodusPage';
+import TicTacToePage from './Pages/Projects/TicTacToePage';
+import BlackjackPage from './Pages/Projects/BlackjackPage';
 import ExperiencePage from './Pages/ExperiencePage';
 import ContactPage from './Pages/ContactPage';
 

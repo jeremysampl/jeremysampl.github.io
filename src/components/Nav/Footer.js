@@ -12,7 +12,7 @@ export default function Footer() {
 				<a href="https://www.linkedin.com/in/jeremysampl/" target="_blank" rel="noreferrer"><i className="fa fa-linkedin"></i></a>
 				<a href="https://github.com/jeremysampl" target="_blank" rel="noreferrer"><i className="fa fa-github"></i></a>
 			</div>
-			<p>This website was completely made by myself using HTML, CSS and JavaScript.</p>
+			<p>This website was completely made by myself using React.</p>
 		</section>
 	);
 }
