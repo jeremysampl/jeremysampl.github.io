@@ -50,7 +50,7 @@ export default function ProjectPage({ project, overview, languages, gallery, git
         <section className="github">
             <p>This project and its source code can be found in its entirety on GitHub:</p>
             <div className="image">
-                <a href={"https://github.com/jeremysampl/" + github.repository}><img src="../../Images/Misc/GitHub Logo.png" alt="GitHub Logo"/></a>
+                <a href={"https://github.com/jeremysampl/" + github.repository}><img src="/Images/Misc/GitHub Logo.png" alt="GitHub Logo"/></a>
                 <p>{"https://github.com/jeremysampl/" + github.repository}</p>
             </div>
         </section>

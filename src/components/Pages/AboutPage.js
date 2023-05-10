@@ -12,7 +12,7 @@ export default function AboutPage() {
             <div className="row">
                 <div className="about-col">
                     <div className="about-col-margin">
-                        <img src="../Images/Misc/Profile Picture.jpg" alt="LinkedIn profile icon"/>
+                        <img src="/Images/Misc/Profile Picture.jpg" alt="LinkedIn profile icon"/>
                         <h2>Jeremy Sampl</h2>
                     </div>
                 </div>
