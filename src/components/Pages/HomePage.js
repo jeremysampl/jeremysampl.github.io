@@ -9,7 +9,7 @@ import DropDownDisplay from '../Containers/DropDownDisplay';
 
 export default function HomePage() {
 	useEffect(() => {
-		window.scrollTo(0, 0)
+		window.scrollTo(0, 0);
 	}, []);
 
 	return (

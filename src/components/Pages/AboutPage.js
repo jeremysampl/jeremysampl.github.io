@@ -3,7 +3,7 @@ import '../../styles/about.css';
 
 export default function AboutPage() {
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
       }, []);
 
     return (

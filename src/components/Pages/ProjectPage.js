@@ -9,7 +9,7 @@ import Spacer from '../Containers/Spacer';
 
 export default function ProjectPage({ project, overview, languages, gallery, github }) {
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
       }, []);
   
     return (

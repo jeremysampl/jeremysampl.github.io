@@ -4,7 +4,7 @@ import Spacer from '../Containers/Spacer';
 
 export default function ContactPage() {
 	useEffect(() => {
-		window.scrollTo(0, 0)
+		window.scrollTo(0, 0);
 	}, [])
 
 	return (
