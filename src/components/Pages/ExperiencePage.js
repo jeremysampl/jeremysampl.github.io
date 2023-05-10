@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 export default function ExperiencePage() {
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
     }, []);
 
 	const style = {
