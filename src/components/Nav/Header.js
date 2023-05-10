@@ -6,7 +6,7 @@ export default function Header() {
     return (
         <section className="header" id="header">
             <nav>
-                <Link to="/"><img src="../Images/Misc/JS Logo.png" alt="Logo"/></Link>
+                <Link to="/"><img src="%PUBLIC_URL%/Images/Misc/JS Logo.png" alt="Logo"/></Link>
                 <h1>Jeremy Sampl</h1>
                 <div className="nav-links" id="navLinks">
                     <i className="fa fa-times" onClick={hideMenu}></i>

@@ -25,6 +25,6 @@ function zoomImage(path, description) {
     const modalImg = document.getElementById("modalImg");
     const caption = document.getElementById("caption");
     modal.style.display = "flex";
-    modalImg.src = "../Images/Projects/" + path;
+    modalImg.src = "%PUBLIC_URL%/Images/Projects/" + path;
     caption.innerHTML = description;
 }
