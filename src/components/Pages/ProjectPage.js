@@ -5,6 +5,7 @@ import ModalView from '../Views/ModalView';
 import ThreeBox from '../Containers/ThreeBox';
 import LanguageDisplay from '../Containers/LanguageDisplay';
 import DropDownDisplay from '../Containers/DropDownDisplay';
+import Spacer from '../Containers/Spacer';
 
 export default function ProjectPage({ project, overview, languages, gallery, github }) {
     useEffect(() => {
@@ -23,17 +24,20 @@ export default function ProjectPage({ project, overview, languages, gallery, git
             <ThreeBox box1 = {overview.box1} box2 = {overview.box2} box3 = {overview.box3} />
         </section>
 
+        <Spacer height="30" />
         <section className="description">
             <h2>Description</h2>
             {project.description}
         </section>
 
+        <Spacer height="30" />
         <section className="languages">
             <h2>Programming Languages</h2>
             <p>This program is written in the following language(s):</p>
 			<LanguageDisplay l1={languages.l1} l2={languages.l2} l3={languages.l3} />
         </section>
 
+        <Spacer height="30" />
         <section className="gallery">
             <h2>Gallery</h2>
             <p>Click on any image to enlarge it and obtain more information.</p>

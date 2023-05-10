@@ -1,12 +1,12 @@
 .project-col {
-    flex-basis: 47%;
+    flex-basis: calc(49% - 20px);
     border-radius: 10px;
     transition: 0.5s;
     padding: 10px;
     padding-bottom: 5px;
     background-color: #000;
     cursor: pointer;
-    margin: auto;
+    margin: auto 0;
     text-decoration: none;
     width: fit-content;
 }
@@ -19,7 +19,7 @@
     background-color: #000;
 }
 .project-col h3 {
-    width: 100;
+    width: 100%;
     padding: 0;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
