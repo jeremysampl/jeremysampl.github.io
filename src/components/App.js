@@ -12,6 +12,7 @@ import TicTacToePage from './Pages/Projects/TicTacToePage';
 import BlackjackPage from './Pages/Projects/BlackjackPage';
 import ExperiencePage from './Pages/ExperiencePage';
 import ContactPage from './Pages/ContactPage';
+import TimelinePage from './Pages/TimelinePage';
 
 export default function App() {
 	return (
@@ -27,6 +28,7 @@ export default function App() {
 				<Route path="/projects/Blackjack" element={<BlackjackPage />}/>
 				<Route path="/experience" element={<ExperiencePage />}/>
 				<Route path="/contact" element={<ContactPage />}/>
+				<Route path="/timeline" element={<TimelinePage />}/>
 				<Route path="/*" element={<Redirect />}/>
 			</Routes>
 			<Footer />
