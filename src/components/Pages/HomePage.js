@@ -52,9 +52,14 @@ export default function HomePage() {
 					<Spacer height="10" />
 					<p>I also have moderate experience building websites with:</p>
 					<LanguageDisplay
-						l1={{ name: "HTML", icon: "HTML.png", percent: "" }}
-						l2={{ name: "CSS", icon: "CSS.png", percent: "" }}
-						l3={{ name: "JavaScript", icon: "JavaScript.png", percent: "" }}
+						l1={{ name: "HTML", icon: "HTML.png" }}
+						l2={{ name: "CSS", icon: "CSS.png", }}
+						l3={{ name: "JavaScript", icon: "JavaScript.png" }}
+					/>
+					<LanguageDisplay
+						l1={{ name: "React", icon: "React.png" }}
+						l2={{ name: "PHP", icon: "PHP.svg" }}
+						l3={{ name: "jQuery", icon: "jQuery.png" }}
 					/>
 				</>}/>
 			</section>

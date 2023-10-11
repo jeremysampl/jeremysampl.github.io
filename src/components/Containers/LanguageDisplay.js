@@ -35,7 +35,7 @@ function CreateBox({language}) {
 		<div style={style} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
 			<h2>{language.name}</h2>
             <img src={"/Images/Languages/" + language.icon} alt="Java" style={imgStyle}/>
-            {Number(language.percent) ? <h3>{language.percent + "%"}</h3> : <p>{language.percent}</p>}
+            {Number(language?.percent) ? <h3>{language.percent + "%"}</h3> : <p>{language.percent}</p>}
 		</div>
 	);
 }

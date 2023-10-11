@@ -5,7 +5,8 @@
 }
 
 :root {
-    --secondary-color: #f44336
+    --secondary-color: #f44336;
+    --dark-grey: #444;
 }
 .section {
     width: 80%;
