@@ -10,6 +10,7 @@
 }
 .section {
     width: 80%;
+    min-height: calc(93vh - 200px);
     margin: auto;
     text-align: center;
     margin: 10px auto;
