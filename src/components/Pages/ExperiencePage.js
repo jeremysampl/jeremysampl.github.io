@@ -14,13 +14,14 @@ export default function ExperiencePage() {
             <h1>Experience</h1>
             <ExperienceDisplay
                 name="The Watering Can Flower Market"
-                title="Software Developer CO-OP"
+                location="Lincoln, ON"
+                title="Software Developer Co-op"
                 start="May 2023"
                 end="August 2023"
                 image="WateringCan-Mossscape-BG.jpg"
             >
                 <div style={{textAlign: 'left'}}>
-                    <h3 style={{fontSize: isMobile ? 20 : 24}}>During my 4-month co-op at The Watering Can, I had the opportunity to work on many exciting projects with some extremely talented individuals! Here is a summary of my time at the company:</h3>
+                    <h3 style={{fontSize: isMobile ? 20 : 24}}>During my 4-month co-op at The Watering Can, I had the opportunity to work on many exciting projects with some extremely talented individuals! Here is a summary of my first co-op at the company:</h3>
                     <ul style={{margin: '10px 10px 10px 30px', fontSize: isMobile ? 18 : 22, gap: 10, display: 'flex', flexDirection: 'column'}}>
                         <li>Led the development of a new point of sale (POS) system for their café.
                             <ul style={{marginLeft: 30}}>
@@ -33,7 +34,7 @@ export default function ExperiencePage() {
                             <ul style={{marginLeft: 30}}>
                                 <li>Replaced an outdated system with a new lightweight React application, offering significantly improved integration with their pre-existing systems.</li>
                                 <li>Produced a system that displays and controls incoming chits, printing them to the desired location when ready.</li>
-                                <li>Created seamless data syncronization between all devices, permitting multiple instances of the program to run simultaneously.</li>
+                                <li>Created seamless data synchronization between all devices, permitting multiple instances of the program to run simultaneously.</li>
                             </ul>
                         </li>
                         <li>Developed WordPress plugins to add new features to their website, as well as update existing ones.</li>

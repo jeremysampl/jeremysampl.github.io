@@ -1,6 +1,6 @@
 import useIsMobile from "../../Hooks/useIsMobile"
 
-export default function ExperienceDisplay({name, title, start, end, image, children}) {
+export default function ExperienceDisplay({name, location, title, start, end, image, children}) {
     const isMobile = useIsMobile(900);
 
     const styles = {
@@ -33,8 +33,9 @@ export default function ExperienceDisplay({name, title, start, end, image, child
             <div style={styles.left}>
                 <img style={styles.image} src={'/Images/Experience/' + image} alt="Company Logo"/>
                 <div style={styles.underImage}>
-                    <h2 style={{marginTop: 0}}>{name}</h2>
-                    <h3>{title}</h3>
+                    <h2 style={{marginTop: 0, paddingBottom: 0}}>{name}</h2>
+                    <h4>{location}</h4>
+                    <h3 style={{marginTop: 10}}>{title}</h3>
                     <h4 style={{marginBottom: 10}}>{start} - {end}</h4>
                 </div>
             </div>
