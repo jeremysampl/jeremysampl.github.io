@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../../styles/project.css';
 import ModalBox from '../Containers/ModalBox';
 import ModalView from '../Views/ModalView';
@@ -8,10 +8,6 @@ import DropDownDisplay from '../Containers/DropDownDisplay';
 import Spacer from '../Containers/Spacer';
 
 export default function ProjectPage({ project, overview, languages, gallery, github }) {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-      }, []);
-  
     return (
     <section className="section">
         <section className="overview">

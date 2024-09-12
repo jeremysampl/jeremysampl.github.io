@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/header.css';
+import Icon from "../Displays/Icon";
 
 export default function Header() {
     return (
@@ -9,7 +10,7 @@ export default function Header() {
                 <Link to="/"><img src="/Images/Misc/JS Logo.png" alt="Logo"/></Link>
                 <h1>Jeremy Sampl</h1>
                 <div className="nav-links" id="navLinks">
-                    <i className="fa fa-times" onClick={hideMenu}></i>
+                    <Icon name="times" onClick={hideMenu} pointer={true}/>
                     <ul>
                         <li><Link to="/" onClick={hideMenu}>HOME</Link></li>
                         <li><Link to="/about" onClick={hideMenu}>ABOUT</Link></li>
@@ -18,7 +19,7 @@ export default function Header() {
                         <li><Link to="/contact" onClick={hideMenu}>CONTACT</Link></li>
                     </ul>
                 </div>
-                <i className="fa fa-bars" onClick={showMenu}></i>
+                <Icon name="bars" onClick={showMenu} pointer={true}/>
             </nav>
         </section>
     );

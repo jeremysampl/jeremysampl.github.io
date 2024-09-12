@@ -11,7 +11,6 @@
 .section {
     width: 80%;
     min-height: calc(93vh - 200px);
-    margin: auto;
     text-align: center;
     margin: 10px auto;
     padding: 10px 0;
@@ -43,7 +42,7 @@ h2 {
 }
 h3 {
     font-size: 26px;
-    font-weight: 400px;
+    font-weight: 700;
     color:#000;
     padding: 10px;
 }

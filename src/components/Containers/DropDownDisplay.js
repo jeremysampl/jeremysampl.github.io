@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Icon from "../Displays/Icon";
 
 export default function DropDownDisplay({ expansion }) {
     const [isHover, setIsHover] = useState(false);
@@ -19,13 +20,21 @@ export default function DropDownDisplay({ expansion }) {
         transform: isExpanded ? "rotate(180deg)" : "rotate(0)",
         color: isHover ? "var(--secondary-color)" : "#000",
         WebkitTextStrokeWidth: isHover ? "4px" : "0px",
-        WebkitTextStrokeColor: "#000"
+        WebkitTextStrokeColor: "#000",
+        transitionDuration: '200ms',
     }
 
     return (
         <>
             <div style={divStyle}>{expansion}</div>
-            <i className="fa fa-arrow-down" style={buttonStyle} onClick={() => setIsExpanded(!isExpanded)} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}/>
+            <Icon
+                name="arrow-down"
+                style={buttonStyle}
+                onClick={() => setIsExpanded(!isExpanded)}
+                onMouseEnter={() => setIsHover(true)}
+                onMouseLeave={() => setIsHover(false)}
+                pointer={true}
+            />
         </>
     );
 }

@@ -17,7 +17,8 @@ export default function ContactPage() {
 				box3 = {{ title: "Phone", icon: "phone", description: "Please contact me through other means first." }}
 			/>
 
-			<Spacer height="30" />
+			<Spacer height="30"/>
+
 			<h1>Other Socials</h1>
 			<p>Other ways to get to know me:</p>
 			<ThreeBox

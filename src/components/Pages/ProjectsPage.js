@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ProjectDisplay from '../Containers/ProjectDisplay';
 
 export default function ProjectsPage() {
-	useEffect(() => {
-        window.scrollTo(0, 0);
-      }, []);
-
 	return (
 		<>
 			<section className="project-showcase section">

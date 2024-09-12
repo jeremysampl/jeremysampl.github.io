@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../../styles/global.css';
+import Icon from "../Displays/Icon";
 
 export default function ThreeBox({ box1, box2, box3 }) {
 	return (
@@ -24,21 +25,16 @@ function CreateBox({box}) {
 		margin: "5px 0"
 	}
 
-	if (box.url) {
-		return (
-			<a style={style} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} href={box.url}>
-				<h2>{box.title}</h2>
-				<i className={"fa fa-" + box.icon} style={{fontSize: "20vh", color: "var(--secondary-color)" }}></i>
-				<p>{box.description}</p>
-			</a>
-		);
-	} else {
-		return (
-			<div style={style} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-				<h2>{box.title}</h2>
-				<i className={"fa fa-" + box.icon} style={{fontSize: "20vh", color: "var(--secondary-color)" }}></i>
-				<p>{box.description}</p>
-			</div>
-		);
-	}
+	return (
+		<a
+			style={style}
+			onMouseEnter={() => setIsHover(true)}
+			onMouseLeave={() => setIsHover(false)}
+			href={box?.url}
+		>
+			<h2>{box.title}</h2>
+			<Icon name={box.icon} size='20vh' color='var(--secondary-color)' pointer={true}/>
+			<p>{box.description}</p>
+		</a>
+	);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../../styles/home.css';
 import Spacer from '../Containers/Spacer';
 import SkillDisplay from '../Containers/SkillDisplay';
@@ -8,10 +8,6 @@ import LanguageDisplay from '../Containers/LanguageDisplay';
 import DropDownDisplay from '../Containers/DropDownDisplay';
 
 export default function HomePage() {
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
 	return (
 		<>
 			<div id="main-page-background">
@@ -25,7 +21,7 @@ export default function HomePage() {
 				<p>My most prominent skills.</p>
 				<SkillDisplay
 					box1={{ title: "Problem Solver", description: "I am very proficient at quickly solving a multitude of different kinds of problems." }}
-					box2={{ title: "Multitasker", description: "Multitasking enables me to complete the same amount of work in less time." }}
+					box2={{ title: "Multitasker", description: "Multitasking enables me to complete more work in less time." }}
 					box3={{ title: "Team Player", description: "I am able to communicate clearly and effectively on a team, as well as lead when needed." }}
 				/>
 				<SimpleButton text="Learn More" url="/about" color="#000" />
@@ -50,14 +46,14 @@ export default function HomePage() {
 
 				<DropDownDisplay expansion={<>
 					<Spacer height="10" />
-					<p>I also have moderate experience building websites with:</p>
+					<p>I also have extensive experience building websites and web applications with:</p>
 					<LanguageDisplay
 						l1={{ name: "HTML", icon: "HTML.png" }}
 						l2={{ name: "CSS", icon: "CSS.png", }}
 						l3={{ name: "JavaScript", icon: "JavaScript.png" }}
 					/>
 					<LanguageDisplay
-						l1={{ name: "React", icon: "React.png" }}
+						l1={{ name: "React.js", icon: "React.png" }}
 						l2={{ name: "PHP", icon: "PHP.svg" }}
 						l3={{ name: "jQuery", icon: "jQuery.png" }}
 					/>
