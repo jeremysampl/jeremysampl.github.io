@@ -15,8 +15,12 @@ export default function ProjectsPage() {
 				</Row>
 
 				<Row>
-					<ProjectDisplay isModal={false} project={{ name: 'Tic Tac Toe', url: 'TicTacToe', image: 'Tic Tac Toe/Gameplay.png' }}/>
+					<ProjectDisplay isModal={false} project={{ name: 'RC Tank', url: 'RC-Tank', image: 'RC Tank/Final Tank.jpg' }}/>
 					<ProjectDisplay isModal={false} project={{ name: 'Blackjack', url: 'Blackjack', image: 'Blackjack/Lose.png' }}/>
+				</Row>
+
+				<Row>
+					<ProjectDisplay isModal={false} project={{ name: 'Tic Tac Toe', url: 'TicTacToe', image: 'Tic Tac Toe/Gameplay.png' }}/>
 				</Row>
 
 				<h3>More projects are currently being worked on!</h3>

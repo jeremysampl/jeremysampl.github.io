@@ -28,6 +28,7 @@ export default function App() {
 				<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
 				<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>
 				<Route path="/projects/Blackjack" element={<BlackjackPage/>}/>
+				<Route path="/projects/RC-Tank" element={<RCTankPage/>}/>
 				<Route path="/experience" element={<ExperiencePage/>}/>
 				<Route path="/contact" element={<ContactPage/>}/>
 				<Route path="/*" element={<Redirect/>}/>
