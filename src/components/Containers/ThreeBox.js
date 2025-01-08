@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import '../../styles/global.css';
 import Icon from "../Displays/Icon";
 
-export default function ThreeBox({ box1, box2, box3 }) {
+export default function ThreeBox({ boxes }) {
 	return (
 		<div className="row">
-			<CreateBox box={box1} />
-			<CreateBox box={box2} />
-			<CreateBox box={box3} />
+			{boxes.map(box => <CreateBox box={box}/>)}
 		</div>
 	);
 }

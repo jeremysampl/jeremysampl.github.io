@@ -9,7 +9,7 @@ export default function ExperiencePage() {
             <Separator column={true} gap={30}>
                 <ExperienceDisplay
                     name="The Watering Can Flower Market"
-                    location="Lincoln, ON"
+                    location="Lincoln, ON, CAN"
                     title="Software Developer Co-op"
                     start="May 2023"
                     end="August 2023"
@@ -34,7 +34,7 @@ export default function ExperiencePage() {
                 />
                 <ExperienceDisplay
                     name="The Watering Can Flower Market"
-                    location="Lincoln, ON"
+                    location="Lincoln, ON, CAN"
                     title="Software Developer Co-op"
                     start="May 2024"
                     end="August 2024"

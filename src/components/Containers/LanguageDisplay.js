@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import '../../styles/global.css';
 
-export default function LanguageDisplay(props) {
-    const boxCount = getLanguageCount(props);
-
+export default function LanguageDisplay({ languages }) {
 	return (
-		<div className="row">
-            {boxCount === 1 ? <div></div> : null}
-            <CreateBox language={props.l1} />
-            {boxCount === 1 ? <div></div> : null}
-            {boxCount !== 1 ? <CreateBox language={props.l2} /> : null}
-            {boxCount === 3 ? <CreateBox language={props.l3} /> : null}
+		<div className="row" style={languages.length > 2 ? {} : {justifyContent: 'center', gap: 20}}>
+			{languages.map(language => <CreateBox language={language}/>)}
 		</div>
 	);
 }
@@ -28,28 +22,15 @@ function CreateBox({language}) {
 	};
 
     const imgStyle = {
-        width: "100%"
+        width: `calc(100% - ${2 * (language.iconPadding ?? 0)}px)`,
+		padding: language.iconPadding ?? 0
     };
 
 	return (
 		<div style={style} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
 			<h2>{language.name}</h2>
             <img src={"/Images/Languages/" + language.icon} alt="Java" style={imgStyle}/>
-            {Number(language?.percent) ? <h3>{language.percent + "%"}</h3> : <p>{language.percent}</p>}
+            <p>{language.subtitle}</p>
 		</div>
 	);
-}
-
-function getLanguageCount(props) {
-    let count = 0;
-    if (props.l1) {
-        count++;
-    }
-    if (props.l2) {
-        count++;
-    }
-    if (props.l3) {
-        count++;
-    }
-    return count;
 }

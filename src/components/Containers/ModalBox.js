@@ -2,22 +2,16 @@ import React from 'react';
 import ProjectDisplay from '../Containers/ProjectDisplay';
 
 export default function ModalBox({ gallery }) {
-  return (getHTML(gallery));
-}
-
-function getHTML(gallery) {
-    const data = Object.values(gallery);
-    let output = [];
-
-    for (let i = 0; i < data.length; i += 2) {
-        const html =
-            <div className="row">
-                <ProjectDisplay project={{ name: data[i]["title"], image: data[i]["path"] }} onClick={() => zoomImage(data[i]["path"], data[i]["description"])} />
-                <ProjectDisplay project={{ name: data[i + 1]["title"], image: data[i + 1]["path"] }} onClick={() => zoomImage(data[i + 1]["path"], data[i + 1]["description"])} />
-            </div>;
-        output.push(<>{html}</>);
-    }
-    return (output);
+    return Array.from({length: Math.floor(gallery.length / 2)}, (v, i) => i * 2).map(i => <>
+        <div className="row" style={i < gallery.length - 1 ? {} : {justifyContent: 'center'}}>
+            <ProjectDisplay project={{name: gallery[i].title, image: gallery[i].path}}
+                            onClick={() => zoomImage(gallery[i].path, gallery[i].description)}/>
+            {i < gallery.length - 1 ?
+                <ProjectDisplay project={{name: gallery[i + 1].title, image: gallery[i + 1].path}}
+                                onClick={() => zoomImage(gallery[i + 1].path, gallery[i + 1].description)}/>
+                : ''}
+        </div>
+    </>);
 }
 
 function zoomImage(path, description) {
