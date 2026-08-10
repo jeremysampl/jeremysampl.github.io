@@ -6,7 +6,7 @@ export default function Footer() {
 	return (
 		<section className="footer">
 			<h4>About Me</h4>
-			<p>A McMaster University Computer Science Co-op student with a passion for coding and learning.</p>
+			<p>A recent McMaster University computer science graduate with a passion for coding and learning.</p>
 			<div className="icons">
 				{
 					[
@@ -17,7 +17,6 @@ export default function Footer() {
 					].map(([name, url]) => <a href={url} target="_blank" rel="noreferrer"><Icon name={name} pointer={true}/></a>)
 				}
 			</div>
-			<p>This website was completely made by myself using React.js.</p>
 		</section>
 	);
 }

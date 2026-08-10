@@ -5,7 +5,8 @@
 }
 
 :root {
-    --secondary-color: #f44336;
+    --secondary-color: #1E6FE8;
+    --secondary-rgb: 30, 111, 232;
     --dark-grey: #444;
 }
 .section {

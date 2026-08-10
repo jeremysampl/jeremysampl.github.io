@@ -1,15 +1,33 @@
 import React from 'react';
 import ExperienceDisplay from '../containers/ExperienceDisplay';
-import Separator from "../containers/Separator";
 
 export default function ExperiencePage() {
     return (
         <section className="section">
             <h1>Experience</h1>
-            <Separator column={true} gap={30}>
+            <div className="experience-timeline">
                 <ExperienceDisplay
                     name="The Watering Can Flower Market"
-                    location="Lincoln, ON, CAN"
+                    location="Lincoln, ON, Canada"
+                    title="Software Developer Co-op"
+                    start="May 2024"
+                    end="August 2024"
+                    image="WateringCan-Second-Coop.jpg"
+                    descriptionTitle="During my second summer co-op at The Watering Can, I was already familiar with their systems and I truly felt part of the core team! Here is a summary of my second co-op:"
+                    points={[
+                        "Maintained and regularly updated their website and 3+ web applications, including implementing new features, fixing bugs, general testing, and much more.",
+                        [
+                            "Created new RESTful APIs to modernize and modularize existing APIs.",
+                            "Used object-oriented programming techniques to significantly improve readability, scalability, and maintainability.",
+                        ],
+                        "Revamped query structures, optimized data storage, and implemented relational tables, resulting in significant efficiency improvements.",
+                        "Facilitated the smooth deployment of new features and patches to production by conducting extensive testing and incorporating user feedback.",
+                        "Consistently monitored a ticketing system to quickly resolve bugs, discuss potential new features, and track the status of known issues.",
+                    ]}
+                />
+                <ExperienceDisplay
+                    name="The Watering Can Flower Market"
+                    location="Lincoln, ON, Canada"
                     title="Software Developer Co-op"
                     start="May 2023"
                     end="August 2023"
@@ -32,26 +50,7 @@ export default function ExperiencePage() {
                         "Used languages, libraries and frameworks such as PHP, JavaScript, jQuery, React.js and MySQL.",
                     ]}
                 />
-                <ExperienceDisplay
-                    name="The Watering Can Flower Market"
-                    location="Lincoln, ON, CAN"
-                    title="Software Developer Co-op"
-                    start="May 2024"
-                    end="August 2024"
-                    image="WateringCan-Second-Coop.jpg"
-                    descriptionTitle="During my second summer co-op at The Watering Can, I was already familiar with their systems and I truly felt part of the core team! Here is a summary of my second co-op:"
-                    points={[
-                        "Maintained and regularly updated their website and 3+ web applications, including implementing new features, fixing bugs, general testing, and much more.",
-                        [
-                            "Created new RESTful APIs to modernize and modularize existing APIs.",
-                            "Used object-oriented programming techniques to significantly improve readability, scalability, and maintainability.",
-                        ],
-                        "Revamped query structures, optimized data storage, and implemented relational tables, resulting in significant efficiency improvements.",
-                        "Facilitated the smooth deployment of new features and patches to production by conducting extensive testing and incorporating user feedback.",
-                        "Consistently monitored a ticketing system to quickly resolve bugs, discuss potential new features, and track the status of known issues.",
-                    ]}
-                />
-            </Separator>
+            </div>
         </section>
     );
 }
