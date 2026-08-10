@@ -1,0 +1,28 @@
+import React from 'react';
+import { Link } from "react-router-dom";
+import '../../styles/project-display.css'
+
+type ProjectSummary = {
+	name: string;
+	url?: string;
+	image: string;
+};
+
+export default function ProjectDisplay({ project, onClick }: { project: ProjectSummary; onClick?: () => void; isModal?: boolean }) {
+	if (project.url) {
+		return (
+			<Link to={'/projects/' + project.url} className="project-col">
+				<h3>{project.name}</h3>
+				<img src={'/images/projects/' + project.image} alt="Project display"/>
+			</Link>
+		);
+	} else {
+		return (
+			<div className="project-col" onClick={onClick}>
+				<h3>{project.name}</h3>
+				<img src={'/images/projects/' + project.image} alt="Project display"/>
+			</div>
+		);
+	}
+	
+}
