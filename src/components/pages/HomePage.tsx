@@ -5,6 +5,7 @@ import SkillDisplay from '../containers/SkillDisplay';
 import ProjectDisplay from '../containers/ProjectDisplay';
 import SimpleButton from '../buttons/SimpleButton';
 import TechStack from '../containers/TechStack';
+import HeroBackground from '../containers/HeroBackground';
 import { getProject } from '../../data/projects';
 
 export default function HomePage() {
@@ -14,9 +15,12 @@ export default function HomePage() {
 	return (
 		<>
 			<div id="main-page-background">
-				<h1>Jeremy Sampl's Portfolio</h1>
-				<p>Welcome to my personal website.</p>
-				<SimpleButton text="Click to Know More" url="#skills" color="#fff"/>
+				<HeroBackground />
+				<div className="hero-content">
+					<h1>Jeremy Sampl's Portfolio</h1>
+					<p>Welcome to my personal website.</p>
+					<SimpleButton text="Click to Know More" url="#skills" color="#fff"/>
+				</div>
 			</div>
 
 			<section className="section" id="skills">
