@@ -7,14 +7,30 @@
 :root {
     --secondary-color: #1E6FE8;
     --secondary-rgb: 30, 111, 232;
+    /* Soft wash of the accent (same role as the old #ffcdcd on red) */
+    --secondary-tint: #cde0ff;
     --dark-grey: #444;
 }
+
+.app-shell {
+    /* Fill the viewport under the fixed header (body has margin-top: 7vh) */
+    min-height: calc(100vh - 7vh);
+    display: flex;
+    flex-direction: column;
+}
+
+.app-shell__content {
+    flex: 1 0 auto;
+}
+
 .section {
-    width: 80%;
+    width: 100%;
+    max-width: none;
     min-height: calc(93vh - 200px);
     text-align: center;
     margin: 10px auto;
-    padding: 10px 0;
+    padding: 16px clamp(16px, 3vw, 48px);
+    box-sizing: border-box;
 }
 
 /*----- Animations -----*/

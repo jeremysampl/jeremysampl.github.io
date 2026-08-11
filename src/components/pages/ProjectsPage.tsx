@@ -1,6 +1,15 @@
 import React from 'react';
 import ProjectDisplay from '../containers/ProjectDisplay';
 import Row from "../containers/Row";
+import { projects } from '../../data/projects';
+
+function chunk<T>(items: T[], size: number): T[][] {
+	const rows: T[][] = [];
+	for (let i = 0; i < items.length; i += size) {
+		rows.push(items.slice(i, i + size));
+	}
+	return rows;
+}
 
 export default function ProjectsPage() {
 	return (
@@ -9,19 +18,17 @@ export default function ProjectsPage() {
 				<h1>My Projects</h1>
 				<p>Click on any project for more information.</p>
 
-				<Row>
-					<ProjectDisplay isModal={false} project={{ name: 'StockAssist', url: 'StockAssist', image: 'Inventory Manager/Home.png' }}/>
-					<ProjectDisplay isModal={false} project={{ name: 'Terra Exodus', url: 'TerraExodus', image: 'Terra Exodus/Gameplay.png' }}/>
-				</Row>
-
-				<Row>
-					<ProjectDisplay isModal={false} project={{ name: 'RC Tank', url: 'RC-Tank', image: 'RC Tank/Final Tank.jpg' }}/>
-					<ProjectDisplay isModal={false} project={{ name: 'Blackjack', url: 'Blackjack', image: 'Blackjack/Lose.png' }}/>
-				</Row>
-
-				<Row>
-					<ProjectDisplay isModal={false} project={{ name: 'Tic Tac Toe', url: 'TicTacToe', image: 'Tic Tac Toe/Gameplay.png' }}/>
-				</Row>
+				{chunk(projects, 2).map((row) => (
+					<Row key={row.map((project) => project.id).join('-')}>
+						{row.map((project) => (
+							<ProjectDisplay
+								key={project.id}
+								isModal={false}
+								project={{ name: project.name, url: project.slug, image: project.thumbnail }}
+							/>
+						))}
+					</Row>
+				))}
 
 				<h3>More projects are currently being worked on!</h3>
 			</section>

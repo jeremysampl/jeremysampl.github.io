@@ -2,8 +2,9 @@
     background-color: #000;
     width: 100%;
     text-align: center;
-    margin-top: 30px;
+    margin-top: auto;
     padding: 10px 0;
+    flex-shrink: 0;
 }
 .footer h4 {
     margin-bottom: 15px;

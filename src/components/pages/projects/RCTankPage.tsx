@@ -1,11 +1,15 @@
 import ProjectPage from '../ProjectPage';
+import { getProject } from '../../../data/projects';
 
 export default function RCTankPage() {
+    const project = getProject('rc-tank');
+
     return (
         <ProjectPage
+            projectId={project.id}
             project = {{
-                name: "RC Tank",
-                title: "3D-Printed Arduino Remote-Controlled Tank",
+                name: project.name,
+                title: project.title,
                 description:
                     <p>
                         This was my final project for my grade 12 computer engineering class, in collaboration with two
@@ -45,17 +49,6 @@ export default function RCTankPage() {
                     }
                 ]
             }}
-            languages = {[
-                {
-                    name: "Arduino",
-                    icon: "Arduino.svg",
-                    iconPadding: 5
-                },
-                {
-                    name: "MIT App Inventor",
-                    icon: "App Inventor.png"
-                }
-            ]}
             gallery = {[
                 {
                     title: "Assembled Tank",

@@ -17,23 +17,27 @@ import RCTankPage from "./pages/projects/RCTankPage";
 export default function App() {
 	return (
 		<BrowserRouter>
-			<RouteChangeListener/>
-			<Header/>
+			<div className="app-shell">
+				<RouteChangeListener/>
+				<Header/>
 
-			<Routes>
-				<Route path="/" element={<HomePage/>}/>
-				<Route path="/about" element={<AboutPage/>}/>
-				<Route path="/projects" element={<ProjectsPage/>}/>
-				<Route path="/projects/StockAssist" element={<StockAssistPage/>}/>
-				<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
-				<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>
-				<Route path="/projects/Blackjack" element={<BlackjackPage/>}/>
-				<Route path="/projects/RC-Tank" element={<RCTankPage/>}/>
-				<Route path="/experience" element={<ExperiencePage/>}/>
-				<Route path="/contact" element={<ContactPage/>}/>
-				<Route path="/*" element={<Redirect/>}/>
-			</Routes>
-			<Footer/>
+				<main className="app-shell__content">
+					<Routes>
+						<Route path="/" element={<HomePage/>}/>
+						<Route path="/about" element={<AboutPage/>}/>
+						<Route path="/projects" element={<ProjectsPage/>}/>
+						<Route path="/projects/StockAssist" element={<StockAssistPage/>}/>
+						<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
+						<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>
+						<Route path="/projects/Blackjack" element={<BlackjackPage/>}/>
+						<Route path="/projects/RC-Tank" element={<RCTankPage/>}/>
+						<Route path="/experience" element={<ExperiencePage/>}/>
+						<Route path="/contact" element={<ContactPage/>}/>
+						<Route path="/*" element={<Redirect/>}/>
+					</Routes>
+				</main>
+				<Footer/>
+			</div>
 		</BrowserRouter>
 	);
 }

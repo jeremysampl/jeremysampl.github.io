@@ -4,10 +4,13 @@ import Spacer from '../containers/Spacer';
 import SkillDisplay from '../containers/SkillDisplay';
 import ProjectDisplay from '../containers/ProjectDisplay';
 import SimpleButton from '../buttons/SimpleButton';
-import LanguageDisplay from '../containers/LanguageDisplay';
-import DropDownDisplay from '../containers/DropDownDisplay';
+import TechStack from '../containers/TechStack';
+import { getProject } from '../../data/projects';
 
 export default function HomePage() {
+	const stockAssist = getProject('stock-assist');
+	const terraExodus = getProject('terra-exodus');
+
 	return (
 		<>
 			<div id="main-page-background">
@@ -32,50 +35,17 @@ export default function HomePage() {
 				<h2>My Projects</h2>
 				<p>A showcase of some of my most sophisticated projects.</p>
 				<div className="row">
-					<ProjectDisplay isModal={false} project={{ name: 'StockAssist', url: 'StockAssist', image: 'Inventory Manager/Home.png' }}/>
-					<ProjectDisplay isModal={false} project={{ name: 'Terra Exodus', url: 'TerraExodus', image: 'Terra Exodus/Gameplay.png' }}/>
+					<ProjectDisplay isModal={false} project={{ name: stockAssist.name, url: stockAssist.slug, image: stockAssist.thumbnail }}/>
+					<ProjectDisplay isModal={false} project={{ name: terraExodus.name, url: terraExodus.slug, image: terraExodus.thumbnail }}/>
 				</div>
 				<SimpleButton text="View All Projects" url="/projects" color="#000"/>
-				
+
 				<Spacer height="30"/>
-				<h2>Programming Languages</h2>
-				<p>I have significant experience with the following object-oriented languages:</p>
-				<LanguageDisplay
-					languages = {[
-						{ name: "Java", icon: "Java.png", subtitle: "My first and most proficient language. My most sophisticated project to date is written in Java." },
-						{ name: "Python", icon: "Python.png", subtitle: "My second and currently most used language. I have created many small projects in Python." },
-						{ name: "PHP", icon: "PHP.svg", subtitle: "During my first two 4-month co-op terms, I used PHP extensively for major projects." }
-					]}
-				/>
-
-				<DropDownDisplay expansion={<>
-					<Spacer height="50"/>
-					<p>I also have extensive experience building websites and web applications with:</p>
-					<LanguageDisplay
-						languages = {[
-							{ name: "HTML", icon: "HTML.png" },
-							{ name: "CSS", icon: "CSS.png" },
-							{ name: "JavaScript", icon: "JavaScript.png" }
-						]}
-					/>
-					<LanguageDisplay
-						languages = {[
-							{ name: "React.js", icon: "React.png" },
-							{ name: "MySQL", icon: "MySQL.png" },
-							{ name: "jQuery", icon: "jQuery.png" }
-						]}
-					/>
-
-					<Spacer height="50"/>
-					<p>Additionally, I have moderate experience with the following:</p>
-					<LanguageDisplay
-						languages = {[
-							{ name: "C", icon: "C.png" },
-							{ name: "C#", icon: "C Sharp.png" },
-							{ name: "Django", icon: "Django.svg" }
-						]}
-					/>
-				</>}/>
+				<section className="tech-stack-band">
+					<h2>Technology Stack</h2>
+					<p>Hover, focus, or tap any skill to see where I've put it to use.</p>
+					<TechStack />
+				</section>
 			</section>
 		</>
 	);

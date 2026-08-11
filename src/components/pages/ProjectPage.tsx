@@ -3,9 +3,10 @@ import '../../styles/project.css';
 import ModalBox, { GalleryItem } from '../containers/ModalBox';
 import ModalView from '../views/ModalView';
 import ThreeBox, { ThreeBoxItem } from '../containers/ThreeBox';
-import LanguageDisplay, { Language } from '../containers/LanguageDisplay';
+import LanguageDisplay, { LanguageDisplayItem } from '../containers/LanguageDisplay';
 import DropDownDisplay from '../containers/DropDownDisplay';
 import Spacer from '../containers/Spacer';
+import { ProjectId, getProject, resolveProjectTechnologies } from '../../data/projects';
 
 type ProjectDetails = {
 	name: string;
@@ -26,15 +27,37 @@ type ProjectVideo = {
 	src: string;
 };
 
-export default function ProjectPage({ project, overview, languages, gallery, github = null, videos = null }: {
-    project: ProjectDetails;
-    overview: ProjectOverview;
-    languages: Language[];
-    gallery: GalleryItem[];
-    github?: ProjectGithub | null;
-    videos?: ProjectVideo[] | null;
+export default function ProjectPage({
+	projectId,
+	project,
+	overview,
+	languages,
+	gallery,
+	github = null,
+	videos = null,
+}: {
+	projectId?: ProjectId;
+	project: ProjectDetails;
+	overview: ProjectOverview;
+	/** Optional override; defaults to technologies listed on the project registry entry */
+	languages?: LanguageDisplayItem[];
+	gallery: GalleryItem[];
+	github?: ProjectGithub | null;
+	videos?: ProjectVideo[] | null;
 }) {
-    return (
+	const resolvedLanguages =
+		languages ??
+		(projectId
+			? resolveProjectTechnologies(getProject(projectId)).map((technology) => ({
+					name: technology.name,
+					iconSrc: technology.iconSrc,
+					faIcon: technology.faIcon,
+					iconPadding: technology.iconPadding,
+					subtitle: technology.subtitle,
+			  }))
+			: []);
+
+	return (
     <section className="section">
         <section className="overview">
             <div className="title">
@@ -56,7 +79,7 @@ export default function ProjectPage({ project, overview, languages, gallery, git
         <section className="languages">
             <h2>Technologies</h2>
             <p>This project utilizes the following technologies:</p>
-			<LanguageDisplay languages={languages}/>
+			<LanguageDisplay languages={resolvedLanguages}/>
         </section>
 
         <Spacer height="30"/>

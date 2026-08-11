@@ -1,32 +1,31 @@
 import { ReactNode } from "react";
+import { ExperiencePoint } from "../../data/experience";
 import Icon from "../displays/Icon";
 import "../../styles/experience.css";
 
-type ExperiencePoint = string | ExperiencePoint[];
-
 export default function ExperienceDisplay({
+    id,
     name,
     location,
     title,
-    start,
-    end,
+    dateRange,
     image,
     descriptionTitle,
     points,
     children,
 }: {
+    id?: string;
     name: string;
     location: string;
     title: string;
-    start: string;
-    end: string;
+    dateRange: string;
     image: string;
     descriptionTitle?: string;
     points: ExperiencePoint[];
     children?: ReactNode;
 }) {
     return (
-        <article className="experience-card">
+        <article id={id} className="experience-card">
             <div className="experience-card__panel">
                 <div className="experience-card__media">
                     <img
@@ -41,7 +40,7 @@ export default function ExperienceDisplay({
                         <div className="experience-card__meta">
                             <span className="experience-card__meta-item">
                                 <Icon name="calendar" size={15} color="var(--secondary-color)" />
-                                <span>{start} – {end}</span>
+                                <span>{dateRange}</span>
                             </span>
                             <span className="experience-card__meta-sep" aria-hidden="true">·</span>
                             <span className="experience-card__meta-item">

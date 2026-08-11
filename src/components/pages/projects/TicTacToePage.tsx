@@ -1,12 +1,16 @@
 import React from 'react';
 import ProjectPage from '../ProjectPage';
+import { getProject } from '../../../data/projects';
 
 export default function TicTacToePage() {
+	const project = getProject('tic-tac-toe');
+
 	return (
 		<ProjectPage
+			projectId={project.id}
 			project = {{
-				name: "Tic Tac Toe",
-				title: "Classic Paper/Pencil Game",
+				name: project.name,
+				title: project.title,
 				description:
 					<p>
 						This recreation of the classic tic tac toe game was simply created as a starter project when I was learning C# and XAML.<br/><br/>
@@ -35,18 +39,6 @@ export default function TicTacToePage() {
 					}
 				]
 			}}
-			languages = {[
-				{
-					name: "C#",
-					icon: "C Sharp.png",
-					subtitle: "60%"
-				},
-				{
-					name: "XAML",
-					icon: "XAML.png",
-					subtitle: "40%"
-				}
-			]}
 			gallery = {[
 				{
 					title: "Gameplay",

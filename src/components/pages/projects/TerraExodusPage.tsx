@@ -1,12 +1,16 @@
 import React from 'react';
 import ProjectPage from '../ProjectPage';
+import { getProject } from '../../../data/projects';
 
 export default function TerraExodusPage() {
+	const project = getProject('terra-exodus');
+
 	return (
 		<ProjectPage
+			projectId={project.id}
 			project = {{
-				name: "Terra Exodus",
-				title: "CMD Console Shooter Game",
+				name: project.name,
+				title: project.title,
 				description:
 					<p>
 						Terra Exodus is a small console-based 2D plane shooter with custom ASCII art.<br/>
@@ -37,12 +41,6 @@ export default function TerraExodusPage() {
 					}
 				]
 			}}
-			languages = {[
-				{
-					name: "Python",
-					icon: "Python.png"
-				}
-			]}
 			gallery = {[
 				{
 					title: "Choices",

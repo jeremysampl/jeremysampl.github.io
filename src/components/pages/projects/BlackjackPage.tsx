@@ -1,12 +1,16 @@
 import React from 'react';
 import ProjectPage from '../ProjectPage';
+import { getProject } from '../../../data/projects';
 
 export default function BlackjackPage() {
+	const project = getProject('blackjack');
+
 	return (
 		<ProjectPage
+			projectId={project.id}
 			project = {{
-				name: "Blackjack",
-				title: "Casino Card Game",
+				name: project.name,
+				title: project.title,
 				description:
 					<p>
 						Blackjack is a simple card game often played in casinos. This version of the game uses almost standard rules.<br/>
@@ -37,12 +41,6 @@ export default function BlackjackPage() {
 					}
 				]
 			}}
-			languages = {[
-				{
-					name: "Python",
-					icon: "Python.png"
-				}
-			]}
 			gallery = {[
 				{
 					title: "Unlucky Loss",

@@ -1,12 +1,16 @@
 import React from 'react';
 import ProjectPage from '../ProjectPage';
+import { getProject } from '../../../data/projects';
 
 export default function StockAssistPage() {
+	const project = getProject('stock-assist');
+
 	return (
 		<ProjectPage
+			projectId={project.id}
 			project = {{
-				name: "StockAssist",
-				title: "Inventory Management System",
+				name: project.name,
+				title: project.title,
 				description: <p>StockAssist is a small-scale inventory management system that improves productivity by keeping track of a small business' customers, categories, products and orders.
 				However, this product does much more than that.<br/><br/>
 				It also automatically keeps track of inventory counts, calculates totals, and dynamically changes information across the system at once.<br/><br/>
@@ -33,12 +37,6 @@ export default function StockAssistPage() {
 					}
 				]
 			}}
-			languages = {[
-				{
-					name: "Java",
-					icon: "Java.png"
-				}
-			]}
 			gallery = {[
 				{
 					title: "Login Page",

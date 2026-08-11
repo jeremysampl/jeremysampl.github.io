@@ -22,7 +22,7 @@ function CreateBox({box}: { box: SkillBox }) {
 		borderRadius: "10px",
 		boxShadow: isHover ? "0 0 20px 0px rgba(0,0,0,0.5)" : "0 0 20px 0px rgba(0,0,0,0.0)",
 		transition: "500ms",
-        background: "#ffcdcd",
+        background: "var(--secondary-tint)",
 		marginTop: "15px",
         padding: "20px 12px"
 	}

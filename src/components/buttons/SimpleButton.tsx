@@ -1,6 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
+import { scrollToElementWithHeaderOffset } from '../../utils/scroll';
 
 type SimpleButtonProps = {
     text: string;
@@ -27,12 +28,6 @@ export default function SimpleButton(props: SimpleButtonProps) {
         transition: "1s"
     };
 
-    const scrollWithOffset = (el: HTMLElement) => {
-        const yCoord = el.getBoundingClientRect().top + window.pageYOffset;
-        const yOffset = window.innerHeight * 0.08;
-        window.scrollTo({ top: yCoord - yOffset, behavior: 'smooth' });
-    }
-
     if (isHover) {
         style.background = "var(--secondary-color)"
         style.borderColor = "var(--secondary-color)"
@@ -51,7 +46,7 @@ export default function SimpleButton(props: SimpleButtonProps) {
         );
     } else {
         return (
-            <HashLink smooth to={props.url} scroll={el => scrollWithOffset(el)} style={style}
+            <HashLink smooth to={props.url} scroll={scrollToElementWithHeaderOffset} style={style}
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
                 {props.text}

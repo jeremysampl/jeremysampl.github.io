@@ -18,3 +18,16 @@
 #main-page-background a {
     width: fit-content;
 }
+
+/*----- Tech stack band -----*/
+.tech-stack-band {
+    margin-top: 40px;
+    padding-top: 12px;
+}
+
+.tech-stack-band h2,
+.tech-stack-band > p {
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+}
