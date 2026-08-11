@@ -42,7 +42,8 @@ function useOrbitGeometry(count: number) {
 		const tier = TIERS[tierKey];
 		const n = Math.max(count, 1);
 
-		const headerPx = height * 0.07;
+		const headerPx =
+			parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 64;
 		const sectionPad = Math.min(40, Math.max(12, width * 0.025));
 		const stagePad = width >= 700 ? 24 : 12;
 		const labelClearance = 36;

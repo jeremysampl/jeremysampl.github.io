@@ -1,5 +1,6 @@
 .footer {
-    background-color: #000;
+    background-color: var(--surface-dark);
+    border-top: 1px solid rgba(var(--secondary-rgb), 0.28);
     width: 100%;
     text-align: center;
     margin-top: auto;
@@ -11,6 +12,9 @@
     margin-top: 20px;
     font-weight: 600;
     color: #fff;
+}
+.footer > p {
+    color: rgba(255, 255, 255, 0.72);
 }
 .icons .fa {
     color: var(--secondary-color);

@@ -1,7 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import '../../styles/project.css';
 import ModalBox, { GalleryItem } from '../containers/ModalBox';
-import ModalView from '../views/ModalView';
 import ThreeBox, { ThreeBoxItem } from '../containers/ThreeBox';
 import LanguageDisplay, { LanguageDisplayItem } from '../containers/LanguageDisplay';
 import DropDownDisplay from '../containers/DropDownDisplay';
@@ -85,12 +84,12 @@ export default function ProjectPage({
         <Spacer height="30"/>
         <section className="gallery">
             <h2>Gallery</h2>
-            <p>Click on any image to enlarge it and obtain more information.</p>
-            <ModalBox gallery={gallery.slice(0,2)} />
-            {gallery.length > 2 ? <DropDownDisplay expansion={<ModalBox gallery={gallery.slice(2)}/>}/> : null}
+            <p>Click an image to enlarge it. Use the arrows or swipe sideways to browse, and swipe down to close.</p>
+            <ModalBox gallery={gallery} from={0} to={2} />
+            {gallery.length > 2 ? (
+				<DropDownDisplay expansion={<ModalBox gallery={gallery} from={2} />} />
+			) : null}
         </section>
-
-        <ModalView/>
 
         {videos ? <>
             <Spacer height="30"/>
@@ -98,7 +97,7 @@ export default function ProjectPage({
                 <h2>Videos</h2>
                 {videos.map(video => <>
                     <p>{video.title}</p>
-                    <video width="auto" height="auto" controls style={{border: 'solid black 10px', borderRadius: 10, maxWidth: 'calc(80vw - 20px)'}}>
+                    <video width="auto" height="auto" controls style={{border: 'solid var(--surface-dark) 10px', borderRadius: 10, maxWidth: 'calc(80vw - 20px)'}}>
                         <source src={"/images/" + video.src}/>
                         Your browser does not support the video tag.
                     </video>

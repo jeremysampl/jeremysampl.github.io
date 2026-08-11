@@ -13,31 +13,34 @@ import BlackjackPage from './pages/projects/BlackjackPage';
 import ExperiencePage from './pages/ExperiencePage';
 import ContactPage from './pages/ContactPage';
 import RCTankPage from "./pages/projects/RCTankPage";
+import { GalleryLightboxProvider } from './views/GalleryLightbox';
 
 export default function App() {
 	return (
 		<BrowserRouter>
-			<div className="app-shell">
-				<RouteChangeListener/>
-				<Header/>
+			<GalleryLightboxProvider>
+				<div className="app-shell">
+					<RouteChangeListener/>
+					<Header/>
 
-				<main className="app-shell__content">
-					<Routes>
-						<Route path="/" element={<HomePage/>}/>
-						<Route path="/about" element={<AboutPage/>}/>
-						<Route path="/projects" element={<ProjectsPage/>}/>
-						<Route path="/projects/StockAssist" element={<StockAssistPage/>}/>
-						<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
-						<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>
-						<Route path="/projects/Blackjack" element={<BlackjackPage/>}/>
-						<Route path="/projects/RC-Tank" element={<RCTankPage/>}/>
-						<Route path="/experience" element={<ExperiencePage/>}/>
-						<Route path="/contact" element={<ContactPage/>}/>
-						<Route path="/*" element={<Redirect/>}/>
-					</Routes>
-				</main>
-				<Footer/>
-			</div>
+					<main className="app-shell__content">
+						<Routes>
+							<Route path="/" element={<HomePage/>}/>
+							<Route path="/about" element={<AboutPage/>}/>
+							<Route path="/projects" element={<ProjectsPage/>}/>
+							<Route path="/projects/StockAssist" element={<StockAssistPage/>}/>
+							<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
+							<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>
+							<Route path="/projects/Blackjack" element={<BlackjackPage/>}/>
+							<Route path="/projects/RC-Tank" element={<RCTankPage/>}/>
+							<Route path="/experience" element={<ExperiencePage/>}/>
+							<Route path="/contact" element={<ContactPage/>}/>
+							<Route path="/*" element={<Redirect/>}/>
+						</Routes>
+					</main>
+					<Footer/>
+				</div>
+			</GalleryLightboxProvider>
 		</BrowserRouter>
 	);
 }

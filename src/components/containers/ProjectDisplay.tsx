@@ -8,7 +8,14 @@ type ProjectSummary = {
 	image: string;
 };
 
-export default function ProjectDisplay({ project, onClick }: { project: ProjectSummary; onClick?: () => void; isModal?: boolean }) {
+export default function ProjectDisplay({
+	project,
+	onClick,
+}: {
+	project: ProjectSummary;
+	onClick?: (event: React.MouseEvent<HTMLElement>, el: HTMLElement) => void;
+	isModal?: boolean;
+}) {
 	if (project.url) {
 		return (
 			<Link to={'/projects/' + project.url} className="project-col">
@@ -18,11 +25,13 @@ export default function ProjectDisplay({ project, onClick }: { project: ProjectS
 		);
 	} else {
 		return (
-			<div className="project-col" onClick={onClick}>
+			<div
+				className="project-col"
+				onClick={(event) => onClick?.(event, event.currentTarget)}
+			>
 				<h3>{project.name}</h3>
 				<img src={'/images/projects/' + project.image} alt="Project display"/>
 			</div>
 		);
 	}
-	
 }

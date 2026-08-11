@@ -33,7 +33,7 @@ export default function HomePage() {
 						{ title: "Team Player", description: "I am able to communicate clearly and effectively on a team, as well as lead when needed." }
 					]}
 				/>
-				<SimpleButton text="Learn More" url="/about" color="#000"/>
+				<SimpleButton text="Learn More" url="/about" color="var(--text-ink)"/>
 
 				<Spacer height="30"/>
 				<h2>My Projects</h2>
@@ -42,7 +42,7 @@ export default function HomePage() {
 					<ProjectDisplay isModal={false} project={{ name: stockAssist.name, url: stockAssist.slug, image: stockAssist.thumbnail }}/>
 					<ProjectDisplay isModal={false} project={{ name: terraExodus.name, url: terraExodus.slug, image: terraExodus.thumbnail }}/>
 				</div>
-				<SimpleButton text="View All Projects" url="/projects" color="#000"/>
+				<SimpleButton text="View All Projects" url="/projects" color="var(--text-ink)"/>
 
 				<Spacer height="30"/>
 				<section className="tech-stack-band">

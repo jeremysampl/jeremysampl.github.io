@@ -4,12 +4,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 93vh;
+    /* Pull under the fixed header so the glass nav sits on the hero */
+    margin-top: calc(-1 * var(--header-height, 64px));
+    height: 100vh;
+    min-height: 560px;
     width: 100%;
     overflow: hidden;
-    background: #05070d;
+    background: var(--surface-dark);
     text-align: center;
     align-items: center;
+    /* Keep title clear of the overlaying nav */
+    padding-top: var(--header-height, 64px);
+    box-sizing: border-box;
 }
 
 .hero-content {
@@ -51,7 +57,7 @@
     background:
         radial-gradient(ellipse 80% 60% at 50% 40%, rgba(30, 111, 232, 0.22), transparent 60%),
         radial-gradient(ellipse 50% 40% at 80% 80%, rgba(30, 111, 232, 0.12), transparent 55%),
-        linear-gradient(180deg, #05070d 0%, #0a1220 45%, #05070d 100%);
+        linear-gradient(180deg, var(--surface-dark) 0%, #0a1220 45%, var(--surface-dark) 100%);
 }
 
 .hero-bg__grid {
@@ -130,8 +136,8 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 75% 70% at 50% 45%, transparent 35%, rgba(5, 7, 13, 0.55) 100%),
-        linear-gradient(180deg, rgba(5, 7, 13, 0.35) 0%, transparent 18%, transparent 78%, rgba(5, 7, 13, 0.65) 100%);
+        radial-gradient(ellipse 75% 70% at 50% 45%, transparent 35%, rgba(var(--surface-dark-rgb), 0.55) 100%),
+        linear-gradient(180deg, rgba(var(--surface-dark-rgb), 0.35) 0%, transparent 18%, transparent 78%, rgba(var(--surface-dark-rgb), 0.65) 100%);
 }
 
 /* Soft floating particles */

@@ -10,11 +10,16 @@
     /* Soft wash of the accent (same role as the old #ffcdcd on red) */
     --secondary-tint: #cde0ff;
     --dark-grey: #444;
+    /* Shared chrome surface (header, footer, cards, panels) */
+    --surface-dark: #05070d;
+    --surface-dark-rgb: 5, 7, 13;
+    --text-ink: #05070d;
+    --header-height: 64px;
 }
 
 .app-shell {
-    /* Fill the viewport under the fixed header (body has margin-top: 7vh) */
-    min-height: calc(100vh - 7vh);
+    /* Fill the viewport under the fixed header (body has margin-top: var(--header-height)) */
+    min-height: calc(100vh - var(--header-height, 64px));
     display: flex;
     flex-direction: column;
 }
@@ -26,7 +31,7 @@
 .section {
     width: 100%;
     max-width: none;
-    min-height: calc(93vh - 200px);
+    min-height: calc(100vh - var(--header-height, 64px) - 200px);
     text-align: center;
     margin: 10px auto;
     padding: 16px clamp(16px, 3vw, 48px);
@@ -47,20 +52,20 @@
 h1 {
     font-size: 60px;
     font-weight: 900;
-    color: #000;
+    color: var(--text-ink);
     padding: 10px;
 }
 h2 {
     font-size: 36px;
     font-weight: 600;
-    color: #000;
+    color: var(--text-ink);
     padding: 10px;
     margin-top: 10px;
 }
 h3 {
     font-size: 26px;
     font-weight: 700;
-    color:#000;
+    color: var(--text-ink);
     padding: 10px;
 }
 p {

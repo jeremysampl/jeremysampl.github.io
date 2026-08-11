@@ -1,30 +1,57 @@
 import React from 'react';
 import ProjectDisplay from './ProjectDisplay';
+import { useGalleryLightbox } from '../views/GalleryLightbox';
+import type { GalleryItem } from '../../types/gallery';
 
-export type GalleryItem = {
-	title: string;
-	path: string;
-	description: string;
-};
+export type { GalleryItem };
 
-export default function ModalBox({ gallery }: { gallery: GalleryItem[] }) {
-    return <>{Array.from({length: Math.floor(gallery.length / 2)}, (v, i) => i * 2).map(i => <>
-        <div className="row" style={i < gallery.length - 1 ? {} : {justifyContent: 'center'}}>
-            <ProjectDisplay project={{name: gallery[i].title, image: gallery[i].path}}
-                            onClick={() => zoomImage(gallery[i].path, gallery[i].description)}/>
-            {i < gallery.length - 1 ?
-                <ProjectDisplay project={{name: gallery[i + 1].title, image: gallery[i + 1].path}}
-                                onClick={() => zoomImage(gallery[i + 1].path, gallery[i + 1].description)}/>
-                : ''}
-        </div>
-    </>)}</>;
-}
+export default function ModalBox({
+	gallery,
+	from = 0,
+	to,
+}: {
+	gallery: GalleryItem[];
+	from?: number;
+	to?: number;
+}) {
+	const { openLightbox } = useGalleryLightbox();
+	const items = gallery.slice(from, to);
 
-function zoomImage(path: string, description: string) {
-    const modal = document.getElementById("modal")!;
-    const modalImg = document.getElementById("modalImg") as HTMLImageElement;
-    const caption = document.getElementById("caption")!;
-    modal.style.display = "flex";
-    modalImg.src = "/images/projects/" + path;
-    caption.innerHTML = description;
+	return (
+		<>
+			{Array.from({ length: Math.ceil(items.length / 2) }, (_, row) => {
+				const i = row * 2;
+				const first = items[i];
+				const second = items[i + 1];
+				const firstIndex = from + i;
+				const secondIndex = from + i + 1;
+				const isLastRow = !second;
+
+				return (
+					<div
+						className="row"
+						key={`${first.path}-${firstIndex}`}
+						style={isLastRow ? { justifyContent: 'center' } : undefined}
+					>
+						<ProjectDisplay
+							project={{ name: first.title, image: first.path }}
+							onClick={(_, el) => {
+								const origin = el.querySelector('img') ?? el;
+								openLightbox(gallery, firstIndex, origin);
+							}}
+						/>
+						{second ? (
+							<ProjectDisplay
+								project={{ name: second.title, image: second.path }}
+								onClick={(_, el) => {
+									const origin = el.querySelector('img') ?? el;
+									openLightbox(gallery, secondIndex, origin);
+								}}
+							/>
+						) : null}
+					</div>
+				);
+			})}
+		</>
+	);
 }

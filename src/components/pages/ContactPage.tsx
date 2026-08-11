@@ -25,9 +25,9 @@ export default function ContactPage() {
 			<p>Other ways to get to know me:</p>
 			<ThreeBox
 				boxes = {[
-					{ title: "Facebook", icon: "facebook", description: "https://www.facebook.com/jeremysampl/", url: "https://www.facebook.com/jeremysampl/" },
+					{ title: "GitHub", icon: "github", description: "https://github.com/jeremysampl/", url: "https://github.com/jeremysampl/" },
 					{ title: "Instagram", icon: "instagram", description: "https://instagram.com/jeremysampl/", url: "https://instagram.com/jeremysampl/" },
-					{ title: "GitHub", icon: "github", description: "https://github.com/jeremysampl/", url: "https://github.com/jeremysampl/" }
+					{ title: "Facebook", icon: "facebook", description: "https://www.facebook.com/jeremysampl/", url: "https://www.facebook.com/jeremysampl/" },
 				]}
 			/>
 		</section>

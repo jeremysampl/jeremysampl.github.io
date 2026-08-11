@@ -18,9 +18,9 @@ export default function DropDownDisplay({ expansion }: { expansion: ReactNode })
         width: "fit-content",
         margin: "10px auto",
         transform: isExpanded ? "rotate(180deg)" : "rotate(0)",
-        color: isHover ? "var(--secondary-color)" : "#000",
+        color: isHover ? "var(--secondary-color)" : "var(--text-ink)",
         WebkitTextStrokeWidth: isHover ? "4px" : "0px",
-        WebkitTextStrokeColor: "#000",
+        WebkitTextStrokeColor: "var(--text-ink)",
         transitionDuration: '200ms',
     }
 
