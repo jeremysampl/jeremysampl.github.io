@@ -1,4 +1,4 @@
-export type TechnologyCategory = 'languages' | 'frameworks' | 'tools';
+export type TechnologyCategory = 'languages' | 'frameworks' | 'tools' | 'other';
 
 export type TechnologyId =
 	| 'python'
@@ -27,7 +27,10 @@ export type TechnologyId =
 	| 'cicd'
 	| 'docker'
 	| 'websocket'
-	| 'redis';
+	| 'redis'
+	| 'phaser'
+	| 'tailwindcss'
+	| 'yjs';
 
 export type Technology = {
 	id: TechnologyId;
@@ -72,8 +75,13 @@ export const technologies: Technology[] = [
 	{ id: 'git', name: 'Git', category: 'tools', icon: 'Git.svg' },
 	{ id: 'cicd', name: 'CI/CD', category: 'tools', faIcon: 'refresh' },
 	{ id: 'docker', name: 'Docker', category: 'tools', icon: 'Docker.svg' },
-	{ id: 'websocket', name: 'WebSocket', category: 'tools', faIcon: 'plug' },
+	{ id: 'websocket', name: 'WebSocket', category: 'tools', icon: 'WebSocket.webp' },
 	{ id: 'redis', name: 'Redis', category: 'tools', icon: 'Redis.svg' },
+
+	// Other
+	{ id: 'phaser', name: 'Phaser', category: 'other', icon: 'Phaser.png' },
+	{ id: 'tailwindcss', name: 'Tailwind CSS', category: 'other', icon: 'Tailwind CSS.svg' },
+	{ id: 'yjs', name: 'Y.js', category: 'other', icon: 'Yjs.png' },
 ];
 
 export function getTechnology(id: TechnologyId): Technology {

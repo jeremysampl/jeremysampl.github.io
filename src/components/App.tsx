@@ -14,6 +14,7 @@ import ExperiencePage from './pages/ExperiencePage';
 import ContactPage from './pages/ContactPage';
 import RCTankPage from "./pages/projects/RCTankPage";
 import { GalleryLightboxProvider } from './views/GalleryLightbox';
+import GeckodePage from './pages/projects/GeckodePage';
 
 export default function App() {
 	return (
@@ -28,6 +29,7 @@ export default function App() {
 							<Route path="/" element={<HomePage/>}/>
 							<Route path="/about" element={<AboutPage/>}/>
 							<Route path="/projects" element={<ProjectsPage/>}/>
+							<Route path="/projects/Geckode" element={<GeckodePage/>}/>
 							<Route path="/projects/StockAssist" element={<StockAssistPage/>}/>
 							<Route path="/projects/TerraExodus" element={<TerraExodusPage/>}/>
 							<Route path="/projects/TicTacToe" element={<TicTacToePage/>}/>

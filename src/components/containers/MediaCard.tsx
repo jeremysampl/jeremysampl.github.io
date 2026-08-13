@@ -9,17 +9,40 @@ export type MediaCardProps = {
 	alt?: string;
 	href?: string;
 	isVideo?: boolean;
+	compact?: boolean;
+	active?: boolean;
+	path?: string;
 	onClick?: (event: MouseEvent<HTMLElement>, origin: HTMLElement) => void;
 };
 
-function MediaCardBody({ title, src, alt, isVideo }: Pick<MediaCardProps, 'title' | 'src' | 'alt' | 'isVideo'>) {
+function MediaCardBody({
+	title,
+	src,
+	alt,
+	isVideo,
+	path,
+}: Pick<MediaCardProps, 'title' | 'src' | 'alt' | 'isVideo' | 'path'>) {
 	return (
 		<>
 			<span className="media-card__media">
 				{isVideo ? (
-					<video className="media-card__thumb" src={src} muted playsInline preload="metadata" aria-hidden="true" />
+					<video
+						className="media-card__thumb"
+						src={src}
+						data-gallery-path={path}
+						muted
+						playsInline
+						preload="metadata"
+						aria-hidden="true"
+					/>
 				) : (
-					<img className="media-card__thumb" src={src} alt={alt ?? title} loading="lazy" />
+					<img
+						className="media-card__thumb"
+						src={src}
+						data-gallery-path={path}
+						alt={alt ?? title}
+						loading="lazy"
+					/>
 				)}
 				{isVideo ? (
 					<span className="media-card__play" aria-hidden="true">
@@ -34,14 +57,35 @@ function MediaCardBody({ title, src, alt, isVideo }: Pick<MediaCardProps, 'title
 	);
 }
 
-export default function MediaCard({ title, src, alt, href, isVideo, onClick }: MediaCardProps) {
+function mediaCardClassName({ compact, active }: Pick<MediaCardProps, 'compact' | 'active'>) {
+	return [
+		'media-card',
+		compact ? 'media-card--compact' : '',
+		active ? 'is-active' : '',
+	]
+		.filter(Boolean)
+		.join(' ');
+}
+
+export default function MediaCard({
+	title,
+	src,
+	alt,
+	href,
+	isVideo,
+	compact,
+	active,
+	path,
+	onClick,
+}: MediaCardProps) {
 	const originFrom = (el: HTMLElement) =>
 		el.querySelector<HTMLElement>('.media-card__thumb') ?? el;
+	const className = mediaCardClassName({ compact, active });
 
 	if (href) {
 		return (
-			<Link to={href} className="media-card">
-				<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} />
+			<Link to={href} className={className}>
+				<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} path={path} />
 			</Link>
 		);
 	}
@@ -49,10 +93,10 @@ export default function MediaCard({ title, src, alt, href, isVideo, onClick }: M
 	return (
 		<button
 			type="button"
-			className="media-card"
+			className={className}
 			onClick={(event) => onClick?.(event, originFrom(event.currentTarget))}
 		>
-			<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} />
+			<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} path={path} />
 		</button>
 	);
 }
@@ -60,12 +104,24 @@ export default function MediaCard({ title, src, alt, href, isVideo, onClick }: M
 export function MediaCardGrid({
 	children,
 	columns = 2,
+	variant = 'grid',
+	gridRef,
 }: {
 	children: React.ReactNode;
 	columns?: 2 | 3;
+	variant?: 'grid' | 'filmstrip';
+	gridRef?: React.Ref<HTMLDivElement>;
 }) {
+	const className = [
+		'media-card-grid',
+		variant === 'filmstrip' ? 'media-card-grid--filmstrip' : '',
+		variant === 'grid' && columns === 3 ? 'media-card-grid--3' : '',
+	]
+		.filter(Boolean)
+		.join(' ');
+
 	return (
-		<div className={`media-card-grid${columns === 3 ? ' media-card-grid--3' : ''}`}>
+		<div ref={gridRef} className={className}>
 			{children}
 		</div>
 	);

@@ -1,6 +1,7 @@
 import { TechnologyId, getTechnology, technologyIconSrc } from './technologies';
 
 export type ProjectId =
+	| 'geckode'
 	| 'stock-assist'
 	| 'terra-exodus'
 	| 'rc-tank'
@@ -40,6 +41,15 @@ export type ResolvedProjectTechnology = {
 
 /** Projects listed on the site. Also used by the tech stack wheel. */
 export const projects: ProjectEntry[] = [
+	{
+		id: 'geckode',
+		slug: 'Geckode',
+		name: 'Geckode',
+		title: 'Multi-User Block Coding Platform',
+		thumbnail: 'Geckode/Platformer Game.png',
+		technologies: ['nodejs', 'nextjs', 'react', 'tailwindcss', 'typescript', 'rest-apis', 'django', 'python', 'postgresql', 'redis', 'docker', 'phaser', 'websocket', 'yjs'],
+		website: 'https://geckode.ca',
+	},
 	{
 		id: 'stock-assist',
 		slug: 'StockAssist',

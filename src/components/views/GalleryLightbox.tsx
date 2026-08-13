@@ -58,8 +58,12 @@ function rectFromElement(el: Element): OriginRect {
 }
 
 function findThumbnailOrigin(path: string): OriginRect | null {
-	const media = document.querySelectorAll<HTMLElement>('.media-card__thumb');
+	const media = document.querySelectorAll<HTMLElement>('[data-gallery-path], .media-card__thumb, .project-card__image');
 	for (const element of media) {
+		const galleryPath = element.getAttribute('data-gallery-path');
+		if (galleryPath && (galleryPath === path || path.endsWith(galleryPath))) {
+			return rectFromElement(element);
+		}
 		const src = element.getAttribute('src') ?? (element as HTMLImageElement).src;
 		if (src.includes(`/images/projects/${path}`) || src.endsWith(path)) {
 			return rectFromElement(element);
@@ -641,8 +645,8 @@ function LightboxOverlay({
 		dragRef.current = null;
 		setDragging(false);
 
-		// Tap with no drag: toggle captions
-		if (!state.moved && state.mode === 'undecided') {
+		// Tap with no drag: toggle captions (works whether zoomed or not)
+		if (!state.moved) {
 			setChromeVisible((visible) => !visible);
 			return;
 		}
@@ -739,6 +743,45 @@ function LightboxOverlay({
 						strokeLinecap="round"
 					/>
 				</svg>
+			</button>
+
+			<button
+				type="button"
+				className="gallery-lightbox__desc-toggle"
+				aria-pressed={chromeVisible}
+				aria-label={chromeVisible ? 'Hide description' : 'Show description'}
+				hidden={closing}
+				onClick={() => setChromeVisible((visible) => !visible)}
+			>
+				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+					{chromeVisible ? (
+						<path
+							d="M4 7.5h16M4 12h16M4 16.5h10"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+						/>
+					) : (
+						<>
+							<path
+								d="M4 7.5h16M4 12h16M4 16.5h10"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+							/>
+							<path
+								d="M15 15.5l5 5M20 15.5l-5 5"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+							/>
+						</>
+					)}
+				</svg>
+				<span>{chromeVisible ? 'Hide description' : 'Show description'}</span>
 			</button>
 
 			{canNavigate ? (
