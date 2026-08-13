@@ -355,3 +355,10 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+@media (max-width: 699px) {
+    .tech-stack-band {
+        margin-top: 28px;
+        overflow: visible;
+    }
+}

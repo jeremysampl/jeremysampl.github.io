@@ -32,6 +32,13 @@
 		box-shadow 280ms ease,
 		transform 280ms ease,
 		border-color 280ms ease;
+	user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
 }
 
 .media-card:hover,

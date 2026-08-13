@@ -4,6 +4,24 @@
     font-family: 'Roboto Slab', serif;
 }
 
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+    /* Body margin sits outside body background; keep this dark under the home header */
+    background-color: var(--surface-dark);
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+    background-color: #fff;
+}
+
+:target,
+[id] {
+    scroll-margin-top: calc(var(--header-height, 64px) + 12px);
+}
+
 /* Firefox: keep Font Awesome on ::before instead of the page font */
 .fa,
 .fa::before,
@@ -33,6 +51,8 @@ a[href] * {
     min-height: calc(100vh - var(--header-height, 64px));
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 .app-shell__content {

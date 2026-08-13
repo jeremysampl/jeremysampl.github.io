@@ -59,9 +59,10 @@ function Redirect() {
 function RouteChangeListener() {
 	const location = useLocation();
 
+	// Only reset scroll on real page changes, not hash updates like #skills.
 	useEffect(() => {
 		window.scrollTo(0, 0);
-	}, [location]);
+	}, [location.pathname]);
 
 	return null;
 }

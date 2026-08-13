@@ -15,7 +15,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'api.ts',
 		duration: '26s',
 		delay: '0s',
-		style: { top: '7%', left: '17%', '--rotate': '-6deg' } as React.CSSProperties,
+		style: { top: '10%', left: '17%', '--rotate': '-6deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -60,7 +60,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'App.tsx',
 		duration: '28s',
 		delay: '-8s',
-		style: { top: '12%', right: '4%', '--rotate': '5deg' } as React.CSSProperties,
+		style: { top: '15%', right: '4%', '--rotate': '5deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -89,7 +89,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'views.py',
 		duration: '30s',
 		delay: '-14s',
-		style: { bottom: '14%', left: '4%', '--rotate': '4deg' } as React.CSSProperties,
+		style: { bottom: '17%', left: '4%', '--rotate': '4deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -134,7 +134,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'schema.sql',
 		duration: '27s',
 		delay: '-5s',
-		style: { bottom: '10%', right: '5%', '--rotate': '-4deg' } as React.CSSProperties,
+		style: { bottom: '13%', right: '5%', '--rotate': '-4deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -165,7 +165,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'Dockerfile',
 		duration: '29s',
 		delay: '-11s',
-		style: { top: '38%', left: '1%', '--rotate': '-3deg' } as React.CSSProperties,
+		style: { top: '41%', left: '1%', '--rotate': '-3deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -208,7 +208,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'server.js',
 		duration: '25s',
 		delay: '-17s',
-		style: { top: '36%', right: '2%', '--rotate': '3deg' } as React.CSSProperties,
+		style: { top: '39%', right: '2%', '--rotate': '3deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -244,7 +244,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'cache.py',
 		duration: '31s',
 		delay: '-20s',
-		style: { top: '58%', right: '18%', '--rotate': '-5deg' } as React.CSSProperties,
+		style: { bottom: '30%', right: '18%', '--rotate': '-5deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -280,7 +280,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'page.tsx',
 		duration: '24s',
 		delay: '-3s',
-		style: { top: '82%', left: '36%', '--rotate': '6deg' } as React.CSSProperties,
+		style: { bottom: '5%', left: '36%', '--rotate': '6deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [
@@ -327,7 +327,7 @@ const CODE_BLOCKS: CodeBlock[] = [
 		filename: 'bash',
 		duration: '23s',
 		delay: '-12s',
-		style: { top: '6%', left: '52%', '--rotate': '-2deg' } as React.CSSProperties,
+		style: { top: '9%', left: '52%', '--rotate': '-2deg' } as React.CSSProperties,
 		lines: [
 			{
 				tokens: [{ type: 'comment', text: '$ git push origin main' }],

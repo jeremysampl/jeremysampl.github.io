@@ -9,7 +9,7 @@ import HeroBackground from '../containers/HeroBackground';
 import { getProject } from '../../data/projects';
 
 export default function HomePage() {
-	const stockAssist = getProject('stock-assist');
+	const geckode = getProject('geckode');
 	const terraExodus = getProject('terra-exodus');
 
 	return (
@@ -41,9 +41,9 @@ export default function HomePage() {
 				<div className="home-projects">
 					<MediaCardGrid>
 						<MediaCard
-							title={stockAssist.name}
-							src={`/images/projects/${stockAssist.thumbnail}`}
-							href={`/projects/${stockAssist.slug}`}
+							title={geckode.name}
+							src={`/images/projects/${geckode.thumbnail}`}
+							href={`/projects/${geckode.slug}`}
 						/>
 						<MediaCard
 							title={terraExodus.name}

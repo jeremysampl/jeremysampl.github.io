@@ -14,6 +14,15 @@ body.nav-lock {
     z-index: 100;
     width: 100%;
     height: var(--header-height);
+    pointer-events: none;
+}
+
+/* Bar that slides away on mobile scroll */
+.header__slide {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: auto;
     background: var(--surface-dark);
     border-bottom: 1px solid rgba(var(--secondary-rgb), 0.28);
     transition:
@@ -22,7 +31,7 @@ body.nav-lock {
         box-shadow 0.35s ease;
 }
 
-.header--home:not(.header--scrolled):not(.header--menu-open) {
+.header--home:not(.header--scrolled):not(.header--menu-open) .header__slide {
     background: linear-gradient(
         180deg,
         rgba(var(--surface-dark-rgb), 0.55) 0%,
@@ -34,8 +43,8 @@ body.nav-lock {
     -webkit-backdrop-filter: blur(10px) saturate(1.1);
 }
 
-.header--scrolled,
-.header--menu-open {
+.header--scrolled .header__slide,
+.header--menu-open .header__slide {
     background: var(--surface-dark);
     border-bottom-color: rgba(var(--secondary-rgb), 0.28);
     box-shadow: 0 8px 28px rgba(var(--surface-dark-rgb), 0.35);
@@ -61,6 +70,13 @@ body.nav-lock {
     min-width: 0;
     flex: 1 1 auto;
     z-index: 2;
+}
+
+@media (min-width: 801px) {
+    /* Panel is absolutely positioned; keep the brand from running under the links */
+    .nav__brand {
+        max-width: calc(100% - 520px);
+    }
 }
 
 .nav__logo {
@@ -194,11 +210,18 @@ body.nav-lock {
     display: none;
 }
 
+/* Desktop links sit in the header; on mobile the panel is fixed to the viewport */
 .nav__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
     display: flex;
     align-items: center;
-    flex: 0 0 auto;
-    margin-left: auto;
+    padding-right: clamp(16px, 3vw, 40px);
+    box-sizing: border-box;
+    pointer-events: auto;
 }
 
 /*----- Mobile -----*/
@@ -217,9 +240,9 @@ body.nav-lock {
         position: fixed;
         inset: 0;
         z-index: 1;
+        pointer-events: none;
         background: rgba(2, 4, 10, 0.55);
         opacity: 0;
-        pointer-events: none;
         transition: opacity 0.3s ease;
     }
 
@@ -233,6 +256,7 @@ body.nav-lock {
         top: var(--header-height);
         right: 0;
         bottom: 0;
+        left: auto;
         z-index: 1;
         display: block;
         width: min(180px, 86vw);
@@ -241,6 +265,7 @@ body.nav-lock {
         padding: 20px 20px 32px;
         box-sizing: border-box;
         overflow-y: auto;
+        pointer-events: none;
         background: var(--surface-dark);
         border-left: 1px solid rgba(var(--secondary-rgb), 0.28);
         box-shadow: -16px 0 48px rgba(var(--surface-dark-rgb), 0.45);
@@ -250,6 +275,7 @@ body.nav-lock {
 
     .nav__panel.is-open {
         transform: translateX(0);
+        pointer-events: auto;
     }
 
     .nav__list {

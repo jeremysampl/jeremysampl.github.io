@@ -66,6 +66,7 @@ export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkil
 				label: experience.company,
 				sublabel: `${experience.role} · ${experienceDateRange(experience)}`,
 				href: experienceHref(experience.id),
+				thumbnail: `/images/experience/${experience.image}`,
 			};
 		}
 		case 'site':
@@ -89,6 +90,9 @@ function buildSkill(definition: SkillDefinition): Skill {
 	const projectUsages = projects
 		.filter((project) => projectHasTechnology(project, definition.technologyId))
 		.map((project) => ({ kind: 'project' as const, projectId: project.id }));
+	const extraUsages = definition.usages ?? [];
+	const experienceUsages = extraUsages.filter((usage) => usage.kind === 'experience');
+	const otherUsages = extraUsages.filter((usage) => usage.kind !== 'experience');
 
 	return {
 		technologyId: technology.id,
@@ -97,7 +101,8 @@ function buildSkill(definition: SkillDefinition): Skill {
 		icon: technology.icon,
 		iconSrc: technologyIconSrc(technology),
 		faIcon: technology.faIcon,
-		usages: [...projectUsages, ...(definition.usages ?? [])],
+		// Experience, then projects, then site/general.
+		usages: [...experienceUsages, ...projectUsages, ...otherUsages],
 	};
 }
 
@@ -122,25 +127,25 @@ const skillDefinitions: SkillDefinition[] = [
 	{
 		technologyId: 'html',
 		usages: [
-			{ kind: 'site' },
 			{ kind: 'experience', experienceId: 'watering-can-2024' },
 			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'site' },
 		],
 	},
 	{
 		technologyId: 'css',
 		usages: [
-			{ kind: 'site' },
 			{ kind: 'experience', experienceId: 'watering-can-2024' },
 			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'site' },
 		],
 	},
 	{
 		technologyId: 'javascript',
 		usages: [
-			{ kind: 'site' },
 			{ kind: 'experience', experienceId: 'watering-can-2024' },
 			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'site' },
 		],
 	},
 	{ technologyId: 'typescript', usages: [{ kind: 'site' }] },
@@ -149,7 +154,7 @@ const skillDefinitions: SkillDefinition[] = [
 	// Libraries & Frameworks
 	{
 		technologyId: 'django',
-		usages: [{ kind: 'general', label: 'Personal Python web app projects' }],
+		usages: [],
 	},
 	{
 		technologyId: 'wordpress',
@@ -161,18 +166,18 @@ const skillDefinitions: SkillDefinition[] = [
 	{
 		technologyId: 'react',
 		usages: [
-			{ kind: 'site' },
 			{ kind: 'experience', experienceId: 'watering-can-2024' },
 			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'site' },
 		],
 	},
 	{
 		technologyId: 'nextjs',
-		usages: [{ kind: 'general', label: 'Personal full-stack projects' }],
+		usages: [],
 	},
 	{
 		technologyId: 'nodejs',
-		usages: [{ kind: 'general', label: 'Backend services & tooling' }],
+		usages: [],
 	},
 	{
 		technologyId: 'jquery',
@@ -183,7 +188,10 @@ const skillDefinitions: SkillDefinition[] = [
 	},
 	{
 		technologyId: 'electron',
-		usages: [{ kind: 'experience', experienceId: 'watering-can-2023' }],
+		usages: [
+			{ kind: 'experience', experienceId: 'watering-can-2024' },
+			{ kind: 'experience', experienceId: 'watering-can-2023' },
+		],
 	},
 
 	// Databases & Tools
@@ -196,7 +204,7 @@ const skillDefinitions: SkillDefinition[] = [
 	},
 	{
 		technologyId: 'postgresql',
-		usages: [{ kind: 'general', label: 'Personal database-driven projects' }],
+		usages: [],
 	},
 	{
 		technologyId: 'rest-apis',
@@ -215,7 +223,7 @@ const skillDefinitions: SkillDefinition[] = [
 	},
 	{
 		technologyId: 'docker',
-		usages: [{ kind: 'general', label: 'Containerized personal projects' }],
+		usages: [],
 	},
 	{
 		technologyId: 'websocket',
@@ -223,7 +231,7 @@ const skillDefinitions: SkillDefinition[] = [
 	},
 	{
 		technologyId: 'redis',
-		usages: [{ kind: 'general', label: 'Caching & realtime experimentation' }],
+		usages: [],
 	},
 ];
 

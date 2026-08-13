@@ -18,8 +18,6 @@ export default function ProjectsPage() {
 					/>
 				))}
 			</MediaCardGrid>
-
-			<h3>More projects are currently being worked on!</h3>
 		</section>
 	);
 }
