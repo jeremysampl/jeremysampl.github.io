@@ -2,7 +2,7 @@ import React from 'react';
 import '../../styles/home.css';
 import Spacer from '../containers/Spacer';
 import SkillDisplay from '../containers/SkillDisplay';
-import ProjectDisplay from '../containers/ProjectDisplay';
+import MediaCard, { MediaCardGrid } from '../containers/MediaCard';
 import SimpleButton from '../buttons/SimpleButton';
 import TechStack from '../containers/TechStack';
 import HeroBackground from '../containers/HeroBackground';
@@ -38,9 +38,19 @@ export default function HomePage() {
 				<Spacer height="30"/>
 				<h2>My Projects</h2>
 				<p>A showcase of some of my most sophisticated projects.</p>
-				<div className="row">
-					<ProjectDisplay isModal={false} project={{ name: stockAssist.name, url: stockAssist.slug, image: stockAssist.thumbnail }}/>
-					<ProjectDisplay isModal={false} project={{ name: terraExodus.name, url: terraExodus.slug, image: terraExodus.thumbnail }}/>
+				<div className="home-projects">
+					<MediaCardGrid>
+						<MediaCard
+							title={stockAssist.name}
+							src={`/images/projects/${stockAssist.thumbnail}`}
+							href={`/projects/${stockAssist.slug}`}
+						/>
+						<MediaCard
+							title={terraExodus.name}
+							src={`/images/projects/${terraExodus.thumbnail}`}
+							href={`/projects/${terraExodus.slug}`}
+						/>
+					</MediaCardGrid>
 				</div>
 				<SimpleButton text="View All Projects" url="/projects" color="var(--text-ink)"/>
 

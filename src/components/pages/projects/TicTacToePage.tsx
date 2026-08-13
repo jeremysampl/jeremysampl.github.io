@@ -51,9 +51,6 @@ export default function TicTacToePage() {
 					description: "Obtain three in a row, column or diagonal to win."
 				}
 			]}
-			github = {{
-				repository: "tictactoe"
-			}}
 		/>
 	);
 }

@@ -4,7 +4,6 @@ import '../../styles/global.css';
 
 export type LanguageDisplayItem = {
 	name: string;
-	/** Absolute or root-relative image URL, if an icon asset exists */
 	iconSrc?: string;
 	faIcon?: string;
 	subtitle?: string;

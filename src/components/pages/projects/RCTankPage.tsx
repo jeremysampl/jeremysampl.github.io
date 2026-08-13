@@ -85,12 +85,12 @@ export default function RCTankPage() {
                     path: "RC Tank/Bytes Sending.jpg",
                     description: "An example of the bytes sent from the Android app to the Bluetooth module and then processed by the Arduino board."
                 },
-            ]}
-            videos = {[
                 {
                     title: "Muzzle Scanning",
-                    src: "Projects/RC Tank/Tank.mp4"
-                }
+                    path: "RC Tank/Tank.mp4",
+                    description: "Demonstration of the tank's automatic muzzle scanning mode.",
+                    kind: "video" as const,
+                },
             ]}
         />
     );

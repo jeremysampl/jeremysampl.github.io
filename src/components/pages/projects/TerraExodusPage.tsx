@@ -77,9 +77,6 @@ export default function TerraExodusPage() {
 					description: `This is an example of the type of storyline that is found in this game.`
 				}
 			]}
-			github = {{
-				repository: "ascii-shooter"
-			}}
 		/>
 	);
 }

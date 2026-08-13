@@ -63,9 +63,6 @@ export default function BlackjackPage() {
 					description: "A typical loss in blackjack. The player went over 21 while trying to obtain higher."
 				}
 			]}
-			github = {{
-				repository: "blackjack"
-			}}
 		/>
 	);
 }

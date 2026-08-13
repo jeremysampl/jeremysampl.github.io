@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Pull under the fixed header so the glass nav sits on the hero */
     margin-top: calc(-1 * var(--header-height, 64px));
     height: 100vh;
     min-height: 560px;
@@ -13,7 +12,6 @@
     background: var(--surface-dark);
     text-align: center;
     align-items: center;
-    /* Keep title clear of the overlaying nav */
     padding-top: var(--header-height, 64px);
     box-sizing: border-box;
 }
@@ -253,7 +251,6 @@
 .tok--comment { color: #6a9955; }
 .tok--plain { color: rgba(220, 230, 245, 0.82); }
 
-/* Drop secondary blocks on mid/small screens so the hero stays readable */
 @media (max-width: 1100px) {
     .hero-bg__block--shell,
     .hero-bg__block--redis {

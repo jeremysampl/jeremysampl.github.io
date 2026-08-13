@@ -19,7 +19,7 @@ type Tier = {
 	ring: number;
 	iconMax: number;
 	iconMin: number;
-	/** Distance from ring edge to the icon-center track */
+	/** How far the icon centers sit in from the ring edge */
 	trackInset: number;
 	hubFraction: number;
 };
@@ -31,8 +31,8 @@ const TIERS: Record<'mobile' | 'tablet' | 'desktop', Tier> = {
 };
 
 /**
- * Ring + hub size are independent of how many skills are visible.
- * Only icon size reacts to count (so they don't overlap each other).
+ * Ring and hub size stay the same no matter how many skills are visible.
+ * Icon size shrinks if they would overlap.
  */
 function useOrbitGeometry(count: number) {
 	const { width, height } = useWindowSize();
@@ -51,17 +51,14 @@ function useOrbitGeometry(count: number) {
 
 		const availableW = width - (sectionPad + stagePad + labelClearance) * 2;
 		const availableH = height - headerPx - chromeY - stagePad * 2 - labelClearance;
-		// Prefer filling the viewport; soft-cap only to avoid absurd sizes on ultrawide.
 		const ring = Math.max(240, Math.min(tier.ring, availableW, availableH));
 
-		// Fixed hub & track — do not change with filter count.
 		const hub = ring * tier.hubFraction;
 		const radius = ring / 2 - tier.trackInset;
 
 		const circumference = 2 * Math.PI * radius;
 		let icon = Math.min(tier.iconMax, Math.max(tier.iconMin, circumference / n / 1.55));
 
-		// Keep a clear gap between hub edge and icon edge.
 		const maxIconForGap = Math.max(tier.iconMin, (radius - hub / 2 - 16) * 2);
 		icon = Math.min(icon, maxIconForGap);
 
@@ -144,7 +141,7 @@ export default function TechStack() {
 				<div className="orbit__ring-wrap" style={ringStyle}>
 					<span className="orbit__guide" aria-hidden="true" />
 
-					<div className="orbit__ring" role="group" aria-label="Orbiting skills — hover, focus, or tap one">
+					<div className="orbit__ring" role="group" aria-label="Skills">
 						{skills.map((skill) => {
 							const isVisible = visibleNames.has(skill.name);
 							const visibleIndex = isVisible
@@ -204,7 +201,7 @@ export default function TechStack() {
 								<div className="orbit__hub-status">
 									<span className={`orbit__hub-dot orbit__hub-dot--${mode}`} aria-hidden="true" />
 									<span>
-										{mode === 'pinned' ? 'Pinned — tap to release' : mode === 'preview' ? 'Previewing' : 'Auto-cycling'}
+										{mode === 'pinned' ? 'Pinned (tap to unpin)' : mode === 'preview' ? 'Previewing' : 'Auto-cycling'}
 									</span>
 								</div>
 
@@ -223,12 +220,9 @@ export default function TechStack() {
 								<ul className="orbit__usages">
 									{activeSkill.usages.map((usage, index) => {
 										const resolved = resolveSkillUsage(usage);
-
-										return (
-											<li
-												key={`${activeSkill.name}-${resolved.key}-${index}`}
-												className={`orbit__usage orbit__usage--${resolved.kind}`}
-											>
+										const className = `orbit__usage orbit__usage--${resolved.kind}${resolved.href ? ' orbit__usage--link' : ''}`;
+										const body = (
+											<>
 												<span className="orbit__usage-icon" aria-hidden="true">
 													{resolved.thumbnail ? (
 														<img src={resolved.thumbnail} alt="" loading="lazy" />
@@ -253,26 +247,31 @@ export default function TechStack() {
 													) : null}
 												</span>
 												{resolved.href ? (
-													resolved.kind === 'experience' ? (
-														<HashLink
-															className="orbit__usage-link"
-															smooth
-															to={resolved.href}
-															scroll={scrollToElementWithHeaderOffset}
-															aria-label={`Go to ${resolved.label}`}
-														>
-															<Icon name="arrow-right" size={14} />
-														</HashLink>
-													) : (
-														<Link
-															className="orbit__usage-link"
-															to={resolved.href}
-															aria-label={`Go to ${resolved.label}`}
-														>
-															<Icon name="arrow-right" size={14} />
-														</Link>
-													)
+													<span className="orbit__usage-arrow" aria-hidden="true">
+														<Icon name="arrow-right" size={14} />
+													</span>
 												) : null}
+											</>
+										);
+
+										return (
+											<li key={`${activeSkill.name}-${resolved.key}-${index}`}>
+												{resolved.href && resolved.kind === 'experience' ? (
+													<HashLink
+														className={className}
+														smooth
+														to={resolved.href}
+														scroll={scrollToElementWithHeaderOffset}
+													>
+														{body}
+													</HashLink>
+												) : resolved.href ? (
+													<Link className={className} to={resolved.href}>
+														{body}
+													</Link>
+												) : (
+													<div className={className}>{body}</div>
+												)}
 											</li>
 										);
 									})}

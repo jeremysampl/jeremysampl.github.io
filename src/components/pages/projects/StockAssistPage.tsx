@@ -84,9 +84,6 @@ export default function StockAssistPage() {
 					As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products and the order total.`
 				}
 			]}
-			github = {{
-				repository: "inventory-system"
-			}}
 		/>
 	);
 }

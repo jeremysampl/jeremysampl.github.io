@@ -22,7 +22,6 @@ body.nav-lock {
         box-shadow 0.35s ease;
 }
 
-/* Home (top of page): dissolve into the hero */
 .header--home:not(.header--scrolled):not(.header--menu-open) {
     background: linear-gradient(
         180deg,
@@ -191,7 +190,6 @@ body.nav-lock {
 /*----- Mobile -----*/
 @media (max-width: 800px) {
     .nav__brand {
-        /* Keep room for the toggle; never spill into the drawer */
         max-width: calc(100% - 56px);
         z-index: 2;
     }

@@ -10,8 +10,7 @@ import {
 export type SkillCategory = TechnologyCategory;
 
 /**
- * Where a skill has actually been used, beyond the projects that already list
- * this technology in `projects.ts`. Project usages are inferred automatically.
+ * Extra places a skill was used, besides projects that already list it.
  */
 export type SkillUsage =
 	| { kind: 'experience'; experienceId: ExperienceId }
@@ -73,8 +72,7 @@ export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkil
 			return {
 				key: 'site',
 				kind: 'site',
-				label: 'This portfolio',
-				sublabel: 'Built with it, right now',
+				label: 'This website',
 				href: '/',
 			};
 		case 'general':
@@ -110,11 +108,7 @@ export const skillCategories: { id: SkillCategory | 'all'; label: string }[] = [
 	{ id: 'tools', label: 'Databases & Tools' },
 ];
 
-/**
- * Technologies shown on the home Tech Stack wheel.
- * Only entries listed here appear on the wheel — other technologies can still
- * exist in `technologies.ts` and be attached to projects (e.g. C# / XAML).
- */
+/** Skills on the home page wheel. Other techs can still live in technologies.ts. */
 const skillDefinitions: SkillDefinition[] = [
 	// Languages
 	{ technologyId: 'python' },

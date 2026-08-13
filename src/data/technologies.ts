@@ -33,19 +33,14 @@ export type Technology = {
 	id: TechnologyId;
 	name: string;
 	category: TechnologyCategory;
-	/** Filename under /images/languages/ */
+	/** File in /images/languages/ */
 	icon?: string;
-	/** Font Awesome 4 icon name when no image asset exists */
+	/** Font Awesome 4 name, if there is no image */
 	faIcon?: string;
-	/** Extra padding around the icon image (used by LanguageDisplay) */
 	iconPadding?: number;
 };
 
-/**
- * Single source of truth for every technology name + icon on the site.
- * Projects reference these by id; the Tech Stack wheel only shows the subset
- * listed in `skills.ts`.
- */
+/** Names and icons for each technology. The home wheel only shows the subset in skills.ts. */
 export const technologies: Technology[] = [
 	// Languages
 	{ id: 'python', name: 'Python', category: 'languages', icon: 'Python.png' },

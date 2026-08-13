@@ -1,47 +1,288 @@
-/*----- Title/Overview/Description -----*/
-.overview .title h1 {
-    margin-bottom: 0;
-    padding-bottom: 0;
+/*----- Shared content width -----*/
+.project-page {
+	--project-page-width: min(100%, 1280px);
+	text-align: center;
 }
-.overview .title h3 {
-    margin-top: 0;
-    padding-top: 0;
-    color: var(--secondary-color)
+
+.project-page__header,
+.project-page__overview,
+.project-page__description,
+.project-page__media,
+.project-prose,
+.project-page__tagline,
+.project-page__media-hint,
+.project-links,
+.tech-chips,
+.project-page .info-card-grid,
+.project-page .media-card-grid {
+	width: 100%;
+	max-width: var(--project-page-width);
+	margin-left: auto;
+	margin-right: auto;
+	box-sizing: border-box;
 }
-.description p {
-    font-size: 18px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
-    margin-top: 10px;
+
+/*----- Header -----*/
+.project-page__header {
+	margin-bottom: 8px;
 }
-.three-col .fa {
-    font-size: 20vh;
-    color: var(--secondary-color);
+
+.project-page__name {
+	margin-bottom: 0;
+	padding-bottom: 4px;
+}
+
+.project-page__tagline {
+	margin: 0 auto 16px;
+	padding: 0;
+	font-size: clamp(17px, 2.4vw, 24px);
+	font-weight: 600;
+	line-height: 1.45;
+	color: var(--secondary-color);
+}
+
+/*----- Source / site links -----*/
+.project-links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	margin: 0 auto 18px;
+	padding: 0;
+}
+
+.project-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	min-width: min(100%, 220px);
+	padding: 10px 16px 10px 12px;
+	border-radius: 14px;
+	text-decoration: none;
+	text-align: left;
+	transition:
+		transform 180ms ease,
+		box-shadow 180ms ease,
+		filter 180ms ease;
+}
+
+.project-link:hover,
+.project-link:focus-visible {
+	transform: translateY(-1px);
+	outline: none;
+}
+
+.project-link__icon {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 10px;
+	flex-shrink: 0;
+}
+
+.project-link__copy {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	min-width: 0;
+}
+
+.project-link__label {
+	font-size: 14px;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.project-link__meta {
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.3;
+	opacity: 0.78;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.project-link--site {
+	background: var(--secondary-color);
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(var(--secondary-rgb), 0.28);
+}
+
+.project-link--site .project-link__icon {
+	background: rgba(255, 255, 255, 0.16);
+	color: #fff;
+}
+
+.project-link--site:hover,
+.project-link--site:focus-visible {
+	filter: brightness(1.06);
+	box-shadow: 0 10px 24px rgba(var(--secondary-rgb), 0.36);
+}
+
+.project-link--github {
+	background: var(--surface-dark);
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(var(--surface-dark-rgb), 0.28);
+}
+
+.project-link--github .project-link__icon {
+	background: rgba(255, 255, 255, 0.1);
+	color: #fff;
+}
+
+.project-link--github:hover,
+.project-link--github:focus-visible {
+	box-shadow: 0 10px 24px rgba(var(--surface-dark-rgb), 0.4);
+}
+
+.project-page__heading {
+	margin-top: 28px;
+	margin-bottom: 14px;
+	padding: 0;
+}
+
+/*----- Description -----*/
+.project-page__description {
+	margin-top: 8px;
+}
+
+.project-prose {
+	padding: 24px clamp(20px, 3vw, 32px);
+	text-align: left;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.72);
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.project-prose p {
+	margin: 0;
+	padding: 0;
+	color: #3a3a3a;
+	font-size: clamp(16px, 1.1rem, 18px);
+	font-weight: 400;
+	line-height: 1.75;
+}
+
+.project-prose p + p,
+.project-prose br + br {
+	display: block;
+	margin-top: 1.1em;
+	content: '';
+}
+
+.project-prose br {
+	display: block;
+	margin-top: 0.55em;
+	content: '';
+}
+
+/*----- Technology chips -----*/
+.tech-chips {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	margin: 0 auto 8px;
+	padding: 0;
+	list-style: none;
+}
+
+.tech-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	max-width: 100%;
+	padding: 10px 16px 10px 12px;
+	border-radius: 999px;
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+	transition:
+		border-color 180ms ease,
+		box-shadow 180ms ease,
+		transform 180ms ease;
+}
+
+.tech-chip.is-hover {
+	border-color: rgba(var(--secondary-rgb), 0.35);
+	box-shadow: 0 6px 18px rgba(var(--secondary-rgb), 0.16);
+	transform: translateY(-1px);
+}
+
+.tech-chip__icon {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: rgba(var(--secondary-rgb), 0.1);
+	flex-shrink: 0;
+	overflow: hidden;
+}
+
+.tech-chip__icon img {
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+}
+
+.tech-chip__name {
+	font-size: clamp(14px, 1.6vw, 16px);
+	font-weight: 700;
+	color: var(--text-ink);
+	white-space: nowrap;
+}
+
+.tech-chip__subtitle {
+	display: none;
+	font-size: clamp(13px, 1.4vw, 15px);
+	font-weight: 500;
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 280px;
+}
+
+@media (min-width: 700px) {
+	.tech-chip__subtitle {
+		display: inline;
+	}
+
+	.tech-chip__subtitle::before {
+		content: '·';
+		margin: 0 8px 0 0;
+		color: #bbb;
+	}
 }
 
 /*----- Gallery -----*/
-.expand-gallery {
-    display: none;
-}
-.expand-gallery .project-col {
-    animation-name: slide-down;
-    animation-duration: 1s;
-}
-.gallery .fa {
-    font-size: 50px;
-    margin-top: 10px;
-    display: block;
-}
-.gallery .fa-arrow-up {
-    display: none;
-}
-.gallery .fa-arrow-down:hover, .gallery .fa-arrow-up:hover {
-    color: var(--secondary-color);
-    -webkit-text-stroke-width: 4px;
-    -webkit-text-stroke-color: var(--text-ink);
+.project-page__media-hint {
+	margin: 0 auto 18px;
+	padding: 0;
+	font-size: clamp(13px, 1.4vw, 15px);
+	line-height: 1.5;
+	color: #888;
 }
 
-/*----- GitHub -----*/
-.github .image img {
-    max-width: 70%;
+@media (max-width: 699px) {
+	.project-prose {
+		padding: 18px 16px;
+	}
+
+	.tech-chips {
+		gap: 8px;
+	}
+
+	.tech-chip {
+		padding: 9px 14px 9px 10px;
+	}
+
+	.project-link {
+		flex: 1 1 100%;
+		min-width: 0;
+	}
 }

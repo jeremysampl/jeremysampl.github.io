@@ -1,26 +1,26 @@
 export type ExperienceId = 'watering-can-2024' | 'watering-can-2023';
 
-/** Nested bullet lists are represented as arrays (first item = parent, rest = children). */
+/** Nested bullets: first item is the parent, the rest are children. */
 export type ExperiencePoint = string | ExperiencePoint[];
 
 export type Month = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export type ExperienceDate = {
 	year: number;
-	/** Optional calendar month, 1–12 */
+	/** 1-12 */
 	month?: Month;
 };
 
 export type ExperienceEntry = {
 	id: ExperienceId;
-	/** Element id on the matching experience card for deep-linking */
+	/** id of the matching card, for hash links */
 	anchor: string;
 	company: string;
 	location: string;
 	role: string;
 	start: ExperienceDate;
 	end: ExperienceDate;
-	/** Filename under /images/experience/ */
+	/** Relative to /images/experience/ */
 	image: string;
 	descriptionTitle?: string;
 	points: ExperiencePoint[];
@@ -70,11 +70,7 @@ function formatExperienceDate(date: ExperienceDate, style: DateRangeStyle): stri
 	return `${monthName(date.month, style)} ${date.year}`;
 }
 
-/**
- * Single source of truth for every role on the Experience page.
- * Order here is display order (newest first).
- * Skill usages reference entries by `id` so labels/links stay in sync.
- */
+/** Jobs on the Experience page, newest first. */
 export const experiences: ExperienceEntry[] = [
 	{
 		id: 'watering-can-2024',
@@ -138,12 +134,7 @@ export function getExperience(id: ExperienceId): ExperienceEntry {
 	return experience;
 }
 
-/**
- * Formats a start/end range.
- * - same year + months: "May – Aug 2023" / "May – August 2023"
- * - different years: "May 2023 – Aug 2024"
- * - year-only: "2023" or "2023 – 2024"
- */
+/** Start/end range, e.g. "May - Aug 2023" or "2023 - 2024". */
 export function experienceDateRange(
 	experience: ExperienceEntry,
 	style: DateRangeStyle = 'short'

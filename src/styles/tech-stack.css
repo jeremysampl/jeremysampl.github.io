@@ -80,7 +80,6 @@
     inset: 0;
     z-index: 2;
     isolation: isolate;
-    /* Full-area layer must not steal wheel/click from the hub underneath */
     pointer-events: none;
     animation: orbit-spin var(--spin-duration) linear infinite;
 }
@@ -168,7 +167,6 @@
     cursor: pointer;
     position: relative;
     opacity: 0.65;
-    /* Re-enable clicks on the actual skill buttons only */
     pointer-events: auto;
     transition: box-shadow 320ms ease, opacity 320ms ease;
 }
@@ -240,7 +238,6 @@
     align-items: center;
     justify-content: flex-start;
     text-align: center;
-    /* Keep rectangular content inside the circle (≈ inscribed square) */
     padding: 12% 10% 10%;
     box-sizing: border-box;
     z-index: 5;
@@ -366,6 +363,13 @@
     border-radius: 999px;
 }
 
+.orbit__usages > li {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    list-style: none;
+}
+
 .orbit__usage {
     display: flex;
     align-items: center;
@@ -380,6 +384,20 @@
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    color: inherit;
+    text-decoration: none;
+}
+
+.orbit__usage--link {
+    cursor: pointer;
+    transition: background 180ms ease, border-color 180ms ease;
+}
+
+.orbit__usage--link:hover,
+.orbit__usage--link:focus-visible {
+    background: rgba(var(--secondary-rgb), 0.08);
+    border-color: rgba(var(--secondary-rgb), 0.2);
+    outline: none;
 }
 
 .orbit__usage-icon {
@@ -432,7 +450,7 @@
     white-space: nowrap;
 }
 
-.orbit__usage-link {
+.orbit__usage-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -442,17 +460,17 @@
     border-radius: 50%;
     background: rgba(var(--secondary-rgb), 0.1);
     color: var(--secondary-color);
-    text-decoration: none;
     transition: background 180ms ease, transform 180ms ease, color 180ms ease;
 }
 
-.orbit__usage-link:hover {
+.orbit__usage--link:hover .orbit__usage-arrow,
+.orbit__usage--link:focus-visible .orbit__usage-arrow {
     background: var(--secondary-color);
     color: #fff;
     transform: translateX(2px);
 }
 
-.orbit__usage-link i {
+.orbit__usage-arrow i {
     pointer-events: none;
 }
 
@@ -531,7 +549,7 @@
         font-size: 11px;
     }
 
-    .orbit__usage-link {
+    .orbit__usage-arrow {
         width: 26px;
         height: 26px;
     }

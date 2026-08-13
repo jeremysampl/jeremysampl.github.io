@@ -7,7 +7,7 @@ export type ProjectId =
 	| 'blackjack'
 	| 'tic-tac-toe';
 
-/** A project can list a tech id, or attach display-only extras like a subtitle. */
+/** Tech id, or a tech id plus a subtitle shown on the project page. */
 export type ProjectTechnologyRef =
 	| TechnologyId
 	| {
@@ -17,14 +17,16 @@ export type ProjectTechnologyRef =
 
 export type ProjectEntry = {
 	id: ProjectId;
-	/** URL segment used in routes, e.g. /projects/{slug} (must match the <Route> path in App.tsx) */
+	/** Used in /projects/{slug} */
 	slug: string;
 	name: string;
 	title: string;
-	/** Path segment under /images/projects/ */
+	/** Relative to /images/projects/ */
 	thumbnail: string;
-	/** Technologies used by this project — source of truth for project pages + skill usages */
 	technologies: ProjectTechnologyRef[];
+	/** Repo name under jeremysampl/, or a full URL */
+	github?: string;
+	website?: string;
 };
 
 export type ResolvedProjectTechnology = {
@@ -36,11 +38,7 @@ export type ResolvedProjectTechnology = {
 	subtitle?: string;
 };
 
-/**
- * Single source of truth for every project on the site.
- * Entries here automatically show up on the Projects page
- * and become linkable from the Tech Stack orbit (via a skill's `usages`).
- */
+/** Projects listed on the site. Also used by the tech stack wheel. */
 export const projects: ProjectEntry[] = [
 	{
 		id: 'stock-assist',
@@ -49,6 +47,7 @@ export const projects: ProjectEntry[] = [
 		title: 'Inventory Management System',
 		thumbnail: 'Inventory Manager/Home.png',
 		technologies: ['java'],
+		github: 'inventory-system',
 	},
 	{
 		id: 'terra-exodus',
@@ -57,6 +56,7 @@ export const projects: ProjectEntry[] = [
 		title: 'CMD Console Shooter Game',
 		thumbnail: 'Terra Exodus/Gameplay.png',
 		technologies: ['python'],
+		github: 'ascii-shooter',
 	},
 	{
 		id: 'rc-tank',
@@ -73,6 +73,7 @@ export const projects: ProjectEntry[] = [
 		title: 'Casino Card Game',
 		thumbnail: 'Blackjack/Lose.png',
 		technologies: ['python'],
+		github: 'blackjack',
 	},
 	{
 		id: 'tic-tac-toe',
@@ -84,6 +85,7 @@ export const projects: ProjectEntry[] = [
 			{ id: 'csharp', subtitle: '60%' },
 			{ id: 'xaml', subtitle: '40%' },
 		],
+		github: 'tictactoe',
 	},
 ];
 
@@ -99,6 +101,11 @@ export function getProject(id: ProjectId): ProjectEntry {
 
 export function projectHref(id: ProjectId): string {
 	return `/projects/${getProject(id).slug}`;
+}
+
+export function projectGithubUrl(github: string): string {
+	if (/^https?:\/\//i.test(github)) return github;
+	return `https://github.com/jeremysampl/${github}`;
 }
 
 export function projectThumbnailSrc(id: ProjectId): string {

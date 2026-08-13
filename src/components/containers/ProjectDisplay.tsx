@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import '../../styles/project-display.css'
+import MediaCard from './MediaCard';
 
 type ProjectSummary = {
 	name: string;
@@ -16,22 +15,12 @@ export default function ProjectDisplay({
 	onClick?: (event: React.MouseEvent<HTMLElement>, el: HTMLElement) => void;
 	isModal?: boolean;
 }) {
-	if (project.url) {
-		return (
-			<Link to={'/projects/' + project.url} className="project-col">
-				<h3>{project.name}</h3>
-				<img src={'/images/projects/' + project.image} alt="Project display"/>
-			</Link>
-		);
-	} else {
-		return (
-			<div
-				className="project-col"
-				onClick={(event) => onClick?.(event, event.currentTarget)}
-			>
-				<h3>{project.name}</h3>
-				<img src={'/images/projects/' + project.image} alt="Project display"/>
-			</div>
-		);
-	}
+	return (
+		<MediaCard
+			title={project.name}
+			src={`/images/projects/${project.image}`}
+			href={project.url ? `/projects/${project.url}` : undefined}
+			onClick={onClick}
+		/>
+	);
 }

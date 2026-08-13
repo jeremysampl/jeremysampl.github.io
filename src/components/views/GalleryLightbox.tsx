@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import type { GalleryItem } from '../../types/gallery';
+import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 import '../../styles/modal.css';
 
 export type { GalleryItem };
@@ -57,14 +58,21 @@ function rectFromElement(el: Element): OriginRect {
 }
 
 function findThumbnailOrigin(path: string): OriginRect | null {
-	const images = document.querySelectorAll<HTMLImageElement>('.gallery img, .project-col img');
-	for (const image of images) {
-		const src = image.getAttribute('src') ?? image.src;
+	const media = document.querySelectorAll<HTMLElement>('.media-card__thumb');
+	for (const element of media) {
+		const src = element.getAttribute('src') ?? (element as HTMLImageElement).src;
 		if (src.includes(`/images/projects/${path}`) || src.endsWith(path)) {
-			return rectFromElement(image);
+			return rectFromElement(element);
 		}
 	}
 	return null;
+}
+
+function pauseVideosIn(root: ParentNode | null) {
+	if (!root) return;
+	root.querySelectorAll('video').forEach((video) => {
+		video.pause();
+	});
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -148,9 +156,11 @@ function LightboxOverlay({
 }) {
 	const { items, index, origin } = session;
 	const item = items[index];
+	const isVideo = isGalleryVideo(item);
 	const stageRef = useRef<HTMLDivElement>(null);
 	const trackRef = useRef<HTMLDivElement>(null);
 	const imgRef = useRef<HTMLImageElement>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
 	const dragRef = useRef<DragState | null>(null);
 	const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
 	const pinchRef = useRef<PinchState | null>(null);
@@ -179,7 +189,7 @@ function LightboxOverlay({
 	const prevIndex = (index - 1 + items.length) % items.length;
 	const nextIndex = (index + 1) % items.length;
 	const canNavigate = items.length > 1;
-	const isZoomed = zoom > 1.02;
+	const isZoomed = !isVideo && zoom > 1.02;
 
 	useEffect(() => {
 		document.body.classList.add('nav-lock');
@@ -214,6 +224,7 @@ function LightboxOverlay({
 		setZoomAnimating(false);
 		pinchRef.current = null;
 		pointersRef.current.clear();
+		pauseVideosIn(stageRef.current);
 	}, [index]);
 
 	const finishClose = useCallback(() => {
@@ -226,6 +237,13 @@ function LightboxOverlay({
 	}, []);
 
 	const animateCloseToOrigin = useCallback(() => {
+		pauseVideosIn(stageRef.current);
+
+		if (isGalleryVideo(item)) {
+			finishClose();
+			return;
+		}
+
 		const img = imgRef.current;
 		if (!img) {
 			finishClose();
@@ -291,7 +309,7 @@ function LightboxOverlay({
 		});
 
 		window.setTimeout(finishClose, 360);
-	}, [finishClose, item.path, origin, resetZoom]);
+	}, [finishClose, item, origin, resetZoom]);
 
 	const goPrev = useCallback(() => {
 		if (!canNavigate || closing || settling || isZoomed) return;
@@ -438,7 +456,10 @@ function LightboxOverlay({
 
 		const isTouch = event.pointerType === 'touch';
 
-		// Desktop / non-touch: click-to-zoom only — no grab, swipe, or pan drag
+		// Desktop on video: native controls handle interaction
+		if (isVideo && !isTouch) return;
+
+		// Desktop: click to zoom, no swipe/pan
 		if (!isTouch) {
 			dragRef.current = {
 				pointerId: event.pointerId,
@@ -620,7 +641,7 @@ function LightboxOverlay({
 		dragRef.current = null;
 		setDragging(false);
 
-		// Tap with no meaningful drag (touch chrome toggle)
+		// Tap with no drag: toggle captions
 		if (!state.moved && state.mode === 'undecided') {
 			setChromeVisible((visible) => !visible);
 			return;
@@ -699,7 +720,7 @@ function LightboxOverlay({
 			].filter(Boolean).join(' ')}
 			role="dialog"
 			aria-modal="true"
-			aria-label="Image gallery"
+			aria-label="Project media gallery"
 			style={{ ['--lightbox-backdrop-opacity' as string]: String(backdropOpacity) }}
 		>
 			<button
@@ -763,7 +784,7 @@ function LightboxOverlay({
 
 			<div
 				ref={stageRef}
-				className="gallery-lightbox__stage"
+				className={`gallery-lightbox__stage${isVideo ? ' gallery-lightbox__stage--video' : ''}`}
 				onPointerDown={onPointerDown}
 				onPointerMove={onPointerMove}
 				onPointerUp={onPointerUp}
@@ -774,29 +795,43 @@ function LightboxOverlay({
 					className={`gallery-lightbox__track${canNavigate ? '' : ' gallery-lightbox__track--single'}`}
 					style={trackStyle}
 				>
-					{slides.map((slide) => (
-						<div
-							key={slide.key}
-							className={`gallery-lightbox__slide${slide.role === 'active' ? ' is-active' : ''}`}
-							style={{ width: slideWidth }}
-						>
-							<img
-								ref={slide.role === 'active' ? imgRef : undefined}
-								className="gallery-lightbox__image"
-								src={`/images/projects/${slide.item.path}`}
-								alt={slide.item.title}
-								draggable={false}
-								style={slide.role === 'active' ? activeImageStyle : undefined}
-							/>
-						</div>
-					))}
+					{slides.map((slide) => {
+						const slideIsVideo = isGalleryVideo(slide.item);
+						return (
+							<div
+								key={slide.key}
+								className={`gallery-lightbox__slide${slide.role === 'active' ? ' is-active' : ''}${slideIsVideo ? ' is-video' : ''}`}
+								style={{ width: slideWidth }}
+							>
+								{slideIsVideo ? (
+									<video
+										ref={slide.role === 'active' ? videoRef : undefined}
+										className="gallery-lightbox__video"
+										src={galleryItemUrl(slide.item)}
+										controls={slide.role === 'active'}
+										playsInline
+										preload="metadata"
+									/>
+								) : (
+									<img
+										ref={slide.role === 'active' ? imgRef : undefined}
+										className="gallery-lightbox__image"
+										src={galleryItemUrl(slide.item)}
+										alt={slide.item.title}
+										draggable={false}
+										style={slide.role === 'active' ? activeImageStyle : undefined}
+									/>
+								)}
+							</div>
+						);
+					})}
 				</div>
 			</div>
 
-			{closing && closeStyle ? (
+			{closing && closeStyle && !isVideo ? (
 				<img
 					className="gallery-lightbox__image gallery-lightbox__image--flying"
-					src={`/images/projects/${item.path}`}
+					src={galleryItemUrl(item)}
 					alt=""
 					draggable={false}
 					style={closeStyle}

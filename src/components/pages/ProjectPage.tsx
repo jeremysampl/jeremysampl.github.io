@@ -1,10 +1,10 @@
 import React, { type ReactNode } from 'react';
 import '../../styles/project.css';
-import ModalBox, { GalleryItem } from '../containers/ModalBox';
-import ThreeBox, { ThreeBoxItem } from '../containers/ThreeBox';
-import LanguageDisplay, { LanguageDisplayItem } from '../containers/LanguageDisplay';
-import DropDownDisplay from '../containers/DropDownDisplay';
-import Spacer from '../containers/Spacer';
+import ProjectMediaGrid, { type GalleryItem } from '../containers/ProjectMediaGrid';
+import InfoCardGrid, { type InfoCardItem } from '../containers/InfoCardGrid';
+import TechnologyChips from '../containers/TechnologyChips';
+import ProjectLinks from '../containers/ProjectLinks';
+import type { LanguageDisplayItem } from '../containers/LanguageDisplay';
 import { ProjectId, getProject, resolveProjectTechnologies } from '../../data/projects';
 
 type ProjectDetails = {
@@ -14,16 +14,7 @@ type ProjectDetails = {
 };
 
 type ProjectOverview = {
-	boxes: ThreeBoxItem[];
-};
-
-type ProjectGithub = {
-	repository: string;
-};
-
-type ProjectVideo = {
-	title: string;
-	src: string;
+	boxes: InfoCardItem[];
 };
 
 export default function ProjectPage({
@@ -32,89 +23,61 @@ export default function ProjectPage({
 	overview,
 	languages,
 	gallery,
-	github = null,
-	videos = null,
+	github,
+	website,
 }: {
 	projectId?: ProjectId;
 	project: ProjectDetails;
 	overview: ProjectOverview;
-	/** Optional override; defaults to technologies listed on the project registry entry */
 	languages?: LanguageDisplayItem[];
 	gallery: GalleryItem[];
-	github?: ProjectGithub | null;
-	videos?: ProjectVideo[] | null;
+	github?: string;
+	website?: string;
 }) {
+	const listed = projectId ? getProject(projectId) : null;
 	const resolvedLanguages =
 		languages ??
-		(projectId
-			? resolveProjectTechnologies(getProject(projectId)).map((technology) => ({
+		(listed
+			? resolveProjectTechnologies(listed).map((technology) => ({
 					name: technology.name,
 					iconSrc: technology.iconSrc,
 					faIcon: technology.faIcon,
 					iconPadding: technology.iconPadding,
 					subtitle: technology.subtitle,
-			  }))
+				}))
 			: []);
 
 	return (
-    <section className="section">
-        <section className="overview">
-            <div className="title">
-                <h1>{project.name}</h1>
-                <h3>{project.title}</h3>
-            </div>
+		<section className="section project-page">
+			<header className="project-page__header">
+				<h1 className="project-page__name">{project.name}</h1>
+				<p className="project-page__tagline">{project.title}</p>
+				<ProjectLinks github={github ?? listed?.github} website={website ?? listed?.website} />
+				{resolvedLanguages.length ? (
+					<TechnologyChips technologies={resolvedLanguages} />
+				) : null}
+			</header>
 
-            <h2>Overview</h2>
-            <ThreeBox boxes = {overview.boxes}/>
-        </section>
+			<section className="project-page__overview">
+				<h2 className="project-page__heading">Overview</h2>
+				<InfoCardGrid items={overview.boxes} />
+			</section>
 
-        <Spacer height="30"/>
-        <section className="description">
-            <h2>Description</h2>
-            {project.description}
-        </section>
+			<section className="project-page__description">
+				<h2 className="project-page__heading">About this project</h2>
+				<div className="project-prose">{project.description}</div>
+			</section>
 
-        <Spacer height="30"/>
-        <section className="languages">
-            <h2>Technologies</h2>
-            <p>This project utilizes the following technologies:</p>
-			<LanguageDisplay languages={resolvedLanguages}/>
-        </section>
-
-        <Spacer height="30"/>
-        <section className="gallery">
-            <h2>Gallery</h2>
-            <p>Click an image to enlarge it. Use the arrows or swipe sideways to browse, and swipe down to close.</p>
-            <ModalBox gallery={gallery} from={0} to={2} />
-            {gallery.length > 2 ? (
-				<DropDownDisplay expansion={<ModalBox gallery={gallery} from={2} />} />
+			{gallery.length ? (
+				<section className="project-page__media">
+					<h2 className="project-page__heading">Gallery</h2>
+					<p className="project-page__media-hint">
+						Click any item to open it full screen. Use arrows or swipe to browse photos and
+						videos together.
+					</p>
+					<ProjectMediaGrid media={gallery} />
+				</section>
 			) : null}
-        </section>
-
-        {videos ? <>
-            <Spacer height="30"/>
-            <section>
-                <h2>Videos</h2>
-                {videos.map(video => <>
-                    <p>{video.title}</p>
-                    <video width="auto" height="auto" controls style={{border: 'solid var(--surface-dark) 10px', borderRadius: 10, maxWidth: 'calc(80vw - 20px)'}}>
-                        <source src={"/images/" + video.src}/>
-                        Your browser does not support the video tag.
-                    </video>
-                </>)}
-            </section>
-        </> : ''}
-
-        {github ?
-            <section className="github">
-                <p>This project and its source code can be found in its entirety on GitHub:</p>
-                <div className="image">
-                    <a href={"https://github.com/jeremysampl/" + github.repository}><img
-                        src="/images/misc/GitHub Logo.png" alt="GitHub Logo"/></a>
-                    <p>{"https://github.com/jeremysampl/" + github.repository}</p>
-                </div>
-            </section>
-        : ''}
-    </section>
-    );
+		</section>
+	);
 }

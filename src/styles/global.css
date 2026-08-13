@@ -4,13 +4,25 @@
     font-family: 'Roboto Slab', serif;
 }
 
+/* Firefox: keep Font Awesome on ::before instead of the page font */
+.fa,
+.fa::before,
+.fa::after {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+}
+
+a[href],
+a[href] * {
+    cursor: pointer;
+}
+
 :root {
     --secondary-color: #1E6FE8;
     --secondary-rgb: 30, 111, 232;
-    /* Soft wash of the accent (same role as the old #ffcdcd on red) */
     --secondary-tint: #cde0ff;
     --dark-grey: #444;
-    /* Shared chrome surface (header, footer, cards, panels) */
     --surface-dark: #05070d;
     --surface-dark-rgb: 5, 7, 13;
     --text-ink: #05070d;
@@ -18,7 +30,6 @@
 }
 
 .app-shell {
-    /* Fill the viewport under the fixed header (body has margin-top: var(--header-height)) */
     min-height: calc(100vh - var(--header-height, 64px));
     display: flex;
     flex-direction: column;
