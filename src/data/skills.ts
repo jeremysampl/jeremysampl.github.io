@@ -189,7 +189,6 @@ const skillDefinitions: SkillDefinition[] = [
 	{
 		technologyId: 'electron',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
 			{ kind: 'experience', experienceId: 'watering-can-2023' },
 		],
 	},
@@ -233,6 +232,10 @@ const skillDefinitions: SkillDefinition[] = [
 		technologyId: 'redis',
 		usages: [],
 	},
+	{
+		technologyId: 'yjs',
+		usages: [],
+	}
 ];
 
 export const skills: Skill[] = skillDefinitions.map(buildSkill);

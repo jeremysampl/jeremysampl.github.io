@@ -28,9 +28,11 @@ export type TechnologyId =
 	| 'docker'
 	| 'websocket'
 	| 'redis'
+	| 'yjs'
 	| 'phaser'
 	| 'tailwindcss'
-	| 'yjs';
+	| 'blockly'
+	| 'woocommerce';
 
 export type Technology = {
 	id: TechnologyId;
@@ -77,11 +79,13 @@ export const technologies: Technology[] = [
 	{ id: 'docker', name: 'Docker', category: 'tools', icon: 'Docker.svg' },
 	{ id: 'websocket', name: 'WebSocket', category: 'tools', icon: 'WebSocket.webp' },
 	{ id: 'redis', name: 'Redis', category: 'tools', icon: 'Redis.svg' },
+	{ id: 'yjs', name: 'Yjs', category: 'tools', icon: 'Yjs.png' },
 
 	// Other
 	{ id: 'phaser', name: 'Phaser', category: 'other', icon: 'Phaser.png' },
 	{ id: 'tailwindcss', name: 'Tailwind CSS', category: 'other', icon: 'Tailwind CSS.svg' },
-	{ id: 'yjs', name: 'Y.js', category: 'other', icon: 'Yjs.png' },
+	{ id: 'blockly', name: 'Blockly', category: 'other', icon: 'Blockly.svg' },
+	{ id: 'woocommerce', name: 'WooCommerce', category: 'other', icon: 'WooCommerce.svg' },
 ];
 
 export function getTechnology(id: TechnologyId): Technology {

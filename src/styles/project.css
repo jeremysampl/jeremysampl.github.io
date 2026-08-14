@@ -267,7 +267,7 @@
 .project-card__body {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 28px;
 	padding: 26px 28px 28px;
 	text-align: left;
 }
@@ -276,7 +276,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
-	padding-bottom: 14px;
+	padding-bottom: 28px;
 	border-bottom: 1px solid rgba(var(--secondary-rgb), 0.14);
 }
 
@@ -297,191 +297,6 @@
 	font-weight: 700;
 	line-height: 1.3;
 	color: #222;
-}
-
-.project-card__meta {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 10px;
-	margin-top: 8px;
-}
-
-/*----- Source / site links -----*/
-.project-links {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	gap: 8px;
-	margin: 0;
-	padding: 0;
-}
-
-.project-link {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	min-width: 0;
-	padding: 7px 12px 7px 8px;
-	border-radius: 999px;
-	text-decoration: none;
-	text-align: left;
-	transition:
-		transform 180ms ease,
-		box-shadow 180ms ease,
-		filter 180ms ease;
-}
-
-.project-link:hover,
-.project-link:focus-visible {
-	transform: translateY(-1px);
-	outline: none;
-}
-
-.project-link__icon {
-	display: grid;
-	place-items: center;
-	width: 26px;
-	height: 26px;
-	border-radius: 50%;
-	flex-shrink: 0;
-}
-
-.project-link__copy {
-	display: flex;
-	flex-direction: column;
-	gap: 0;
-	min-width: 0;
-}
-
-.project-link__label {
-	font-size: 13px;
-	font-weight: 800;
-	line-height: 1.2;
-}
-
-.project-link__meta {
-	font-size: 11px;
-	font-weight: 500;
-	line-height: 1.25;
-	opacity: 0.78;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	max-width: 180px;
-}
-
-.project-link--site {
-	background: var(--secondary-color);
-	color: #fff;
-	box-shadow: 0 6px 16px rgba(var(--secondary-rgb), 0.24);
-}
-
-.project-link--site .project-link__icon {
-	background: rgba(255, 255, 255, 0.16);
-	color: #fff;
-}
-
-.project-link--site:hover,
-.project-link--site:focus-visible {
-	filter: brightness(1.06);
-	box-shadow: 0 8px 18px rgba(var(--secondary-rgb), 0.34);
-}
-
-.project-link--github {
-	background: var(--surface-dark);
-	color: #fff;
-	box-shadow: 0 6px 16px rgba(var(--surface-dark-rgb), 0.24);
-}
-
-.project-link--github .project-link__icon {
-	background: rgba(255, 255, 255, 0.1);
-	color: #fff;
-}
-
-.project-link--github:hover,
-.project-link--github:focus-visible {
-	box-shadow: 0 8px 18px rgba(var(--surface-dark-rgb), 0.38);
-}
-
-/*----- Technology chips -----*/
-.tech-chips {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	gap: 8px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.tech-chip {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	max-width: 100%;
-	padding: 6px 12px 6px 6px;
-	border-radius: 999px;
-	background: #fff;
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	transition:
-		border-color 180ms ease,
-		box-shadow 180ms ease,
-		transform 180ms ease;
-}
-
-.tech-chip.is-hover {
-	border-color: rgba(var(--secondary-rgb), 0.35);
-	box-shadow: 0 4px 14px rgba(var(--secondary-rgb), 0.14);
-	transform: translateY(-1px);
-}
-
-.tech-chip__icon {
-	display: grid;
-	place-items: center;
-	width: 28px;
-	height: 28px;
-	border-radius: 50%;
-	background: rgba(var(--secondary-rgb), 0.1);
-	flex-shrink: 0;
-	overflow: hidden;
-}
-
-.tech-chip__icon img {
-	width: 18px;
-	height: 18px;
-	object-fit: contain;
-}
-
-.tech-chip__name {
-	font-size: 13px;
-	font-weight: 700;
-	color: var(--text-ink);
-	white-space: nowrap;
-}
-
-.tech-chip__subtitle {
-	display: none;
-	font-size: 12px;
-	font-weight: 500;
-	color: #666;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	max-width: 160px;
-}
-
-@media (min-width: 700px) {
-	.tech-chip__subtitle {
-		display: inline;
-	}
-
-	.tech-chip__subtitle::before {
-		content: '·';
-		margin: 0 6px 0 0;
-		color: #bbb;
-	}
 }
 
 /*----- Overview highlights -----*/
@@ -689,13 +504,13 @@
 
 	.project-card__body,
 	.project-card__story {
-		padding: 18px 16px 20px;
-		gap: 10px;
+		padding: 18px 16px;
+		gap: 18px;
 	}
 
 	.project-card__header {
 		gap: 5px;
-		padding-bottom: 12px;
+		padding-bottom: 18px;
 	}
 
 	.project-card .media-card-grid--filmstrip,
@@ -710,11 +525,7 @@
 		min-width: 88px;
 	}
 
-	.project-link {
-		flex: 1 1 auto;
-	}
-
-	.project-link__meta {
-		max-width: 140px;
+	.project-card__progress {
+		height: 2px;
 	}
 }

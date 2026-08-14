@@ -1,6 +1,98 @@
-import ProjectPage, { ProjectFilmstrip } from '../ProjectPage';
+import ProjectPage, { ProjectFilmstrip, type TechnologyItem } from '../ProjectPage';
 import { getProject } from '../../../data/projects';
 import type { GalleryItem } from '../../../types/gallery';
+
+const technologies: TechnologyItem[] = [
+    {
+		id: 'nextjs',
+		featured: true,
+		description: 'App router, API routes, and useful server-side rendering features.',
+	},
+	{
+		id: 'react',
+		featured: true,
+		description: 'Frontend framework for the Geckode editor and website.',
+		children: [
+			{
+				id: 'typescript',
+				description: `Used instead of plain JavaScript for its strongly typed models,
+                    helping prevent unnecessary bugs and improve code readability.`,
+			},
+			{
+				id: 'html',
+			},
+			{
+				id: 'css',
+			},
+			{
+				id: 'tailwindcss',
+				description: 'Inline styling for rapid development..',
+			},
+		],
+	},
+    {
+        id: 'blockly',
+        description: 'Google\'s open-source block-based programming library used to create the Geckode editor.',
+    },
+	{
+		id: 'phaser',
+		description: `2D physics engine highly tailored for the Geckode editor. Custom JavaScript code generation from
+            Blockly blocks carefully combine with sprite parameters from React to create complex Phaser game logic, such as
+            sprite movement, object collisions, gravity, and much more.`,
+	},
+	{
+		id: 'yjs',
+		featured: true,
+		description: `Used for its conflict-free replicated data types (CRDTs), which allow multiple users to work on the
+            same project simultaneously without conflicts. Paired with hand-crafted custom merging logic to enable full
+            offline editing capabilities, avoiding data corruption such as circular references.`,
+	},
+	{
+		id: 'django',
+        featured: true,
+		description: `Main backend APIs for the app, handling user accounts, organizations, project storage, permissions,
+            and more.`,
+		children: [
+			{
+				id: 'python',
+			},
+            {
+                id: 'rest-apis',
+                description: 'Used the Django REST Framework to create structured API responses and validation.',
+            },
+			{
+				id: 'postgresql',
+				description: 'Primary datastore for users, organizations, and project metadata.',
+			},
+		],
+	},
+	{
+		id: 'nodejs',
+        featured: true,
+		description: `WebSocket server to rapidly sync real-time changes between project collaborators, checking
+            necessary permissions, sending essential updates to each connected client, and ensuring data consistency.`,
+		children: [
+			{
+				id: 'websocket',
+				description: `Live project-specific channels that ferry Yjs updates between collaborators, including
+                    connected user information and project state updates.`,
+			},
+		],
+	},
+    {
+        id: 'redis',
+        featured: true,
+        description: `Extremely fast in-memory datastore for the bidirectional transport of data between the Django backend
+            (single source of truth) and the WebSocket server to update connected clients about data changes from sources
+            outside the scope of the WebSocket connection as well as funnel validated updates from clients to the backend
+            for processing and storage, avoiding costly API calls and ensuring data integrity at all times.`,
+    },
+	{
+		id: 'docker',
+		description: 'Local and deployed stacks for the web app, backend APIs, database, and Redis in one compose setup.',
+	},
+	
+];
 
 const galleryStrip: GalleryItem[] = [
 	{
@@ -109,6 +201,9 @@ export default function GeckodePage() {
 					},
 				],
 			}}
+			technologies={technologies}
+			siteIconSrc="/images/projects/Geckode/Geckode Icon.png"
+			siteIconAlt="Geckode"
 			gallery={[...galleryStrip, ...organizationsStrip, ...editorsStrip, ...shareStrip, ...howItWorksStrip]}
 		/>
 	);

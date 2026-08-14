@@ -48,7 +48,7 @@ export const projects: ProjectEntry[] = [
 		title: 'Multi-User Block Coding Platform',
 		thumbnail: 'Geckode/Platformer Game.png',
 		technologies: ['nodejs', 'nextjs', 'react', 'html', 'css', 'tailwindcss', 'typescript', 'rest-apis', 'django', 'python', 'postgresql', 'redis', 'docker', 'phaser', 'websocket', 'yjs'],
-		website: 'https://geckode.ca',
+		website: 'https://geckode.ca/playground-editor',
 	},
 	{
 		id: 'terra-exodus',

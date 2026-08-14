@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { ExperiencePoint } from "../../data/experience";
 import Icon from "../displays/Icon";
+import StackMeta, { type ExternalLinksProps, type TechnologyItem } from "./StackMeta";
 import "../../styles/experience.css";
 
 export default function ExperienceDisplay({
@@ -12,6 +13,8 @@ export default function ExperienceDisplay({
     image,
     descriptionTitle,
     points,
+    links,
+    technologies,
     children,
 }: {
     id?: string;
@@ -22,6 +25,8 @@ export default function ExperienceDisplay({
     image: string;
     descriptionTitle?: string;
     points: ExperiencePoint[];
+    links?: ExternalLinksProps;
+    technologies?: TechnologyItem[];
     children?: ReactNode;
 }) {
     return (
@@ -48,6 +53,7 @@ export default function ExperienceDisplay({
                                 <span>{location}</span>
                             </span>
                         </div>
+                        <StackMeta links={links} technologies={technologies} label="Technologies Used" />
                     </header>
                     {descriptionTitle ? (
                         <p className="experience-card__intro">{descriptionTitle}</p>

@@ -14,16 +14,16 @@ import ProjectMediaGrid, {
 	type GalleryItem,
 } from '../containers/ProjectMediaGrid';
 import type { InfoCardItem } from '../containers/InfoCardGrid';
-import TechnologyChips from '../containers/TechnologyChips';
-import ProjectLinks from '../containers/ProjectLinks';
+import StackMeta from '../containers/StackMeta';
+import type { TechnologyItem } from '../containers/TechnologyChips';
 import Icon from '../displays/Icon';
-import type { LanguageDisplayItem } from '../containers/LanguageDisplay';
 import { ProjectId, getProject, projectThumbnailSrc, resolveProjectTechnologies } from '../../data/projects';
 import { useGalleryLightbox } from '../views/GalleryLightbox';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 
 export type { GalleryItem };
 export { ProjectFilmstrip, ProjectGalleryRef };
+export type { TechnologyItem } from '../containers/TechnologyChips';
 
 const AUTOPLAY_MS = 4500;
 const SWIPE_THRESHOLD = 48;
@@ -31,9 +31,7 @@ const SWIPE_THRESHOLD = 48;
 type ProjectDetails = {
 	name: string;
 	title: string;
-	/** Rich description shown under the whole card (text, bullets, filmstrips, image refs). */
 	description?: ReactNode;
-	/** Optional short lead-in when using `points` instead of a full `description`. */
 	intro?: string;
 	points?: ReactNode[];
 };
@@ -61,32 +59,33 @@ export default function ProjectPage({
 	projectId,
 	project,
 	overview,
-	languages,
+	technologies,
 	gallery,
 	github,
 	website,
+	siteIconSrc,
+	siteIconAlt,
 }: {
 	projectId?: ProjectId;
 	project: ProjectDetails;
 	overview: ProjectOverview;
-	languages?: LanguageDisplayItem[];
+	technologies?: TechnologyItem[];
 	gallery: GalleryItem[];
 	github?: string;
 	website?: string;
+	siteIconSrc?: string;
+	siteIconAlt?: string;
 }) {
 	const { openLightbox } = useGalleryLightbox();
 	const listed = projectId ? getProject(projectId) : null;
-	const resolvedLanguages =
-		languages ??
-		(listed
-			? resolveProjectTechnologies(listed).map((technology) => ({
-					name: technology.name,
-					iconSrc: technology.iconSrc,
-					faIcon: technology.faIcon,
-					iconPadding: technology.iconPadding,
-					subtitle: technology.subtitle,
-				}))
-			: []);
+	const displayTechnologies = useMemo<TechnologyItem[]>(() => {
+		if (technologies?.length) return technologies;
+		if (!listed) return [];
+		return resolveProjectTechnologies(listed).map((technology) => ({
+			id: technology.id,
+			subtitle: technology.subtitle,
+		}));
+	}, [listed, technologies]);
 
 	const thumbnailPath = listed?.thumbnail;
 	const lightboxItems = useMemo(
@@ -370,12 +369,15 @@ export default function ProjectPage({
 							<header className="project-card__header">
 								<h1 className="project-card__name">{project.name}</h1>
 								<p className="project-card__tagline">{project.title}</p>
-								<div className="project-card__meta">
-									{resolvedLanguages.length ? (
-										<TechnologyChips technologies={resolvedLanguages} />
-									) : null}
-									<ProjectLinks github={github ?? listed?.github} website={website ?? listed?.website} />
-								</div>
+								<StackMeta
+									links={{
+										github: github ?? listed?.github,
+										website: website ?? listed?.website,
+										siteIconSrc,
+										siteIconAlt,
+									}}
+									technologies={displayTechnologies}
+								/>
 							</header>
 
 							{overview.boxes.length ? (

@@ -21,6 +21,8 @@ type LightboxSession = {
 	items: GalleryItem[];
 	index: number;
 	origin: OriginRect | null;
+	/** Element that opened the lightbox (or last matched thumb while browsing). */
+	originEl: Element | null;
 };
 
 type GalleryLightboxContextValue = {
@@ -38,6 +40,8 @@ const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
 const CLICK_ZOOM = 2.5;
 const TAP_MOVE_THRESHOLD = 10;
+const THUMB_SCOPE_SELECTOR =
+	'.media-card-grid, .project-gallery-ref, .project-card__visual, .project-card__story, .project-card__panel';
 
 export function useGalleryLightbox() {
 	const value = useContext(GalleryLightboxContext);
@@ -57,19 +61,80 @@ function rectFromElement(el: Element): OriginRect {
 	};
 }
 
-function findThumbnailOrigin(path: string): OriginRect | null {
-	const media = document.querySelectorAll<HTMLElement>('[data-gallery-path], .media-card__thumb, .project-card__image');
-	for (const element of media) {
-		const galleryPath = element.getAttribute('data-gallery-path');
-		if (galleryPath && (galleryPath === path || path.endsWith(galleryPath))) {
-			return rectFromElement(element);
+function galleryPathMatches(element: HTMLElement, path: string): boolean {
+	const galleryPath = element.getAttribute('data-gallery-path');
+	if (
+		galleryPath &&
+		(galleryPath === path || path.endsWith(galleryPath) || galleryPath.endsWith(path))
+	) {
+		return true;
+	}
+
+	const src =
+		element.getAttribute('src') ||
+		(element as HTMLImageElement).currentSrc ||
+		'';
+	if (!src) return false;
+	return src.includes(`/images/projects/${path}`) || src.endsWith(path);
+}
+
+function isElementOnScreen(element: HTMLElement): boolean {
+	const rect = element.getBoundingClientRect();
+	return (
+		rect.width > 1 &&
+		rect.height > 1 &&
+		rect.bottom > 0 &&
+		rect.right > 0 &&
+		rect.top < window.innerHeight &&
+		rect.left < window.innerWidth
+	);
+}
+
+function findThumbnailElements(path: string, root: ParentNode = document): HTMLElement[] {
+	const media = root.querySelectorAll<HTMLElement>(
+		'[data-gallery-path], .media-card__thumb, .project-card__image, .project-gallery-ref__thumb',
+	);
+	return Array.from(media).filter((element) => galleryPathMatches(element, path));
+}
+
+function pickPreferredThumbnail(candidates: HTMLElement[]): HTMLElement | null {
+	if (!candidates.length) return null;
+	return candidates.find(isElementOnScreen) ?? candidates[0];
+}
+
+/**
+ * Resolve the thumbnail to animate back to.
+ * Prefers the opener element / its filmstrip or section so inline strips
+ * do not snap to a duplicate thumb in the hero gallery.
+ */
+function findThumbnailElement(path: string, preferred?: Element | null): HTMLElement | null {
+	if (preferred && preferred.isConnected) {
+		const preferredEl = preferred as HTMLElement;
+		if (galleryPathMatches(preferredEl, path)) {
+			return preferredEl;
 		}
-		const src = element.getAttribute('src') ?? (element as HTMLImageElement).src;
-		if (src.includes(`/images/projects/${path}`) || src.endsWith(path)) {
-			return rectFromElement(element);
+
+		const scope = preferredEl.closest(THUMB_SCOPE_SELECTOR);
+		if (scope) {
+			const scoped = pickPreferredThumbnail(findThumbnailElements(path, scope));
+			if (scoped) return scoped;
 		}
 	}
-	return null;
+
+	return pickPreferredThumbnail(findThumbnailElements(path));
+}
+
+function findThumbnailOrigin(path: string, preferred?: Element | null): OriginRect | null {
+	const element = findThumbnailElement(path, preferred);
+	return element ? rectFromElement(element) : null;
+}
+
+function objectFitForElement(element: Element | null): React.CSSProperties['objectFit'] {
+	if (!element) return 'cover';
+	const fit = getComputedStyle(element).objectFit;
+	return fit === 'contain' || fit === 'cover' || fit === 'fill' || fit === 'none' || fit === 'scale-down'
+		? fit
+		: 'cover';
 }
 
 function pauseVideosIn(root: ParentNode | null) {
@@ -90,10 +155,12 @@ export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 		(items: GalleryItem[], index: number, originEl?: Element | null) => {
 			if (!items.length) return;
 			const safeIndex = Math.max(0, Math.min(index, items.length - 1));
+			const matched = originEl ?? findThumbnailElement(items[safeIndex].path);
 			setSession({
 				items,
 				index: safeIndex,
-				origin: originEl ? rectFromElement(originEl) : findThumbnailOrigin(items[safeIndex].path),
+				originEl: matched,
+				origin: matched ? rectFromElement(matched) : null,
 			});
 		},
 		[],
@@ -105,10 +172,12 @@ export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 		setSession((current) => {
 			if (!current) return null;
 			const nextIndex = ((index % current.items.length) + current.items.length) % current.items.length;
+			const matched = findThumbnailElement(current.items[nextIndex].path, current.originEl);
 			return {
 				...current,
 				index: nextIndex,
-				origin: findThumbnailOrigin(current.items[nextIndex].path) ?? current.origin,
+				originEl: matched ?? current.originEl,
+				origin: matched ? rectFromElement(matched) : current.origin,
 			};
 		});
 	}, []);
@@ -158,7 +227,7 @@ function LightboxOverlay({
 	onIndexChange: (index: number) => void;
 	onClosed: () => void;
 }) {
-	const { items, index, origin } = session;
+	const { items, index, origin, originEl } = session;
 	const item = items[index];
 	const isVideo = isGalleryVideo(item);
 	const stageRef = useRef<HTMLDivElement>(null);
@@ -254,24 +323,33 @@ function LightboxOverlay({
 			return;
 		}
 
-		const liveOrigin = findThumbnailOrigin(item.path) ?? origin;
+		const thumbEl = findThumbnailElement(item.path, originEl);
+		if (thumbEl) {
+			const strip = thumbEl.closest('.media-card-grid--filmstrip');
+			if (strip instanceof HTMLElement) {
+				const card = thumbEl.closest('.media-card');
+				if (card instanceof HTMLElement) {
+					const stripRect = strip.getBoundingClientRect();
+					const cardRect = card.getBoundingClientRect();
+					if (cardRect.left < stripRect.left || cardRect.right > stripRect.right) {
+						card.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+					}
+				}
+			}
+		}
+
 		const current = img.getBoundingClientRect();
-		const target = liveOrigin ?? {
-			top: window.innerHeight * 0.85,
-			left: window.innerWidth / 2 - current.width * 0.12,
-			width: current.width * 0.24,
-			height: current.height * 0.24,
-		};
+		const target = thumbEl
+			? rectFromElement(thumbEl)
+			: origin ?? {
+					top: window.innerHeight * 0.85,
+					left: window.innerWidth / 2 - current.width * 0.12,
+					width: current.width * 0.24,
+					height: current.height * 0.24,
+				};
+		const objectFit = objectFitForElement(thumbEl);
 
-		const scale = Math.max(
-			0.08,
-			Math.min(target.width / Math.max(current.width, 1), target.height / Math.max(current.height, 1)),
-		);
-		const currentCx = current.left + current.width / 2;
-		const currentCy = current.top + current.height / 2;
-		const targetCx = target.left + target.width / 2;
-		const targetCy = target.top + target.height / 2;
-
+		// Morph the flying frame to the thumb's exact box so cover/contain crops line up.
 		setCloseStyle({
 			position: 'fixed',
 			top: current.top,
@@ -284,7 +362,7 @@ function LightboxOverlay({
 			transform: 'none',
 			transition: 'none',
 			zIndex: 5,
-			objectFit: 'contain',
+			objectFit,
 		});
 		setClosing(true);
 		setDragX(0);
@@ -295,25 +373,25 @@ function LightboxOverlay({
 			requestAnimationFrame(() => {
 				setCloseStyle({
 					position: 'fixed',
-					top: current.top,
-					left: current.left,
-					width: current.width,
-					height: current.height,
+					top: target.top,
+					left: target.left,
+					width: target.width,
+					height: target.height,
 					maxWidth: 'none',
 					maxHeight: 'none',
 					margin: 0,
-					transform: `translate(${targetCx - currentCx}px, ${targetCy - currentCy}px) scale(${scale})`,
-					opacity: 0.2,
-					transition: 'transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease',
+					transform: 'none',
+					opacity: 0.15,
+					transition:
+						'top 0.34s cubic-bezier(0.22, 1, 0.36, 1), left 0.34s cubic-bezier(0.22, 1, 0.36, 1), width 0.34s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease',
 					zIndex: 5,
-					objectFit: 'contain',
-					transformOrigin: 'center center',
+					objectFit,
 				});
 			});
 		});
 
 		window.setTimeout(finishClose, 360);
-	}, [finishClose, item, origin, resetZoom]);
+	}, [finishClose, item, origin, originEl, resetZoom]);
 
 	const goPrev = useCallback(() => {
 		if (!canNavigate || closing || settling || isZoomed) return;

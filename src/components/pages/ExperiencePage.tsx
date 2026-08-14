@@ -1,10 +1,11 @@
 import ExperienceDisplay from '../containers/ExperienceDisplay';
 import { experienceDateRange, experiences } from '../../data/experience';
+import { experienceTechnologies } from '../../data/experienceTechnologies';
 
 export default function ExperiencePage() {
 	return (
 		<section className="section">
-			<h1>Experience</h1>
+			<h1>Professional Experience</h1>
 			<div className="experience-timeline">
 				{experiences.map((experience) => (
 					<ExperienceDisplay
@@ -17,6 +18,7 @@ export default function ExperiencePage() {
 						image={experience.image}
 						descriptionTitle={experience.descriptionTitle}
 						points={experience.points}
+						technologies={experienceTechnologies[experience.id]}
 					/>
 				))}
 			</div>
