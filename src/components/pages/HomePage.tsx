@@ -5,7 +5,7 @@ import MediaCard, { MediaCardGrid } from '../containers/MediaCard';
 import SimpleButton from '../buttons/SimpleButton';
 import TechStack from '../containers/TechStack';
 import HeroBackground from '../containers/HeroBackground';
-import { getProject } from '../../data/projects';
+import { getProject, projectHref, projectThumbnailSrc } from '../../data/projects';
 
 export default function HomePage() {
 	const geckode = getProject('geckode');
@@ -29,13 +29,13 @@ export default function HomePage() {
 					<MediaCardGrid>
 						<MediaCard
 							title={geckode.name}
-							src={`/images/projects/${geckode.thumbnail}`}
-							href={`/projects/${geckode.slug}`}
+							src={projectThumbnailSrc(geckode.id)}
+							href={projectHref(geckode.id)}
 						/>
 						<MediaCard
 							title={terraExodus.name}
-							src={`/images/projects/${terraExodus.thumbnail}`}
-							href={`/projects/${terraExodus.slug}`}
+							src={projectThumbnailSrc(terraExodus.id)}
+							href={projectHref(terraExodus.id)}
 						/>
 					</MediaCardGrid>
 				</div>

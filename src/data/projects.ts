@@ -18,8 +18,10 @@ export type ProjectTechnologyRef =
 
 export type ProjectEntry = {
 	id: ProjectId;
-	/** Used in /projects/{slug} */
+	/** Canonical URL segment for /projects/{slug} (kebab-case) */
 	slug: string;
+	/** Former URL segments that should redirect to the canonical slug */
+	legacySlugs?: string[];
 	name: string;
 	title: string;
 	/** Relative to /images/projects/ */
@@ -43,7 +45,8 @@ export type ResolvedProjectTechnology = {
 export const projects: ProjectEntry[] = [
 	{
 		id: 'geckode',
-		slug: 'Geckode',
+		slug: 'geckode',
+		legacySlugs: ['Geckode'],
 		name: 'Geckode',
 		title: 'Multi-User Block Coding Platform',
 		thumbnail: 'geckode/platformer-game.png',
@@ -52,7 +55,8 @@ export const projects: ProjectEntry[] = [
 	},
 	{
 		id: 'terra-exodus',
-		slug: 'TerraExodus',
+		slug: 'terra-exodus',
+		legacySlugs: ['TerraExodus'],
 		name: 'Terra Exodus',
 		title: 'CMD Console Shooter Game',
 		thumbnail: 'terra-exodus/gameplay.png',
@@ -61,7 +65,8 @@ export const projects: ProjectEntry[] = [
 	},
 	{
 		id: 'stock-assist',
-		slug: 'StockAssist',
+		slug: 'stock-assist',
+		legacySlugs: ['StockAssist'],
 		name: 'StockAssist',
 		title: 'Inventory Management System',
 		thumbnail: 'inventory-manager/home.png',
@@ -70,7 +75,8 @@ export const projects: ProjectEntry[] = [
 	},
 	{
 		id: 'rc-tank',
-		slug: 'RC-Tank',
+		slug: 'rc-tank',
+		legacySlugs: ['RC-Tank'],
 		name: 'RC Tank',
 		title: '3D-Printed Arduino Remote-Controlled Tank',
 		thumbnail: 'rc-tank/final-tank.jpg',
@@ -78,7 +84,8 @@ export const projects: ProjectEntry[] = [
 	},
 	{
 		id: 'blackjack',
-		slug: 'Blackjack',
+		slug: 'blackjack',
+		legacySlugs: ['Blackjack'],
 		name: 'Blackjack',
 		title: 'Casino Card Game',
 		thumbnail: 'blackjack/lose.png',
@@ -87,7 +94,8 @@ export const projects: ProjectEntry[] = [
 	},
 	{
 		id: 'tic-tac-toe',
-		slug: 'TicTacToe',
+		slug: 'tic-tac-toe',
+		legacySlugs: ['TicTacToe'],
 		name: 'Tic Tac Toe',
 		title: 'Classic Paper/Pencil Game',
 		thumbnail: 'tic-tac-toe/gameplay.png',
@@ -107,6 +115,27 @@ export function getProject(id: ProjectId): ProjectEntry {
 	}
 
 	return project;
+}
+
+export function getProjectBySlug(slug: string): ProjectEntry | undefined {
+	return projects.find((entry) => entry.slug === slug);
+}
+
+/** Resolve a URL slug to a project, including legacy slugs that should redirect. */
+export function resolveProjectFromSlug(
+	slug: string
+): { project: ProjectEntry; isLegacy: boolean } | undefined {
+	const current = getProjectBySlug(slug);
+	if (current) {
+		return { project: current, isLegacy: false };
+	}
+
+	const legacy = projects.find((entry) => entry.legacySlugs?.includes(slug));
+	if (legacy) {
+		return { project: legacy, isLegacy: true };
+	}
+
+	return undefined;
 }
 
 export function projectHref(id: ProjectId): string {

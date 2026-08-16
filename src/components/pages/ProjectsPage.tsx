@@ -1,6 +1,6 @@
 import React from 'react';
 import MediaCard, { MediaCardGrid } from '../containers/MediaCard';
-import { projects } from '../../data/projects';
+import { projects, projectHref, projectThumbnailSrc } from '../../data/projects';
 
 export default function ProjectsPage() {
 	return (
@@ -13,8 +13,8 @@ export default function ProjectsPage() {
 					<MediaCard
 						key={project.id}
 						title={project.name}
-						src={`/images/projects/${project.thumbnail}`}
-						href={`/projects/${project.slug}`}
+						src={projectThumbnailSrc(project.id)}
+						href={projectHref(project.id)}
 					/>
 				))}
 			</MediaCardGrid>

@@ -5,7 +5,7 @@ import {
 	spokenLanguages,
 	type AboutEntry,
 } from '../../data/about';
-import { getProject } from '../../data/projects';
+import { getProject, projectHref } from '../../data/projects';
 import { EntryCardHeader } from '../containers/EntryCard';
 import InlineLink from '../displays/InlineLink';
 import '../../styles/about.css';
@@ -79,7 +79,7 @@ export default function AboutPage() {
 						<li>
 							When I work on personal and group projects, I do not shy away from engineering
 							my own solutions where no market-ready option exists, such as in{' '}
-							<InlineLink to={`/projects/${geckode.slug}`}>{geckode.name}</InlineLink>
+							<InlineLink to={projectHref(geckode.id)}>{geckode.name}</InlineLink>
 							{' '}where I architected and developed a real-time, multi-user
 							collaborative experience in a block coding editor.
 						</li>
