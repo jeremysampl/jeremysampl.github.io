@@ -41,36 +41,36 @@ export default function TerraExodusPage() {
 			gallery={[
 				{
 					title: 'Choices',
-					path: 'Terra Exodus/Choices.png',
+					path: 'terra-exodus/choices.png',
 					description: `This is an example of the choices that the player has to make as they are making their way through the storyline.
 						This allows a little bit of customizability to the end gameplay.`,
 				},
 				{
 					title: 'Gameplay',
-					path: 'Terra Exodus/Gameplay2.png',
+					path: 'terra-exodus/gameplay-2.png',
 					description: `The player's mission is to shoot down all the enemies while avoiding the bombs that they drop
 						in order to successfully defend against the enemies.`,
 				},
 				{
 					title: 'Gameplay',
-					path: 'Terra Exodus/Gameplay3.png',
+					path: 'terra-exodus/gameplay-3.png',
 					description: `Cross-mapping a display screen over another keeping track of collision zones allows for collisions between objects to take place.
 						In this case the missile is about to collide with the enemy plane.`,
 				},
 				{
 					title: 'Gameplay',
-					path: 'Terra Exodus/Gameplay.png',
+					path: 'terra-exodus/gameplay.png',
 					description: `The player must avoid getting hit by bombs dropped by the enemies. If they get hit too many times, they could lose the game.`,
 				},
 				{
 					title: 'Welcome Screen',
-					path: 'Terra Exodus/Welcome.png',
+					path: 'terra-exodus/welcome.png',
 					description: `This is the displayed welcome screen to the player when the game is started.
 						The user is able to adjust the size of the canvas of the game in order to fit their needs.`,
 				},
 				{
 					title: 'Storyline',
-					path: 'Terra Exodus/Storyline.png',
+					path: 'terra-exodus/storyline.png',
 					description: `This is an example of the type of storyline that is found in this game.`,
 				},
 			]}

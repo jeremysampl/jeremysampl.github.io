@@ -44,43 +44,43 @@ export default function RCTankPage() {
 			gallery={[
 				{
 					title: 'Assembled Tank',
-					path: 'RC Tank/Assembled.jpg',
+					path: 'rc-tank/assembled.jpg',
 					description: 'The assembled version of our project.',
 				},
 				{
 					title: 'Arduino Board',
-					path: 'RC Tank/Arduino Board.jpg',
+					path: 'rc-tank/arduino-board.jpg',
 					description: 'The Arduino board with the PWM hat installed and the Bluetooth module connected.',
 				},
 				{
 					title: 'Android App',
-					path: 'RC Tank/App.jpg',
+					path: 'rc-tank/app.jpg',
 					description: 'The visuals of the Android app made with MIT App Inventor.',
 				},
 				{
 					title: '3D-Printed Chassis',
-					path: 'RC Tank/Chassis.jpg',
+					path: 'rc-tank/chassis.jpg',
 					description: 'The 3D-printed chassis assembly of our tank.',
 				},
 				{
 					title: 'Connecting Components',
-					path: 'RC Tank/Connecting Components.jpg',
+					path: 'rc-tank/connecting-components.jpg',
 					description: 'The components being connected inside the chassis.',
 				},
 				{
 					title: 'App Code',
-					path: 'RC Tank/App Code Snippet.jpg',
+					path: 'rc-tank/app-code-snippet.jpg',
 					description: "A snippet of our Android app's code.",
 				},
 				{
 					title: 'Bytes Sending',
-					path: 'RC Tank/Bytes Sending.jpg',
+					path: 'rc-tank/bytes-sending.jpg',
 					description:
 						'An example of the bytes sent from the Android app to the Bluetooth module and then processed by the Arduino board.',
 				},
 				{
 					title: 'Muzzle Scanning',
-					path: 'RC Tank/Tank.mp4',
+					path: 'rc-tank/tank.mp4',
 					description: "Demonstration of the tank's automatic muzzle scanning mode.",
 					kind: 'video' as const,
 				},

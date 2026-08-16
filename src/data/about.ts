@@ -16,7 +16,7 @@ export type SpokenLanguage = {
 
 export const aboutIntro = {
 	name: 'Jeremy Sampl',
-	photo: '/images/misc/Profile Picture.jpg',
+	photo: '/images/misc/profile-picture.jpg',
 };
 
 export const education: AboutEntry = {

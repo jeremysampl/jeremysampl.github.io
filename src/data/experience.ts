@@ -80,7 +80,7 @@ export const experiences: ExperienceEntry[] = [
 		role: 'Software Developer Co-op',
 		start: { month: 5, year: 2024 },
 		end: { month: 8, year: 2024 },
-		image: 'WateringCan-Second-Coop.jpg',
+		image: 'watering-can-second-coop.jpg',
 		descriptionTitle:
 			'During my second summer co-op at The Watering Can, I was already familiar with their systems and I truly felt part of the core team! Here is a summary of my second co-op:',
 		points: [
@@ -102,7 +102,7 @@ export const experiences: ExperienceEntry[] = [
 		role: 'Software Developer Co-op',
 		start: { month: 5, year: 2023 },
 		end: { month: 8, year: 2023 },
-		image: 'WateringCan-Mossscape-BG.jpg',
+		image: 'watering-can-mossscape-bg.jpg',
 		descriptionTitle:
 			'During my first 4-month co-op at The Watering Can, I had the opportunity to work on many exciting projects with some extremely talented individuals! Here is a summary of my first co-op at the company:',
 		points: [

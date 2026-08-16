@@ -40,46 +40,46 @@ export default function StockAssistPage() {
 			gallery={[
 				{
 					title: 'Login Page',
-					path: 'Inventory Manager/Login.png',
+					path: 'inventory-manager/login.png',
 					description: `The login page of the program. This is where users are able to login with an existing account,
 						given they have the right username and password, or create a new account with a unique username and their password of choice.`,
 				},
 				{
 					title: 'Home Screen',
-					path: 'Inventory Manager/Home.png',
+					path: 'inventory-manager/home.png',
 					description: `The user's dashboard. This is the hub which allows the user to access all parts of the program.`,
 				},
 				{
 					title: 'User List (Admin)',
-					path: 'Inventory Manager/Users.png',
+					path: 'inventory-manager/users.png',
 					description: `This page allows the administrator to view, add, edit, delete and organize users.`,
 				},
 				{
 					title: 'Customers Panel',
-					path: 'Inventory Manager/Customers.png',
+					path: 'inventory-manager/customers.png',
 					description: `This panel allows the user to view, add, edit, remove and organize their customers.
 					Customers contain contact information and can be associated to orders.`,
 				},
 				{
 					title: 'Categories Panel',
-					path: 'Inventory Manager/Categories.png',
+					path: 'inventory-manager/categories.png',
 					description: `This panel allows the user to organize their products with categories that they may create, edit, remove and organize at any point.`,
 				},
 				{
 					title: 'Products Panel',
-					path: 'Inventory Manager/Products.png',
+					path: 'inventory-manager/products.png',
 					description: `This panel allows the user to create products with binding information such as its price and its category.
 					This is also where product stock is kept track of.`,
 				},
 				{
 					title: 'Order Tables',
-					path: 'Inventory Manager/Orders.png',
+					path: 'inventory-manager/orders.png',
 					description: `These are the order tables. The top table shows the user the list of current orders with information such as the customer and price of the order.
 					The bottom table shows the products inside the order selected from the top table. This allows the user to easily view all order information at a glance.`,
 				},
 				{
 					title: 'Create Order Screen',
-					path: 'Inventory Manager/New Order.png',
+					path: 'inventory-manager/new-order.png',
 					description: `This page is where the user makes a new order. The user must simply select a customer from their list and then add the products to the order.
 					As the user is adding products to the order, the system will automatically keep track of the remaining inventory of products and the order total.`,
 				},

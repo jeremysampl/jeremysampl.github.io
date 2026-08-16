@@ -89,6 +89,7 @@ const technologies: TechnologyItem[] = [
     },
 	{
 		id: 'docker',
+		featured: true,
 		description: 'Local and deployed stacks for the web app, backend APIs, database, and Redis in one compose setup.',
 	},
 	
@@ -97,7 +98,7 @@ const technologies: TechnologyItem[] = [
 const galleryStrip: GalleryItem[] = [
 	{
 		title: 'Platformer Game',
-		path: 'Geckode/Platformer Game.png',
+		path: 'geckode/platformer-game.png',
 		description: 'A simple platformer game built with Geckode.',
 	},
 ];
@@ -105,22 +106,22 @@ const galleryStrip: GalleryItem[] = [
 const editorsStrip: GalleryItem[] = [
     {
         title: 'Sprite Editor',
-        path: 'Geckode/Sprite Editor.png',
+        path: 'geckode/sprite-editor.png',
         description: 'The sprite editor allows you to create and edit sprites for your projects.',
     },
     {
         title: 'Tilemap Editor',
-        path: 'Geckode/Tilemap Editor.png',
+        path: 'geckode/tilemap-editor.png',
         description: 'The tilemap editor allows you to create and edit the worlds in your games.',
     },
     {
         title: 'Tileset Editor',
-        path: 'Geckode/Tileset Editor.png',
+        path: 'geckode/tileset-editor.png',
         description: 'The tileset editor allows you to create and edit the tilesets to speed up and organize tilemap editing.',
     },
     {
         title: 'Tile Editor',
-        path: 'Geckode/Tile Editor.png',
+        path: 'geckode/tile-editor.png',
         description: 'The tile editor allows you to create and edit the tiles for your tilesets.',
     },
 ];
@@ -128,7 +129,7 @@ const editorsStrip: GalleryItem[] = [
 const shareStrip: GalleryItem[] = [
     {
         title: 'Project Sharing',
-        path: 'Geckode/Share Project Users.png',
+        path: 'geckode/share-project-users.png',
         description: 'You can share your projects with other users, allowing them to edit or simply view your projects.',
     },
     // TODO: Add project sharing with organizations
@@ -138,7 +139,7 @@ const shareStrip: GalleryItem[] = [
 const organizationsStrip: GalleryItem[] = [
 	{
 		title: 'Organizations',
-		path: 'Geckode/Organization Projects.png',
+		path: 'geckode/organization-projects.png',
 		description: 'Organizations can be used to quickly create, manage and share projects among a group of users, such as a classroom or team.',
 	},
     // TODO: Add organization members
@@ -148,7 +149,7 @@ const organizationsStrip: GalleryItem[] = [
 const howItWorksStrip: GalleryItem[] = [
     {
         title: 'How It Works',
-        path: 'Geckode/Functionality Diagram.png',
+        path: 'geckode/functionality-diagram.png',
         description: 'A diagram of Geckode\'s core services and how they interact with each other.',
     },
 ];
@@ -202,7 +203,7 @@ export default function GeckodePage() {
 				],
 			}}
 			technologies={technologies}
-			siteIconSrc="/images/projects/Geckode/Geckode Icon.png"
+			siteIconSrc="/images/projects/geckode/geckode-icon.png"
 			siteIconAlt="Geckode"
 			gallery={[...galleryStrip, ...organizationsStrip, ...editorsStrip, ...shareStrip, ...howItWorksStrip]}
 		/>

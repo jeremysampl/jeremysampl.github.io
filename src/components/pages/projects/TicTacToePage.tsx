@@ -41,12 +41,12 @@ export default function TicTacToePage() {
 			gallery={[
 				{
 					title: 'Gameplay',
-					path: 'Tic Tac Toe/Gameplay.png',
+					path: 'tic-tac-toe/gameplay.png',
 					description: 'The game contains a modern looking user interface.',
 				},
 				{
 					title: 'Gameplay',
-					path: 'Tic Tac Toe/Gameplay2.png',
+					path: 'tic-tac-toe/gameplay-2.png',
 					description: 'Obtain three in a row, column or diagonal to win.',
 				},
 			]}
