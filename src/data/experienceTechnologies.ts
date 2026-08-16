@@ -5,7 +5,7 @@ import type { TechnologyId } from './technologies';
 const sharedWateringCanTechnologies = Object.fromEntries(Object.entries({
 	php: {
 		featured: true,
-		description: `Used for all server-side features, plugins, and API endpoints for existing systems.`,
+		description: `Used for all server-side features, plugins, and API endpoints for company systems.`,
 	},
 	wordpress: {
 		featured: true,
@@ -43,9 +43,10 @@ export const experienceTechnologies: Record<ExperienceId, TechnologyItem[]> = {
 		{
 			id: 'react',
 			featured: true,
-			description: 'Built and maintained interactive React apps used on the floor and in the café.',
+			description: `Developed and maintained features for 3+ React applications, ensuring seamless integration
+				with existing systems and providing an intuitive and efficient experience for staff.`,
 			children: [
-				{ id: 'javascript', description: 'App logic and client-side interactivity.' },
+				{ id: 'javascript' },
 				{ id: 'html' },
 				{ id: 'css' },
 			],

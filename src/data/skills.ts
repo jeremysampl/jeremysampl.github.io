@@ -75,6 +75,7 @@ export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkil
 				kind: 'site',
 				label: 'This website',
 				href: '/',
+				thumbnail: '/images/misc/js-logo.svg'
 			};
 		case 'general':
 			return {

@@ -34,6 +34,11 @@ body {
 a[href],
 a[href] * {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
 }
 
 :root {

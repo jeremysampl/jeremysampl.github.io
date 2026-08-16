@@ -107,7 +107,7 @@ export const experiences: ExperienceEntry[] = [
 			'During my first 4-month co-op at The Watering Can, I had the opportunity to work on many exciting projects with some extremely talented individuals! Here is a summary of my first co-op at the company:',
 		points: [
 			[
-				'Led the end-to-end development of an extension to their existing custom point of sale (POS) system to support their café oprations.',
+				'Led the end-to-end development of an extension to their existing custom point of sale (POS) system to support their restaurant operations.',
 				'Assumed project ownership and maintained constant communication with staff and management to ensure the system met their needs and exceeded expectations.',
 				'Developed a new interactive map that displays table statuses and links tables to their orders.',
 				'Integrated WebSocket connections to ensure the data is shown in real-time on all devices simultaneously, cutting down on API calls and improving performance.',

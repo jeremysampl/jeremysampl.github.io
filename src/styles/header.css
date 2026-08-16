@@ -107,13 +107,6 @@ body.nav-lock {
     list-style: none;
     margin: 0;
     padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-drag: none;
 }
 
 .nav__link {
@@ -169,13 +162,6 @@ body.nav-lock {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.04);
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-drag: none;
 }
 
 .nav__toggle-bar {

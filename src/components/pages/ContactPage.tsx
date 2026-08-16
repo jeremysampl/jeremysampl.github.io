@@ -11,6 +11,7 @@ export default function ContactPage() {
 		<section className="section">
 			<h1>Contact Me</h1>
 			<p>Here are a few ways to contact me. The best way to contact me is via email or LinkedIn.</p>
+			<Spacer height="10" />
 			<InfoCardGrid
 				items={[
 					{ title: 'Email', icon: 'envelope', description: 'jeremysampl@live.com', url: 'mailto:jeremysampl@live.com' },
@@ -23,6 +24,7 @@ export default function ContactPage() {
 
 			<h1>Other Socials</h1>
 			<p>Other ways to get to know me:</p>
+			<Spacer height="10" />
 			<InfoCardGrid
 				items={[
 					{ title: 'GitHub', icon: 'github', description: 'https://github.com/jeremysampl/', url: 'https://github.com/jeremysampl/' },

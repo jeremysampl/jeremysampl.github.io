@@ -1,0 +1,64 @@
+.inline-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	max-width: 100%;
+	padding: 2px 6px;
+	border-radius: 999px;
+	background: linear-gradient(
+		135deg,
+		rgba(var(--secondary-rgb), 0.12) 0%,
+		rgba(var(--secondary-rgb), 0.06) 100%
+	);
+	border: 1px solid rgba(var(--secondary-rgb), 0.22);
+	color: var(--secondary-color);
+	font-weight: 800;
+	font-size: 0.95em;
+	line-height: 1.35;
+	text-decoration: none;
+	vertical-align: baseline;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	transition:
+		background 160ms ease,
+		border-color 160ms ease,
+		box-shadow 160ms ease,
+		transform 160ms ease;
+}
+
+.inline-link__label {
+	min-width: 0;
+}
+
+.inline-link__mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 12px;
+	height: 12px;
+	color: currentColor;
+	opacity: 0.9;
+	transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.inline-link__mark svg {
+	display: block;
+	width: 12px;
+	height: 12px;
+}
+
+.inline-link:hover,
+.inline-link:focus-visible {
+	background: rgba(var(--secondary-rgb), 0.16);
+	border-color: rgba(var(--secondary-rgb), 0.45);
+	box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.14);
+	transform: translateY(-1px);
+	outline: none;
+}
+
+.inline-link:hover .inline-link__mark,
+.inline-link:focus-visible .inline-link__mark {
+	opacity: 1;
+	transform: translateX(2px);
+}

@@ -59,13 +59,7 @@
 	overflow: hidden;
 	line-height: 0;
 	touch-action: pan-y;
-	user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-drag: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .project-card__media:focus-visible {
@@ -484,6 +478,23 @@
 	flex: 0 0 auto;
 	width: clamp(84px, 22%, 120px);
 	min-width: 84px;
+}
+
+.project-more {
+	width: 100%;
+	max-width: var(--project-page-width);
+	margin: 40px auto 28px;
+	padding: 4px 0 0;
+	text-align: center;
+}
+
+.project-more__text {
+	margin: 0;
+	padding: 0;
+	color: #777;
+	font-size: clamp(14px, 1.25vw, 15px);
+	font-weight: 500;
+	line-height: 1.5;
 }
 
 @media (max-width: 900px) {

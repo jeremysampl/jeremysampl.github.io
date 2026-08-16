@@ -59,10 +59,11 @@ function Redirect() {
 function RouteChangeListener() {
 	const location = useLocation();
 
-	// Only reset scroll on real page changes, not hash updates like #skills.
+	// Reset scroll on page changes. Leave hash targets to HashLink.
 	useEffect(() => {
+		if (location.hash) return;
 		window.scrollTo(0, 0);
-	}, [location.pathname]);
+	}, [location.pathname, location.hash]);
 
 	return null;
 }

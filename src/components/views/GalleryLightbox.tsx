@@ -9,6 +9,7 @@ import React, {
 	type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import type { GalleryItem } from '../../types/gallery';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 import '../../styles/modal.css';
@@ -150,6 +151,7 @@ function clamp(value: number, min: number, max: number) {
 
 export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 	const [session, setSession] = useState<LightboxSession | null>(null);
+	const { pathname } = useLocation();
 
 	const openLightbox = useCallback(
 		(items: GalleryItem[], index: number, originEl?: Element | null) => {
@@ -167,6 +169,11 @@ export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 	);
 
 	const closeLightbox = useCallback(() => setSession(null), []);
+
+	useEffect(() => {
+		setSession(null);
+		document.body.classList.remove('nav-lock');
+	}, [pathname]);
 
 	const setIndex = useCallback((index: number) => {
 		setSession((current) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import Icon from '../displays/Icon';
 import {
 	type TechnologyId,
@@ -80,6 +81,11 @@ export default function TechnologyChips({ technologies, label = 'Built with' }: 
 }) {
 	const [modalOpen, setModalOpen] = useState(false);
 	const titleId = useId();
+	const { pathname } = useLocation();
+
+	useEffect(() => {
+		setModalOpen(false);
+	}, [pathname]);
 
 	const resolved = useMemo(() => technologies.map(resolveTech), [technologies]);
 	const hasFeaturedFlags = technologies.some((item) => item.featured);

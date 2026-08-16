@@ -17,6 +17,7 @@ import type { InfoCardItem } from '../containers/InfoCardGrid';
 import StackMeta from '../containers/StackMeta';
 import type { TechnologyItem } from '../containers/TechnologyChips';
 import Icon from '../displays/Icon';
+import InlineLink from '../displays/InlineLink';
 import { ProjectId, getProject, projectThumbnailSrc, resolveProjectTechnologies } from '../../data/projects';
 import { useGalleryLightbox } from '../views/GalleryLightbox';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
@@ -403,6 +404,13 @@ export default function ProjectPage({
 					{story ? <div className="project-card__story">{story}</div> : null}
 				</div>
 			</article>
+
+			<aside className="project-more" aria-label="More projects">
+				<p className="project-more__text">
+					Want to see more?{' '}
+					<InlineLink to="/projects">View all projects</InlineLink>
+				</p>
+			</aside>
 		</section>
 	);
 }

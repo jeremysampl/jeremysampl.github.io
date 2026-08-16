@@ -291,15 +291,38 @@
 }
 
 .orbit__hub-heading {
+    appearance: none;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 2px;
-    width: 100%;
+    margin: 0 0 2px;
+    padding: 6px 10px;
+    width: auto;
     max-width: 100%;
     flex-shrink: 0;
     min-width: 0;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition:
+        background 160ms ease,
+        border-color 160ms ease;
+}
+
+.orbit__hub-heading:hover,
+.orbit__hub-heading:focus-visible {
+    background: rgba(var(--secondary-rgb), 0.08);
+    border-color: rgba(var(--secondary-rgb), 0.18);
+    outline: none;
+}
+
+.orbit__hub-heading[aria-pressed='true'] {
+    background: rgba(var(--secondary-rgb), 0.1);
+    border-color: rgba(var(--secondary-rgb), 0.28);
 }
 
 .orbit__hub-icon {
@@ -535,13 +558,6 @@
         overflow: visible;
         padding: 4px 0 8px;
         margin-top: 12px;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
-        -webkit-user-drag: none;
     }
 
     .orbit__tabs {
@@ -604,12 +620,12 @@
     }
 
     .orbit__hub-label {
-        margin: 8px 0 6px;
+        margin: 4px 0 2px;
         font-size: 10px;
     }
 
     .orbit__usages {
-        gap: 6px;
+        gap: 4px;
         padding: 0;
     }
 

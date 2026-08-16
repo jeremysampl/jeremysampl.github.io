@@ -412,19 +412,27 @@ export default function TechStack() {
 	const angleStep = visibleSkills.length ? 360 / visibleSkills.length : 0;
 	const usagesRef = useUsagesScrollPassThrough(activeSkill?.name);
 
-	function toggleSkill(skill: Skill, event: MouseEvent<HTMLButtonElement>) {
-		if (suppressClick.current) {
+	function toggleSkill(skill: Skill, event?: MouseEvent<HTMLElement>) {
+		if (event && suppressClick.current) {
 			suppressClick.current = false;
 			event.preventDefault();
 			return;
 		}
-		const button = event.currentTarget;
+
 		const unpinning = pinnedSkill?.name === skill.name;
 		setHoveredSkill(null);
-		setPinnedSkill(unpinning ? null : skill);
+
 		if (unpinning) {
-			button.blur();
+			const resumeIndex = visibleSkills.findIndex((entry) => entry.name === skill.name);
+			if (resumeIndex >= 0) {
+				setAutoIndex(resumeIndex);
+			}
+			setPinnedSkill(null);
+			event?.currentTarget.blur();
+			return;
 		}
+
+		setPinnedSkill(skill);
 	}
 
 	const ringStyle: CSSProperties = {
@@ -537,7 +545,17 @@ export default function TechStack() {
 									</span>
 								</div>
 
-								<div className="orbit__hub-heading">
+								<button
+									type="button"
+									className="orbit__hub-heading"
+									aria-pressed={pinnedSkill?.name === activeSkill.name}
+									aria-label={
+										pinnedSkill?.name === activeSkill.name
+											? `Unpin ${activeSkill.name}`
+											: `Pin ${activeSkill.name}`
+									}
+									onClick={() => toggleSkill(activeSkill)}
+								>
 									<span className="orbit__hub-icon" aria-hidden="true">
 										{activeSkill.iconSrc ? (
 											<img src={activeSkill.iconSrc} alt="" draggable={false} />
@@ -546,7 +564,7 @@ export default function TechStack() {
 										)}
 									</span>
 									<strong>{activeSkill.name}</strong>
-								</div>
+								</button>
 
 								<p className="orbit__hub-label">Used in</p>
 								<ul ref={usagesRef} className="orbit__usages">
