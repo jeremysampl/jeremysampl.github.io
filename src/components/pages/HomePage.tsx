@@ -18,13 +18,14 @@ export default function HomePage() {
 				<div className="hero-content">
 					<h1>Jeremy Sampl's Portfolio</h1>
 					<p>Welcome to my personal website.</p>
-					<SimpleButton text="Click to Know More" url="#projects" variant="on-dark" />
+					<SimpleButton text="Get started" url="#projects" variant="on-dark" />
 				</div>
 			</div>
 
 			<section className="section" id="projects">
 				<h2>My Projects</h2>
 				<p>A showcase of some of my most sophisticated projects.</p>
+				<Spacer height="10" />
 				<div className="home-projects">
 					<MediaCardGrid>
 						<MediaCard
@@ -39,7 +40,7 @@ export default function HomePage() {
 						/>
 					</MediaCardGrid>
 				</div>
-				<SimpleButton text="View All Projects" url="/projects" variant="primary" />
+				<SimpleButton text="View all projects" url="/projects" variant="primary" />
 
 				<Spacer height="30"/>
 				<section className="tech-stack-band">
@@ -51,7 +52,7 @@ export default function HomePage() {
 				<Spacer height="30"/>
 				<h2>About Me</h2>
 				<p>Education, leadership, and a bit more about who I am.</p>
-				<SimpleButton text="Learn More" url="/about" variant="ghost" />
+				<SimpleButton text="Learn more" url="/about" variant="ghost" />
 			</section>
 		</>
 	);

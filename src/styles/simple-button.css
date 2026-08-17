@@ -13,12 +13,7 @@
 	letter-spacing: 0.01em;
 	text-decoration: none;
 	cursor: pointer;
-	transition:
-		transform 180ms ease,
-		box-shadow 180ms ease,
-		background 180ms ease,
-		border-color 180ms ease,
-		filter 180ms ease;
+	transition: var(--transition-interactive);
 }
 
 .simple-btn__label {

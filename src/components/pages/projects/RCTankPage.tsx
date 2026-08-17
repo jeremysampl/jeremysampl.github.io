@@ -30,7 +30,7 @@ export default function RCTankPage() {
 						description: 'Utilizes Bluetooth for remote control.',
 					},
 					{
-						title: 'Android App',
+						title: 'Android app',
 						icon: 'android',
 						description: 'A custom-made Android app that turns any phone into a remote to control the tank.',
 					},
@@ -43,43 +43,43 @@ export default function RCTankPage() {
 			}}
 			gallery={[
 				{
-					title: 'Assembled Tank',
+					title: 'Assembled tank',
 					path: 'rc-tank/assembled.jpg',
 					description: 'The assembled version of our project.',
 				},
 				{
-					title: 'Arduino Board',
+					title: 'Arduino board',
 					path: 'rc-tank/arduino-board.jpg',
 					description: 'The Arduino board with the PWM hat installed and the Bluetooth module connected.',
 				},
 				{
-					title: 'Android App',
+					title: 'Android app',
 					path: 'rc-tank/app.jpg',
 					description: 'The visuals of the Android app made with MIT App Inventor.',
 				},
 				{
-					title: '3D-Printed Chassis',
+					title: '3D-printed chassis',
 					path: 'rc-tank/chassis.jpg',
 					description: 'The 3D-printed chassis assembly of our tank.',
 				},
 				{
-					title: 'Connecting Components',
+					title: 'Connecting components',
 					path: 'rc-tank/connecting-components.jpg',
 					description: 'The components being connected inside the chassis.',
 				},
 				{
-					title: 'App Code',
+					title: 'App code',
 					path: 'rc-tank/app-code-snippet.jpg',
 					description: "A snippet of our Android app's code.",
 				},
 				{
-					title: 'Bytes Sending',
+					title: 'Bytes sending',
 					path: 'rc-tank/bytes-sending.jpg',
 					description:
 						'An example of the bytes sent from the Android app to the Bluetooth module and then processed by the Arduino board.',
 				},
 				{
-					title: 'Muzzle Scanning',
+					title: 'Muzzle scanning',
 					path: 'rc-tank/tank.mp4',
 					description: "Demonstration of the tank's automatic muzzle scanning mode.",
 					kind: 'video' as const,

@@ -11,7 +11,8 @@ export default function TerraExodusPage() {
 				name: project.name,
 				title: project.title,
 				intro:
-					'Terra Exodus is a small console-based 2D plane shooter with custom ASCII art. It was made to show the limits of what really can be done on the console (+Windows CMD/PowerShell for controls).',
+					`Terra Exodus is a small console-based 2D plane shooter with custom ASCII art. It was made to show the limits of what really can be done on the console (Windows
+					Command Prompt / PowerShell for controls).`,
 				points: [
 					'The game can be broken down into two parts: the storyline (where the player makes choices which slightly modify the gameplay at the end), and the game itself.',
 					'The storyline allows the player to choose their planet, enemy, plane and weapon type.',
@@ -63,7 +64,7 @@ export default function TerraExodusPage() {
 					description: `The player must avoid getting hit by bombs dropped by the enemies. If they get hit too many times, they could lose the game.`,
 				},
 				{
-					title: 'Welcome Screen',
+					title: 'Welcome screen',
 					path: 'terra-exodus/welcome.png',
 					description: `This is the displayed welcome screen to the player when the game is started.
 						The user is able to adjust the size of the canvas of the game in order to fit their needs.`,

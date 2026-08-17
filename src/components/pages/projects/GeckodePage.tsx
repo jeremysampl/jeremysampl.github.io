@@ -97,7 +97,7 @@ const technologies: TechnologyItem[] = [
 
 const galleryStrip: GalleryItem[] = [
 	{
-		title: 'Platformer Game',
+		title: 'Platformer game',
 		path: 'geckode/platformer-game.png',
 		description: 'A simple platformer game built with Geckode.',
 	},
@@ -105,22 +105,22 @@ const galleryStrip: GalleryItem[] = [
 
 const editorsStrip: GalleryItem[] = [
     {
-        title: 'Sprite Editor',
+        title: 'Sprite editor',
         path: 'geckode/sprite-editor.png',
         description: 'The sprite editor allows you to create and edit sprites for your projects.',
     },
     {
-        title: 'Tilemap Editor',
+        title: 'Tilemap editor',
         path: 'geckode/tilemap-editor.png',
         description: 'The tilemap editor allows you to create and edit the worlds in your games.',
     },
     {
-        title: 'Tileset Editor',
+        title: 'Tileset editor',
         path: 'geckode/tileset-editor.png',
         description: 'The tileset editor allows you to create and edit the tilesets to speed up and organize tilemap editing.',
     },
     {
-        title: 'Tile Editor',
+        title: 'Tile editor',
         path: 'geckode/tile-editor.png',
         description: 'The tile editor allows you to create and edit the tiles for your tilesets.',
     },
@@ -128,7 +128,7 @@ const editorsStrip: GalleryItem[] = [
 
 const shareStrip: GalleryItem[] = [
     {
-        title: 'Project Sharing',
+        title: 'Project sharing',
         path: 'geckode/share-project-users.png',
         description: 'You can share your projects with other users, allowing them to edit or simply view your projects.',
     },
@@ -148,7 +148,7 @@ const organizationsStrip: GalleryItem[] = [
 
 const howItWorksStrip: GalleryItem[] = [
     {
-        title: 'How It Works',
+        title: 'How it works',
         path: 'geckode/functionality-diagram.png',
         description: 'A diagram of Geckode\'s core services and how they interact with each other.',
     },
@@ -186,17 +186,17 @@ export default function GeckodePage() {
 			overview={{
 				boxes: [
 					{
-						title: 'Simplified Block Coding',
+						title: 'Simplified block coding',
 						icon: 'code',
 						description: 'Programmers of any level can easily build programs by snapping blocks together.',
 					},
 					{
-						title: 'Multi-User Collaboration',
+						title: 'Multi-user collaboration',
 						icon: 'users',
 						description: 'Real-time collaboration on projects between users.',
 					},
 					{
-						title: 'Real Physics Engine',
+						title: 'Real physics engine',
 						icon: 'gear',
 						description: 'A custom-built physics engine that enables the rapid development of interactive games.',
 					},

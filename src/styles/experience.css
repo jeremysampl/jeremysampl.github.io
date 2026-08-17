@@ -24,7 +24,7 @@
 	left: 50%;
 	bottom: 0;
 	width: 2px;
-	height: 36px;
+	height: 52px;
 	transform: translateX(-50%);
 	background: linear-gradient(
 		to bottom,
@@ -38,7 +38,7 @@
 	content: "";
 	position: absolute;
 	left: 50%;
-	bottom: 14px;
+	bottom: 19px;
 	width: 10px;
 	height: 10px;
 	transform: translateX(-50%);
@@ -65,11 +65,11 @@
 	}
 
 	.experience-card:not(:last-child)::after {
-		height: 28px;
+		height: 40px;
 	}
 
 	.experience-card:not(:last-child)::before {
-		bottom: 10px;
+		bottom: 14px;
 		width: 8px;
 		height: 8px;
 	}

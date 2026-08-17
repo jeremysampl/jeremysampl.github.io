@@ -82,6 +82,7 @@
 	color: var(--text-ink);
 	cursor: pointer;
 	flex-shrink: 0;
+	transition: var(--transition-interactive);
 }
 
 .app-modal__close svg {

@@ -31,6 +31,10 @@ const DRAG_START_PX_TOUCH = 36;
 const DRAG_START_ANGLE_TOUCH = 16;
 const INERTIA_FRICTION = 0.925;
 const INERTIA_MIN_VELOCITY = 0.02;
+/** Delay before mouse hover starts previewing a skill in the ring. */
+const PREVIEW_HOVER_MS = 100;
+/** Grace period after leaving an icon before preview ends (moving between neighbours). */
+const PREVIEW_HOVER_LEAVE_MS = 200;
 
 type Tier = {
 	ring: number;
@@ -44,7 +48,7 @@ type Tier = {
 const TIERS: Record<'mobile' | 'tablet' | 'desktop', Tier> = {
 	mobile: { ring: 560, iconMax: 56, iconMin: 34, trackInset: 28, hubFraction: 0.7 },
 	tablet: { ring: 620, iconMax: 64, iconMin: 42, trackInset: 36, hubFraction: 0.7 },
-	desktop: { ring: 980, iconMax: 76, iconMin: 48, trackInset: 42, hubFraction: 0.72 },
+	desktop: { ring: 950, iconMax: 76, iconMin: 48, trackInset: 42, hubFraction: 0.68 },
 };
 
 /** True for mouse/trackpad hover, not coarse touch pointers. */
@@ -110,10 +114,16 @@ function useOrbitGeometry(count: number) {
 			const sectionPad = Math.min(40, Math.max(12, width * 0.025));
 			const stagePad = 24;
 			const labelClearance = 36;
-			const chromeY = 72;
 			const availableW = width - (sectionPad + stagePad + labelClearance) * 2;
-			const availableH = height - headerPx - chromeY - stagePad * 2 - labelClearance;
-			ring = Math.max(240, Math.min(tier.ring, availableW, availableH));
+			if (tierKey === 'desktop') {
+				// Slightly below the full tier size; trim only when the viewport is genuinely short.
+				const heightCap = height - headerPx - 70;
+				ring = Math.max(240, Math.min(tier.ring, availableW, Math.max(heightCap, tier.ring - 36)));
+			} else {
+				const chromeY = 72 + stagePad * 2 + labelClearance;
+				const availableH = height - headerPx - chromeY;
+				ring = Math.max(240, Math.min(tier.ring, availableW, availableH));
+			}
 		}
 
 		const hubCap = cropMode === 'sides'
@@ -182,6 +192,57 @@ export default function TechStack() {
 	const lastMoveStamp = useRef(0);
 	const inertiaFrame = useRef<number | null>(null);
 	const spinFrame = useRef<number | null>(null);
+	const previewEnterTimerRef = useRef<number | null>(null);
+	const previewLeaveTimerRef = useRef<number | null>(null);
+	const hoveredSkillRef = useRef<Skill | null>(null);
+
+	function clearPreviewEnterTimer() {
+		if (previewEnterTimerRef.current != null) {
+			window.clearTimeout(previewEnterTimerRef.current);
+			previewEnterTimerRef.current = null;
+		}
+	}
+
+	function clearPreviewLeaveTimer() {
+		if (previewLeaveTimerRef.current != null) {
+			window.clearTimeout(previewLeaveTimerRef.current);
+			previewLeaveTimerRef.current = null;
+		}
+	}
+
+	function clearPreviewHoverTimers() {
+		clearPreviewEnterTimer();
+		clearPreviewLeaveTimer();
+	}
+
+	function scheduleHoverPreview(skill: Skill) {
+		clearPreviewLeaveTimer();
+		clearPreviewEnterTimer();
+
+		if (hoveredSkillRef.current) {
+			setHoveredSkill(skill);
+			return;
+		}
+
+		previewEnterTimerRef.current = window.setTimeout(() => {
+			previewEnterTimerRef.current = null;
+			setHoveredSkill(skill);
+		}, PREVIEW_HOVER_MS);
+	}
+
+	function scheduleHoverLeave() {
+		clearPreviewEnterTimer();
+		clearPreviewLeaveTimer();
+		previewLeaveTimerRef.current = window.setTimeout(() => {
+			previewLeaveTimerRef.current = null;
+			setHoveredSkill(null);
+		}, PREVIEW_HOVER_LEAVE_MS);
+	}
+
+	function cancelHoverPreview() {
+		clearPreviewHoverTimers();
+		setHoveredSkill(null);
+	}
 
 	function applyRotation(next: number) {
 		rotationRef.current = next;
@@ -199,6 +260,11 @@ export default function TechStack() {
 	const geometry = useOrbitGeometry(visibleSkills.length);
 
 	useEffect(() => {
+		hoveredSkillRef.current = hoveredSkill;
+	}, [hoveredSkill]);
+
+	useEffect(() => {
+		clearPreviewHoverTimers();
 		setHoveredSkill(null);
 		setPinnedSkill(null);
 		setAutoIndex(0);
@@ -206,18 +272,7 @@ export default function TechStack() {
 
 	const previewSkill = fineHover ? hoveredSkill : null;
 	const isFrozen = Boolean(previewSkill || pinnedSkill);
-
-	useEffect(() => {
-		if (pinnedSkill || previewSkill || isDragging || visibleSkills.length === 0) {
-			return;
-		}
-
-		const timer = window.setInterval(() => {
-			setAutoIndex((index) => (index + 1) % visibleSkills.length);
-		}, AUTO_CYCLE_MS);
-
-		return () => window.clearInterval(timer);
-	}, [pinnedSkill, previewSkill, isDragging, visibleSkills.length]);
+	const isAutoCycling = !isFrozen && !isDragging && visibleSkills.length > 0;
 
 	// Idle spin (paused while frozen or dragging; inertia handles release).
 	useEffect(() => {
@@ -249,6 +304,7 @@ export default function TechStack() {
 
 	useEffect(() => {
 		return () => {
+			clearPreviewHoverTimers();
 			if (inertiaFrame.current != null) {
 				cancelAnimationFrame(inertiaFrame.current);
 			}
@@ -420,6 +476,7 @@ export default function TechStack() {
 		}
 
 		const unpinning = pinnedSkill?.name === skill.name;
+		clearPreviewHoverTimers();
 		setHoveredSkill(null);
 
 		if (unpinning) {
@@ -444,6 +501,11 @@ export default function TechStack() {
 	} as CSSProperties;
 
 	const hubStyle: CSSProperties = { width: geometry.hub, height: geometry.hub };
+	const hubCyclePad = Math.max(8, Math.round(geometry.hub * 0.022));
+	const hubCycleStyle: CSSProperties = {
+		width: geometry.hub + hubCyclePad * 2,
+		height: geometry.hub + hubCyclePad * 2,
+	};
 	const cropClass = geometry.cropMode === 'sides' ? ' orbit--edge-crop orbit--edge-crop-x' : '';
 	const landscapeClass = geometry.isLandscapePhone ? ' orbit--landscape' : '';
 	const dragClass = isDragging ? ' is-dragging' : '';
@@ -512,10 +574,13 @@ export default function TechStack() {
 													aria-controls={dockId}
 													aria-hidden={!isVisible}
 													tabIndex={isVisible ? 0 : -1}
-													onMouseEnter={() => fineHover && isVisible && setHoveredSkill(skill)}
-													onMouseLeave={() => fineHover && setHoveredSkill(null)}
-													onFocus={() => fineHover && isVisible && setHoveredSkill(skill)}
-													onBlur={() => setHoveredSkill(null)}
+													onMouseEnter={() => fineHover && isVisible && scheduleHoverPreview(skill)}
+													onMouseLeave={() => fineHover && scheduleHoverLeave()}
+													onFocus={() => {
+														clearPreviewHoverTimers();
+														fineHover && isVisible && setHoveredSkill(skill);
+													}}
+													onBlur={() => cancelHoverPreview()}
 													onClick={(event) => isVisible && toggleSkill(skill, event)}
 												>
 													<span className="orbit__icon" aria-hidden="true">
@@ -534,6 +599,30 @@ export default function TechStack() {
 							);
 						})}
 					</div>
+
+					{isAutoCycling ? (
+						<div className="orbit__hub-cycle" style={hubCycleStyle} aria-hidden="true">
+							<svg className="orbit__hub-cycle-svg" viewBox="0 0 100 100">
+								<circle className="orbit__hub-cycle-track" cx="50" cy="50" r="48.5" />
+								{/* Rotated so the stroke grows clockwise from 12 o'clock */}
+								<g transform="rotate(-90 50 50)">
+									<circle
+										key={autoIndex}
+										className="orbit__hub-cycle-bar"
+										cx="50"
+										cy="50"
+										r="48.5"
+										pathLength={1}
+										style={{ animationDuration: `${AUTO_CYCLE_MS}ms` }}
+										onAnimationEnd={(event) => {
+											if (event.animationName !== 'orbit-hub-cycle') return;
+											setAutoIndex((index) => (index + 1) % visibleSkills.length);
+										}}
+									/>
+								</g>
+							</svg>
+						</div>
+					) : null}
 
 					<div id={dockId} className="orbit__hub" style={hubStyle} aria-live="polite">
 						{activeSkill ? (

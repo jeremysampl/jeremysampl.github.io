@@ -31,8 +31,8 @@ export default function ExternalLinks({
 	website,
 	siteIconSrc,
 	siteIconAlt = '',
-	siteLabel = 'Visit Site',
-	githubLabel = 'View Source',
+	siteLabel = 'Visit site',
+	githubLabel = 'View source',
 }: ExternalLinksProps) {
 	const githubHref = github ? projectGithubUrl(github) : null;
 	if (!githubHref && !website) return null;

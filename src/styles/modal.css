@@ -42,9 +42,7 @@
     opacity: 1;
     transform: none;
     transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
+        var(--transition-interactive),
         opacity 0.22s ease,
         visibility 0.22s ease;
 }
@@ -100,9 +98,7 @@
     opacity: 1;
     visibility: visible;
     transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
+        var(--transition-interactive),
         opacity 0.22s ease,
         visibility 0.22s ease;
 }

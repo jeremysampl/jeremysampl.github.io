@@ -40,7 +40,7 @@ export default function BlackjackPage() {
 			}}
 			gallery={[
 				{
-					title: 'Unlucky Loss',
+					title: 'Unlucky loss',
 					path: 'blackjack/lose-2.png',
 					description: 'A common upsetting loss in blackjack.',
 				},
@@ -50,12 +50,12 @@ export default function BlackjackPage() {
 					description: 'This is an example of how a player could win in blackjack.',
 				},
 				{
-					title: 'Hit/Hold',
+					title: 'Hit or hold',
 					path: 'blackjack/hit-or-hold.png',
 					description: 'The player may choose to hit (pick up another card) or hold.',
 				},
 				{
-					title: 'Typical Loss',
+					title: 'Typical loss',
 					path: 'blackjack/lose.png',
 					description: 'A typical loss in blackjack. The player went over 21 while trying to obtain higher.',
 				},

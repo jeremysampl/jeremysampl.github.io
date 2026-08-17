@@ -471,7 +471,7 @@ export default function ProjectPage({
 	return (
 		<section className="section project-page">
 			<article className="project-card">
-				<div className="project-card__panel">
+				<div className="project-card__panel entry-card">
 					<div className="project-card__hero">
 						<div className="project-card__visual">
 							{heroSrc && heroItem ? (
@@ -551,7 +551,10 @@ export default function ProjectPage({
 										) {
 											return;
 										}
-										handleMediaTap();
+										const origin =
+											event.currentTarget.querySelector<HTMLElement>('.project-card__image') ??
+											event.currentTarget;
+										openHeroLightbox(origin);
 									}}
 									onKeyDown={(event) => {
 										if (event.key === 'ArrowLeft' && canNavigate) {
@@ -846,8 +849,8 @@ export default function ProjectPage({
 				</div>
 			</article>
 
-			<aside className="project-more" aria-label="More projects">
-				<p className="project-more__text">
+			<aside className="page-more" aria-label="More projects">
+				<p className="page-more__text">
 					Want to see more?{' '}
 					<InlineLink to="/projects">View all projects</InlineLink>
 				</p>

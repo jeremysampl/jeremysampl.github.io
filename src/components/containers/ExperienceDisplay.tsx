@@ -31,7 +31,7 @@ export default function ExperienceDisplay({
 }) {
 	return (
 		<article id={id} className="experience-card">
-			<div className="entry-card entry-card--lift">
+			<div className="entry-card">
 				<div className="entry-card__media">
 					<img
 						src={"/images/experience/" + image}
@@ -46,7 +46,7 @@ export default function ExperienceDisplay({
 						location={location}
 						subtitleAs="h2"
 					>
-						<StackMeta links={links} technologies={technologies} label="Technologies Used" />
+						<StackMeta links={links} technologies={technologies} label="Technologies used" />
 					</EntryCardHeader>
 					{descriptionTitle ? (
 						<p className="entry-card__intro">{descriptionTitle}</p>

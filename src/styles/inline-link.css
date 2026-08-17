@@ -3,7 +3,7 @@
 	align-items: center;
 	gap: 5px;
 	max-width: 100%;
-	padding: 2px 6px;
+	padding: 0 6px;
 	border-radius: 999px;
 	background: linear-gradient(
 		135deg,
@@ -19,11 +19,7 @@
 	vertical-align: baseline;
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
-	transition:
-		background 160ms ease,
-		border-color 160ms ease,
-		box-shadow 160ms ease,
-		transform 160ms ease;
+	transition: var(--transition-interactive);
 }
 
 .inline-link__label {

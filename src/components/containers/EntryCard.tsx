@@ -8,17 +8,19 @@ export type EntryCardMetaProps = {
 };
 
 export function EntryCardMeta({ dateRange, location }: EntryCardMetaProps) {
+	const size = 15;
+
 	return (
 		<div className="entry-card__meta">
 			<span className="entry-card__meta-item">
-				<Icon name="calendar" size={15} color="var(--secondary-color)" />
+				<Icon name="calendar" size={size} color="var(--secondary-color)" style={{ width: size, textAlign: 'center' }} />
 				<span>{dateRange}</span>
 			</span>
 			<span className="entry-card__meta-sep" aria-hidden="true">
 				·
 			</span>
 			<span className="entry-card__meta-item">
-				<Icon name="map-marker" size={15} color="var(--secondary-color)" />
+				<Icon name="map-marker" size={size} color="var(--secondary-color)" style={{ width: size, textAlign: 'center' }} />
 				<span>{location}</span>
 			</span>
 		</div>

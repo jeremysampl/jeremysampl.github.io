@@ -26,7 +26,7 @@ export const education: AboutEntry = {
 	dateRange: 'September 2022 – April 2026',
 	detail: 'GPA: 3.96/4.0',
 	points: [
-		'Named to the Provost Honour Roll for achieving a mark of 90% or higher in every course across an entire academic year.',
+		'Named to the Provost\'s Honour Roll for achieving a mark of 90% or higher in every course across an entire academic year.',
 	],
 };
 

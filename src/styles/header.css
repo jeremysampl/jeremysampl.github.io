@@ -162,6 +162,7 @@ body.nav-lock {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.04);
     cursor: pointer;
+    transition: var(--transition-interactive);
 }
 
 .nav__toggle-bar {

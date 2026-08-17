@@ -61,7 +61,7 @@ export const technologies: Technology[] = [
 	{ id: 'arduino', name: 'Arduino', category: 'languages', icon: 'arduino.svg', iconPadding: 5 },
 	{ id: 'app-inventor', name: 'MIT App Inventor', category: 'languages', icon: 'app-inventor.png' },
 
-	// Libraries & Frameworks
+	// Libraries & frameworks
 	{ id: 'django', name: 'Django', category: 'frameworks', icon: 'django.svg' },
 	{ id: 'wordpress', name: 'WordPress', category: 'frameworks', icon: 'wordpress.svg' },
 	{ id: 'react', name: 'React', category: 'frameworks', icon: 'react.png' },
@@ -70,7 +70,7 @@ export const technologies: Technology[] = [
 	{ id: 'jquery', name: 'jQuery', category: 'frameworks', icon: 'jquery.png' },
 	{ id: 'electron', name: 'Electron', category: 'frameworks', icon: 'electron.svg' },
 
-	// Databases & Tools
+	// Databases & tools
 	{ id: 'mysql', name: 'MySQL', category: 'tools', icon: 'mysql.png' },
 	{ id: 'postgresql', name: 'PostgreSQL', category: 'tools', icon: 'postgresql.svg' },
 	{ id: 'rest-apis', name: 'REST APIs', category: 'tools', faIcon: 'exchange' },

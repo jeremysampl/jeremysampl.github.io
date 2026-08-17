@@ -110,8 +110,8 @@ function buildSkill(definition: SkillDefinition): Skill {
 export const skillCategories: { id: SkillCategory | 'all'; label: string }[] = [
 	{ id: 'all', label: 'All' },
 	{ id: 'languages', label: 'Languages' },
-	{ id: 'frameworks', label: 'Libraries & Frameworks' },
-	{ id: 'tools', label: 'Databases & Tools' },
+	{ id: 'frameworks', label: 'Libraries & frameworks' },
+	{ id: 'tools', label: 'Databases & tools' },
 ];
 
 /** Skills on the home page wheel. Other techs can still live in technologies.ts. */
@@ -152,7 +152,7 @@ const skillDefinitions: SkillDefinition[] = [
 	{ technologyId: 'typescript', usages: [{ kind: 'site' }] },
 	{ technologyId: 'java' },
 
-	// Libraries & Frameworks
+	// Libraries & frameworks
 	{
 		technologyId: 'django',
 		usages: [],
@@ -194,7 +194,7 @@ const skillDefinitions: SkillDefinition[] = [
 		],
 	},
 
-	// Databases & Tools
+	// Databases & tools
 	{
 		technologyId: 'mysql',
 		usages: [

@@ -51,10 +51,10 @@ export const experienceTechnologies: Record<ExperienceId, TechnologyItem[]> = {
 				{ id: 'css' },
 			],
 		},
+		sharedWateringCanTechnologies.jquery,
 		sharedWateringCanTechnologies.php,
 		sharedWateringCanTechnologies.wordpress,
 		sharedWateringCanTechnologies.mysql,
-		sharedWateringCanTechnologies.jquery,
 		{
 			id: 'rest-apis',
 			featured: true,
@@ -76,10 +76,10 @@ export const experienceTechnologies: Record<ExperienceId, TechnologyItem[]> = {
 				{ id: 'css' },
 			],
 		},
+		sharedWateringCanTechnologies.jquery,
 		sharedWateringCanTechnologies.php,
 		sharedWateringCanTechnologies.wordpress,
 		sharedWateringCanTechnologies.mysql,
-		sharedWateringCanTechnologies.jquery,
 		{
 			id: 'websocket',
 			featured: true,

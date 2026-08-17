@@ -1,20 +1,34 @@
 import React, { useEffect, useRef } from 'react';
 import { useGalleryLightbox } from '../views/GalleryLightbox';
-import MediaCard, { MediaCardGrid } from './MediaCard';
+import MediaCard, { MediaCardGrid, type MediaAspectRatio, type MediaMaxPerRow } from './MediaCard';
 import type { GalleryItem } from '../../types/gallery';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 
-export type { GalleryItem };
+export type { GalleryItem, MediaAspectRatio, MediaMaxPerRow };
 
-/** Compact filmstrip whose lightbox only cycles through the given items. */
+/** Inline screenshot strip for project writeups. Lightbox only cycles these items. */
 export function ProjectFilmstrip({
 	media,
 	activePath,
+	aspectRatio,
+	maxPerRow = 3,
 }: {
 	media: GalleryItem[];
 	activePath?: string;
+	/** Applied to every image in this strip. Defaults to 16 / 10. */
+	aspectRatio?: MediaAspectRatio;
+	/** Max images per row on larger screens. Phones stay one-across. Defaults to 3. */
+	maxPerRow?: MediaMaxPerRow;
 }) {
-	return <ProjectMediaGrid media={media} variant="filmstrip" activePath={activePath} />;
+	return (
+		<ProjectMediaGrid
+			media={media}
+			variant="inline"
+			activePath={activePath}
+			aspectRatio={aspectRatio}
+			maxPerRow={maxPerRow}
+		/>
+	);
 }
 
 /**
@@ -94,12 +108,16 @@ export default function ProjectMediaGrid({
 	variant = 'grid',
 	activePath,
 	onSelect,
+	aspectRatio,
+	maxPerRow,
 }: {
 	media: GalleryItem[];
-	variant?: 'grid' | 'filmstrip';
+	variant?: 'grid' | 'filmstrip' | 'inline';
 	activePath?: string;
 	/** If provided, filmstrip/grid selection calls this instead of opening the lightbox. */
 	onSelect?: (index: number, item: GalleryItem) => void;
+	aspectRatio?: MediaAspectRatio;
+	maxPerRow?: MediaMaxPerRow;
 }) {
 	const { openLightbox } = useGalleryLightbox();
 	const gridRef = useRef<HTMLDivElement>(null);
@@ -118,7 +136,13 @@ export default function ProjectMediaGrid({
 	if (!media.length) return null;
 
 	return (
-		<MediaCardGrid columns={3} variant={variant} gridRef={gridRef}>
+		<MediaCardGrid
+			columns={3}
+			variant={variant}
+			gridRef={gridRef}
+			aspectRatio={aspectRatio}
+			maxPerRow={maxPerRow}
+		>
 			{media.map((item, index) => (
 				<MediaCard
 					key={`${item.path}-${index}`}

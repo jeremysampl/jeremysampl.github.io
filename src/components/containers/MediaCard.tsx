@@ -1,7 +1,16 @@
-import React, { type MouseEvent } from 'react';
+import React, { type CSSProperties, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../displays/Icon';
 import '../../styles/media-card.css';
+
+export type MediaAspectRatio = string | number | readonly [number, number];
+export type MediaMaxPerRow = 1 | 2 | 3;
+
+function cssAspectRatio(value: MediaAspectRatio): string {
+	if (typeof value === 'number') return String(value);
+	if (typeof value === 'string') return value;
+	return `${value[0]} / ${value[1]}`;
+}
 
 export type MediaCardProps = {
 	title: string;
@@ -106,22 +115,32 @@ export function MediaCardGrid({
 	columns = 2,
 	variant = 'grid',
 	gridRef,
+	aspectRatio,
+	maxPerRow = 3,
 }: {
 	children: React.ReactNode;
 	columns?: 2 | 3;
-	variant?: 'grid' | 'filmstrip';
+	variant?: 'grid' | 'filmstrip' | 'inline';
 	gridRef?: React.Ref<HTMLDivElement>;
+	aspectRatio?: MediaAspectRatio;
+	maxPerRow?: MediaMaxPerRow;
 }) {
 	const className = [
 		'media-card-grid',
 		variant === 'filmstrip' ? 'media-card-grid--filmstrip' : '',
+		variant === 'inline' ? 'media-card-grid--inline' : '',
 		variant === 'grid' && columns === 3 ? 'media-card-grid--3' : '',
 	]
 		.filter(Boolean)
 		.join(' ');
 
+	const style = {
+		...(aspectRatio != null ? { '--media-card-aspect': cssAspectRatio(aspectRatio) } : {}),
+		...(variant === 'inline' ? { '--media-inline-max': String(maxPerRow) } : {}),
+	} as CSSProperties;
+
 	return (
-		<div ref={gridRef} className={className}>
+		<div ref={gridRef} className={className} style={Object.keys(style).length ? style : undefined}>
 			{children}
 		</div>
 	);
