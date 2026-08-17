@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import {
 	aboutIntro,
 	education,
@@ -6,12 +7,19 @@ import {
 	type AboutEntry,
 } from '../../data/about';
 import { getProject, projectHref } from '../../data/projects';
+import CourseHistory from '../containers/CourseHistory';
 import { EntryCardHeader } from '../containers/EntryCard';
 import InlineLink from '../displays/InlineLink';
 import '../../styles/about.css';
 import { getExperience } from '../../data/experience';
 
-function AboutEntryCard({ entry }: { entry: AboutEntry }) {
+function AboutEntryCard({
+	entry,
+	children,
+}: {
+	entry: AboutEntry;
+	children?: ReactNode;
+}) {
 	return (
 		<article className="entry-card about-entry">
 			<div className="entry-card__body">
@@ -29,6 +37,7 @@ function AboutEntryCard({ entry }: { entry: AboutEntry }) {
 						))}
 					</ul>
 				) : null}
+				{children}
 			</div>
 		</article>
 	);
@@ -77,7 +86,7 @@ export default function AboutPage() {
 							and retail operations by merging them under a single unified system.
 						</li>
 						<li>
-							When I work on personal and group projects, I do not shy away from engineering
+							When I work on personal and group projects, I don't shy away from engineering
 							my own solutions where no market-ready option exists, such as in{' '}
 							<InlineLink to={projectHref(geckode.id)}>{geckode.name}</InlineLink>
 							{' '}where I architected and developed a real-time, multi-user
@@ -96,7 +105,9 @@ export default function AboutPage() {
 
 			<div className="about-block" id="education">
 				<h2>Education</h2>
-				<AboutEntryCard entry={education} />
+				<AboutEntryCard entry={education}>
+					<CourseHistory />
+				</AboutEntryCard>
 			</div>
 
 			<div className="about-block" id="leadership">

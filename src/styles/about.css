@@ -65,15 +65,17 @@
 	margin-top: 12px;
 }
 
+.about-entry .simple-btn {
+	align-self: center;
+	margin-top: 12px;
+}
+
 .about-block {
 	margin-top: 36px;
-	text-align: left;
 }
 
 .about-block > h2 {
-	margin: 0 0 14px;
-	padding: 0;
-	text-align: left;
+	margin: 14px 0;
 }
 
 .about-languages {
@@ -81,6 +83,7 @@
 	margin: 0;
 	padding: 0;
 	display: flex;
+	justify-content: center;
 	flex-wrap: wrap;
 	gap: 10px;
 }

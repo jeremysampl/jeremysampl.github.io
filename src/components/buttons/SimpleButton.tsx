@@ -7,9 +7,12 @@ export type SimpleButtonVariant = 'primary' | 'ghost' | 'on-dark';
 
 type SimpleButtonProps = {
 	text: string;
-	url: string;
 	variant?: SimpleButtonVariant;
-};
+	ariaHasPopup?: 'dialog';
+} & (
+	| { url: string; onClick?: never }
+	| { url?: never; onClick: () => void }
+);
 
 function ButtonArrow() {
 	return (
@@ -28,7 +31,13 @@ function ButtonArrow() {
 	);
 }
 
-export default function SimpleButton({ text, url, variant = 'primary' }: SimpleButtonProps) {
+export default function SimpleButton({
+	text,
+	url,
+	onClick,
+	variant = 'primary',
+	ariaHasPopup,
+}: SimpleButtonProps) {
 	const className = `simple-btn simple-btn--${variant}`;
 	const content = (
 		<>
@@ -36,6 +45,19 @@ export default function SimpleButton({ text, url, variant = 'primary' }: SimpleB
 			<ButtonArrow />
 		</>
 	);
+
+	if (onClick) {
+		return (
+			<button
+				type="button"
+				className={className}
+				onClick={onClick}
+				aria-haspopup={ariaHasPopup}
+			>
+				{content}
+			</button>
+		);
+	}
 
 	if (url.startsWith('#')) {
 		return (

@@ -1,0 +1,443 @@
+.course-table__mark {
+	display: none;
+}
+
+.course-table__head,
+.course-table__row {
+	display: grid;
+	grid-template-columns: 7.2rem 4.6rem minmax(0, 1fr) 2.8rem 3.4rem 3.4rem 3.2rem;
+	align-items: baseline;
+	gap: 8px 10px;
+	padding: 8px 12px;
+}
+
+.course-table__id {
+	display: contents;
+}
+
+.course-table__grades {
+	display: grid;
+	grid-column: 4 / -1;
+	grid-template-columns: subgrid;
+	align-items: baseline;
+	gap: inherit;
+}
+
+.course-table__head {
+	flex-shrink: 0;
+	z-index: 2;
+	margin: 0;
+	padding: 10px 24px;
+	background: #fff;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	font-size: 11px;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #888;
+}
+
+.course-table__head .course-table__grades > span,
+.course-table__letter,
+.course-table__g12,
+.course-table__g4,
+.course-table__units {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+.course-table {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.course-table__year {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.course-table__semester {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.course-table__banner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 6px 12px;
+	padding: 10px 12px;
+	border-radius: 12px;
+	background: rgba(var(--secondary-rgb), 0.08);
+	border: 1px solid rgba(var(--secondary-rgb), 0.14);
+}
+
+.course-table__banner--term {
+	background: rgba(0, 0, 0, 0.03);
+	border-color: rgba(0, 0, 0, 0.05);
+	padding: 8px 12px;
+	border-radius: 10px;
+}
+
+.course-table__banner-title {
+	font-size: 14px;
+	font-weight: 800;
+	color: var(--text-ink);
+}
+
+.course-table__banner--term .course-table__banner-title {
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.course-table__banner-avg {
+	font-size: 12px;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: var(--secondary-color);
+}
+
+.course-table__banner--term .course-table__banner-avg {
+	color: #666;
+}
+
+.course-table__row {
+	border-radius: 10px;
+	background: rgba(0, 0, 0, 0.02);
+	border: 1px solid transparent;
+}
+
+.course-table__row--mt {
+	grid-template-columns: 7.2rem 4.6rem minmax(0, 1fr) auto;
+	align-items: center;
+}
+
+.course-table__prefix {
+	font-size: 12px;
+	font-weight: 800;
+	letter-spacing: 0.02em;
+	color: var(--secondary-color);
+	white-space: nowrap;
+}
+
+.course-table__code {
+	font-size: 13px;
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-ink);
+	white-space: nowrap;
+}
+
+.course-table__name {
+	min-width: 0;
+	font-size: 13px;
+	font-weight: 600;
+	color: #444;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.course-table__letter,
+.course-table__g12,
+.course-table__g4,
+.course-table__units {
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--text-ink);
+}
+
+.course-table__letter {
+	font-weight: 800;
+}
+
+.course-table__status {
+	display: inline-flex;
+	align-items: center;
+	justify-self: end;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: rgba(var(--secondary-rgb), 0.1);
+	border: 1px solid rgba(var(--secondary-rgb), 0.2);
+	color: var(--secondary-color);
+	font-size: 11px;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+}
+
+.course-history__overall {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 16px;
+}
+
+.course-history__overall-label {
+	margin: 0;
+	flex-shrink: 0;
+	font-size: 11px;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #888;
+}
+
+.course-history__overall-values {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: baseline;
+	margin: 0;
+	min-width: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #555;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.course-history__overall-values strong {
+	font-weight: 800;
+	color: var(--text-ink);
+}
+
+.course-history__sep {
+	margin: 0 8px;
+	color: #bbb;
+}
+
+.course-history__units {
+	margin: 0;
+	padding: 0;
+	font-size: inherit;
+	font-weight: 700;
+	color: var(--secondary-color);
+}
+
+@media (max-width: 700px) {
+	.course-table__head {
+		display: none;
+	}
+
+	.course-table {
+		gap: 16px;
+	}
+
+	.course-table__year {
+		gap: 10px;
+	}
+
+	.course-table__semester {
+		gap: 0;
+		padding: 0;
+		border-radius: 14px;
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		overflow: hidden;
+	}
+
+	.course-table__banner--term {
+		background: rgba(var(--secondary-rgb), 0.08);
+		border: none;
+		border-radius: 0;
+		padding: 10px 12px;
+	}
+
+	.course-table__row {
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-areas:
+			'id mark'
+			'name mark';
+		align-items: center;
+		column-gap: 12px;
+		row-gap: 1px;
+		padding: 10px 12px;
+		background: #fff;
+		border: none;
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
+		border-radius: 0;
+	}
+
+	.course-table__row--mt {
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-areas:
+			'id mark'
+			'name mark';
+		align-items: center;
+	}
+
+	.course-table__id {
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: baseline;
+		gap: 8px;
+		grid-area: id;
+		min-width: 0;
+	}
+
+	.course-table__prefix {
+		font-size: 11px;
+	}
+
+	.course-table__code {
+		font-size: 13px;
+	}
+
+	.course-table__name {
+		grid-area: name;
+		white-space: nowrap;
+		text-overflow: clip;
+		margin: 0;
+		font-size: 14px;
+		font-weight: 700;
+		line-height: 1.3;
+		color: var(--text-ink);
+	}
+
+	.course-table__name .sliding-text__inner {
+		display: inline-block;
+		white-space: nowrap;
+	}
+
+	.course-table__mark {
+		display: flex;
+		grid-area: mark;
+		align-items: center;
+		justify-content: flex-end;
+		min-width: 2.4em;
+		font-size: 18px;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		line-height: 1;
+		color: var(--secondary-color);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.course-table__grades,
+	.course-table__status {
+		display: none;
+	}
+
+	.course-table__banner {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+	}
+
+	.course-table__banner-avg {
+		font-size: 12px;
+	}
+
+	.course-table.is-detailed .course-table__semester {
+		gap: 8px;
+		padding: 8px;
+		background: rgba(0, 0, 0, 0.045);
+	}
+
+	.course-table.is-detailed .course-table__banner--term {
+		background: #fff;
+		border: 1px solid rgba(var(--secondary-rgb), 0.28);
+		border-radius: 10px;
+		padding: 8px 12px;
+	}
+
+	.course-table.is-detailed .course-table__row {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			'id'
+			'name'
+			'grades';
+		align-items: start;
+		gap: 2px 8px;
+		padding: 10px 12px 12px;
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.06);
+		border-radius: 10px;
+	}
+
+	.course-table.is-detailed .course-table__row--mt {
+		grid-template-areas:
+			'id'
+			'name'
+			'status';
+	}
+
+	.course-table.is-detailed .course-table__name {
+		white-space: normal;
+		overflow: visible;
+		text-overflow: unset;
+		margin-top: 2px;
+		margin-bottom: 8px;
+		font-weight: 600;
+		color: #444;
+	}
+
+	.course-table.is-detailed .course-table__name .sliding-text__inner {
+		display: inline;
+		white-space: normal;
+		animation: none;
+	}
+
+	.course-table.is-detailed .course-table__row--mt .course-table__name {
+		margin-bottom: 6px;
+	}
+
+	.course-table.is-detailed .course-table__mark {
+		display: none;
+	}
+
+	.course-table.is-detailed .course-table__grades {
+		display: grid;
+		grid-area: grades;
+		grid-column: auto;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 6px;
+	}
+
+	.course-table.is-detailed .course-table__letter,
+	.course-table.is-detailed .course-table__g12,
+	.course-table.is-detailed .course-table__g4,
+	.course-table.is-detailed .course-table__units {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+		text-align: left;
+		padding: 6px;
+		border-radius: 10px;
+		background: rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.05);
+		font-size: 13px;
+	}
+
+	.course-table.is-detailed .course-table__letter::before,
+	.course-table.is-detailed .course-table__g12::before,
+	.course-table.is-detailed .course-table__g4::before,
+	.course-table.is-detailed .course-table__units::before {
+		content: attr(data-label);
+		font-size: 9px;
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: #888;
+	}
+
+	.course-table.is-detailed .course-table__status {
+		display: inline-flex;
+		grid-area: status;
+		justify-self: start;
+	}
+
+	.course-history__overall-values {
+		font-size: 13px;
+	}
+
+	.course-history__sep {
+		margin: 0 6px;
+	}
+}
