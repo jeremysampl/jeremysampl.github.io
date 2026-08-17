@@ -18,12 +18,36 @@ export type { GalleryItem };
 
 type OriginRect = Pick<DOMRect, 'top' | 'left' | 'width' | 'height'>;
 
+export type LightboxVideoHandoff = {
+	currentTime?: number;
+	muted?: boolean;
+	play?: boolean;
+};
+
+export type LightboxVideoReturn = {
+	path: string;
+	currentTime: number;
+	muted: boolean;
+	volume?: number;
+};
+
+export type MediaAudioState = {
+	volume: number;
+	muted: boolean;
+};
+
+export type OpenLightboxOptions = {
+	video?: LightboxVideoHandoff;
+	galleryVideo?: LightboxVideoReturn;
+};
+
 type LightboxSession = {
 	items: GalleryItem[];
 	index: number;
 	origin: OriginRect | null;
-	/** Element that opened the lightbox (or last matched thumb while browsing). */
 	originEl: Element | null;
+	videoHandoff?: LightboxVideoHandoff | null;
+	galleryVideo?: LightboxVideoReturn | null;
 };
 
 type GalleryLightboxContextValue = {
@@ -31,8 +55,14 @@ type GalleryLightboxContextValue = {
 		items: GalleryItem[],
 		index: number,
 		originEl?: Element | null,
+		options?: OpenLightboxOptions,
 	) => void;
 	closeLightbox: () => void;
+	isOpen: boolean;
+	isVideoPlaying: boolean;
+	takeVideoReturn: () => LightboxVideoReturn | null;
+	mediaAudio: MediaAudioState;
+	setMediaAudio: (update: Partial<MediaAudioState> | ((prev: MediaAudioState) => MediaAudioState)) => void;
 };
 
 const GalleryLightboxContext = createContext<GalleryLightboxContextValue | null>(null);
@@ -151,27 +181,60 @@ function clamp(value: number, min: number, max: number) {
 
 export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 	const [session, setSession] = useState<LightboxSession | null>(null);
+	const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+	const [mediaAudio, setMediaAudioState] = useState<MediaAudioState>({ volume: 1, muted: true });
+	const videoReturnRef = useRef<LightboxVideoReturn | null>(null);
 	const { pathname } = useLocation();
 
-	const openLightbox = useCallback(
-		(items: GalleryItem[], index: number, originEl?: Element | null) => {
-			if (!items.length) return;
-			const safeIndex = Math.max(0, Math.min(index, items.length - 1));
-			const matched = originEl ?? findThumbnailElement(items[safeIndex].path);
-			setSession({
-				items,
-				index: safeIndex,
-				originEl: matched,
-				origin: matched ? rectFromElement(matched) : null,
+	const setMediaAudio = useCallback(
+		(update: Partial<MediaAudioState> | ((prev: MediaAudioState) => MediaAudioState)) => {
+			setMediaAudioState((prev) => {
+				const next = typeof update === 'function' ? update(prev) : { ...prev, ...update };
+				if (next.volume === prev.volume && next.muted === prev.muted) return prev;
+				return next;
 			});
 		},
 		[],
 	);
 
-	const closeLightbox = useCallback(() => setSession(null), []);
+	const openLightbox = useCallback(
+		(items: GalleryItem[], index: number, originEl?: Element | null, options?: OpenLightboxOptions) => {
+			if (!items.length) return;
+			const safeIndex = Math.max(0, Math.min(index, items.length - 1));
+			const matched = originEl ?? findThumbnailElement(items[safeIndex].path);
+			setIsVideoPlaying(false);
+			videoReturnRef.current = null;
+			setSession({
+				items,
+				index: safeIndex,
+				originEl: matched,
+				origin: matched ? rectFromElement(matched) : null,
+				videoHandoff: options?.video ?? null,
+				galleryVideo: options?.galleryVideo ?? null,
+			});
+		},
+		[],
+	);
+
+	const closeLightbox = useCallback(() => {
+		setIsVideoPlaying(false);
+		setSession(null);
+	}, []);
+
+	const takeVideoReturn = useCallback(() => {
+		const value = videoReturnRef.current;
+		videoReturnRef.current = null;
+		return value;
+	}, []);
+
+	const stashVideoReturn = useCallback((value: LightboxVideoReturn | null) => {
+		videoReturnRef.current = value;
+	}, []);
 
 	useEffect(() => {
 		setSession(null);
+		setIsVideoPlaying(false);
+		videoReturnRef.current = null;
 		document.body.classList.remove('nav-lock');
 	}, [pathname]);
 
@@ -185,18 +248,33 @@ export function GalleryLightboxProvider({ children }: { children: ReactNode }) {
 				index: nextIndex,
 				originEl: matched ?? current.originEl,
 				origin: matched ? rectFromElement(matched) : current.origin,
+				videoHandoff: null,
 			};
 		});
 	}, []);
 
 	return (
-		<GalleryLightboxContext.Provider value={{ openLightbox, closeLightbox }}>
+		<GalleryLightboxContext.Provider
+			value={{
+				openLightbox,
+				closeLightbox,
+				isOpen: session !== null,
+				isVideoPlaying,
+				takeVideoReturn,
+				mediaAudio,
+				setMediaAudio,
+			}}
+		>
 			{children}
 			{session ? (
 				<LightboxOverlay
 					session={session}
+					mediaAudio={mediaAudio}
 					onIndexChange={setIndex}
 					onClosed={closeLightbox}
+					onVideoPlayingChange={setIsVideoPlaying}
+					onStashVideoReturn={stashVideoReturn}
+					onMediaAudioChange={setMediaAudio}
 				/>
 			) : null}
 		</GalleryLightboxContext.Provider>
@@ -227,14 +305,22 @@ type PinchState = {
 
 function LightboxOverlay({
 	session,
+	mediaAudio,
 	onIndexChange,
 	onClosed,
+	onVideoPlayingChange,
+	onStashVideoReturn,
+	onMediaAudioChange,
 }: {
 	session: LightboxSession;
+	mediaAudio: MediaAudioState;
 	onIndexChange: (index: number) => void;
 	onClosed: () => void;
+	onVideoPlayingChange: (playing: boolean) => void;
+	onStashVideoReturn: (value: LightboxVideoReturn | null) => void;
+	onMediaAudioChange: (update: Partial<MediaAudioState>) => void;
 }) {
-	const { items, index, origin, originEl } = session;
+	const { items, index, origin, originEl, videoHandoff, galleryVideo } = session;
 	const item = items[index];
 	const isVideo = isGalleryVideo(item);
 	const stageRef = useRef<HTMLDivElement>(null);
@@ -248,6 +334,11 @@ function LightboxOverlay({
 	const settleTimeoutRef = useRef<number | null>(null);
 	const zoomRef = useRef(1);
 	const panRef = useRef({ x: 0, y: 0 });
+	const handoffAppliedForIndexRef = useRef<number | null>(null);
+	const pendingHandoffRef = useRef(videoHandoff);
+	const prevSlideIndexRef = useRef<number | null>(null);
+	const handoffCancelRef = useRef<(() => void) | null>(null);
+	const galleryVideoReturnRef = useRef<LightboxVideoReturn | null>(galleryVideo ?? null);
 
 	const [slideWidth, setSlideWidth] = useState(() => window.innerWidth);
 	const [dragX, setDragX] = useState(0);
@@ -280,8 +371,9 @@ function LightboxOverlay({
 			if (settleTimeoutRef.current !== null) {
 				window.clearTimeout(settleTimeoutRef.current);
 			}
+			onVideoPlayingChange(false);
 		};
-	}, []);
+	}, [onVideoPlayingChange]);
 
 	useLayoutEffect(() => {
 		const measure = () => {
@@ -304,12 +396,210 @@ function LightboxOverlay({
 		setZoomAnimating(false);
 		pinchRef.current = null;
 		pointersRef.current.clear();
-		pauseVideosIn(stageRef.current);
+		const hadPriorSlide = prevSlideIndexRef.current !== null;
+		prevSlideIndexRef.current = index;
+		if (hadPriorSlide) {
+			pauseVideosIn(stageRef.current);
+			onVideoPlayingChange(false);
+		}
+	}, [index, onVideoPlayingChange]);
+
+	useEffect(() => {
+		if (videoHandoff) pendingHandoffRef.current = videoHandoff;
+	}, [videoHandoff]);
+
+	useEffect(() => {
+		if (!isVideo) {
+			onVideoPlayingChange(false);
+			return;
+		}
+
+		const video = videoRef.current;
+		if (!video) return;
+
+		const handlePlay = () => onVideoPlayingChange(true);
+		const handleStop = () => onVideoPlayingChange(false);
+
+		video.addEventListener('play', handlePlay);
+		video.addEventListener('playing', handlePlay);
+		video.addEventListener('pause', handleStop);
+		video.addEventListener('ended', handleStop);
+		onVideoPlayingChange(!video.paused);
+
+		return () => {
+			video.removeEventListener('play', handlePlay);
+			video.removeEventListener('playing', handlePlay);
+			video.removeEventListener('pause', handleStop);
+			video.removeEventListener('ended', handleStop);
+		};
+	}, [index, isVideo, onVideoPlayingChange]);
+
+	const applyVideoHandoff = useCallback((video: HTMLVideoElement) => {
+		const handoff = pendingHandoffRef.current;
+		if (!handoff || handoffAppliedForIndexRef.current === index) return;
+
+		handoffCancelRef.current?.();
+		handoffAppliedForIndexRef.current = index;
+		pendingHandoffRef.current = null;
+
+		let cancelled = false;
+		handoffCancelRef.current = () => {
+			cancelled = true;
+		};
+
+		void (async () => {
+			const waitForMetadata = () =>
+				new Promise<void>((resolve) => {
+					if (video.readyState >= 1) {
+						resolve();
+						return;
+					}
+					const onReady = () => {
+						video.removeEventListener('loadedmetadata', onReady);
+						resolve();
+					};
+					video.addEventListener('loadedmetadata', onReady);
+				});
+
+			await waitForMetadata();
+			if (cancelled) return;
+
+			video.volume = mediaAudio.volume;
+			if (typeof handoff.muted === 'boolean') {
+				video.muted = handoff.muted;
+			} else {
+				video.muted = mediaAudio.muted;
+			}
+
+			if (typeof handoff.currentTime === 'number' && Number.isFinite(handoff.currentTime)) {
+				const targetTime = Math.max(0, handoff.currentTime);
+				await new Promise<void>((resolve) => {
+					let settled = false;
+					const finish = () => {
+						if (settled) return;
+						settled = true;
+						video.removeEventListener('seeked', finish);
+						resolve();
+					};
+					video.addEventListener('seeked', finish);
+					try {
+						video.currentTime = targetTime;
+					} catch {
+						finish();
+						return;
+					}
+					window.setTimeout(finish, 120);
+				});
+			}
+
+			if (cancelled) return;
+
+			video.volume = mediaAudio.volume;
+			if (typeof handoff.muted === 'boolean') {
+				video.muted = handoff.muted;
+			}
+
+			if (handoff.play) {
+				try {
+					await video.play();
+				} catch {
+					if (cancelled) return;
+					video.muted = true;
+					try {
+						await video.play();
+					} catch {
+						/* autoplay blocked */
+					}
+				}
+			}
+		})();
+	}, [index, mediaAudio.muted, mediaAudio.volume]);
+
+	useEffect(() => {
+		if (!isVideo) return;
+		const video = videoRef.current;
+		if (video) applyVideoHandoff(video);
+	}, [applyVideoHandoff, isVideo, videoHandoff]);
+
+	useEffect(() => {
+		return () => handoffCancelRef.current?.();
 	}, [index]);
 
+	const [activeVideoEpoch, setActiveVideoEpoch] = useState(0);
+
+	const setActiveVideoRef = useCallback(
+		(node: HTMLVideoElement | null) => {
+			videoRef.current = node;
+			if (node) {
+				node.volume = mediaAudio.volume;
+				node.muted = mediaAudio.muted;
+				applyVideoHandoff(node);
+				setActiveVideoEpoch((value) => value + 1);
+			}
+		},
+		[applyVideoHandoff, mediaAudio.muted, mediaAudio.volume],
+	);
+
+	useEffect(() => {
+		if (!isVideo) return;
+		const video = videoRef.current;
+		if (!video) return;
+		if (Math.abs(video.volume - mediaAudio.volume) > 0.001) {
+			video.volume = mediaAudio.volume;
+		}
+		if (video.muted !== mediaAudio.muted) {
+			video.muted = mediaAudio.muted;
+		}
+	}, [activeVideoEpoch, isVideo, mediaAudio.muted, mediaAudio.volume]);
+
 	const finishClose = useCallback(() => {
+		const tracked = galleryVideoReturnRef.current;
+		const video = videoRef.current;
+		if (tracked && video && isVideo && item.path === tracked.path) {
+			galleryVideoReturnRef.current = {
+				path: tracked.path,
+				currentTime: video.currentTime,
+				muted: video.muted,
+				volume: video.volume,
+			};
+		}
+		onStashVideoReturn(galleryVideoReturnRef.current);
 		onClosed();
-	}, [onClosed]);
+	}, [isVideo, item.path, onClosed, onStashVideoReturn]);
+
+	useEffect(() => {
+		const tracked = galleryVideoReturnRef.current;
+		if (!isVideo) return;
+		const video = videoRef.current;
+		if (!video) return;
+
+		const syncReturn = () => {
+			if (!tracked || item.path !== tracked.path) return;
+			galleryVideoReturnRef.current = {
+				path: tracked.path,
+				currentTime: video.currentTime,
+				muted: video.muted,
+				volume: video.volume,
+			};
+		};
+
+		const syncAudio = () => {
+			onMediaAudioChange({ volume: video.volume, muted: video.muted });
+			syncReturn();
+		};
+
+		video.addEventListener('timeupdate', syncReturn);
+		video.addEventListener('seeked', syncReturn);
+		video.addEventListener('volumechange', syncAudio);
+		syncReturn();
+
+		return () => {
+			syncReturn();
+			video.removeEventListener('timeupdate', syncReturn);
+			video.removeEventListener('seeked', syncReturn);
+			video.removeEventListener('volumechange', syncAudio);
+		};
+	}, [activeVideoEpoch, index, isVideo, item.path, onMediaAudioChange]);
 
 	const resetZoom = useCallback(() => {
 		setZoom(1);
@@ -356,7 +646,6 @@ function LightboxOverlay({
 				};
 		const objectFit = objectFitForElement(thumbEl);
 
-		// Morph the flying frame to the thumb's exact box so cover/contain crops line up.
 		setCloseStyle({
 			position: 'fixed',
 			top: current.top,
@@ -730,8 +1019,20 @@ function LightboxOverlay({
 		dragRef.current = null;
 		setDragging(false);
 
-		// Tap with no drag: toggle captions (works whether zoomed or not)
+		// Tap with no drag: toggle captions (skip taps on the video player).
 		if (!state.moved) {
+			if (isVideo && videoRef.current) {
+				const rect = videoRef.current.getBoundingClientRect();
+				const { clientX, clientY } = event;
+				if (
+					clientX >= rect.left &&
+					clientX <= rect.right &&
+					clientY >= rect.top &&
+					clientY <= rect.bottom
+				) {
+					return;
+				}
+			}
 			setChromeVisible((visible) => !visible);
 			return;
 		}
@@ -933,12 +1234,12 @@ function LightboxOverlay({
 							>
 								{slideIsVideo ? (
 									<video
-										ref={slide.role === 'active' ? videoRef : undefined}
+										ref={slide.role === 'active' ? setActiveVideoRef : undefined}
 										className="gallery-lightbox__video"
 										src={galleryItemUrl(slide.item)}
 										controls={slide.role === 'active'}
 										playsInline
-										preload="metadata"
+										preload="auto"
 									/>
 								) : (
 									<img
