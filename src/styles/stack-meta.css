@@ -173,6 +173,18 @@
 	transform: translateY(-1px);
 }
 
+button.tech-chip {
+	appearance: none;
+	font: inherit;
+	cursor: pointer;
+}
+
+button.tech-chip:focus-visible {
+	border-color: rgba(var(--secondary-rgb), 0.45);
+	background: rgba(var(--secondary-rgb), 0.08);
+	outline: none;
+}
+
 .tech-chip--others {
 	appearance: none;
 	font: inherit;
@@ -346,6 +358,27 @@
 	border-radius: 14px;
 	background: rgba(0, 0, 0, 0.025);
 	border: 1px solid rgba(0, 0, 0, 0.05);
+	scroll-margin: 10px;
+	cursor: pointer;
+	transition:
+		background 180ms ease,
+		border-color 180ms ease,
+		box-shadow 180ms ease;
+}
+
+.tech-modal__item:hover {
+	border-color: rgba(var(--secondary-rgb), 0.22);
+	background: rgba(var(--secondary-rgb), 0.04);
+}
+
+.tech-modal__item.is-focused {
+	background: rgba(var(--secondary-rgb), 0.1);
+	border-color: rgba(var(--secondary-rgb), 0.42);
+	box-shadow: 0 0 0 2px rgba(var(--secondary-rgb), 0.16);
+}
+
+.tech-modal__item.is-focused .tech-modal__name-row strong {
+	color: var(--secondary-color);
 }
 
 .tech-modal__item-main {

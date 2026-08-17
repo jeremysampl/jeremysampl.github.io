@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Icon from '../displays/Icon';
@@ -80,11 +80,13 @@ export default function TechnologyChips({ technologies, label = 'Built with' }: 
 	label?: string;
 }) {
 	const [modalOpen, setModalOpen] = useState(false);
+	const [focusedId, setFocusedId] = useState<TechnologyId | null>(null);
 	const titleId = useId();
 	const { pathname } = useLocation();
 
 	useEffect(() => {
 		setModalOpen(false);
+		setFocusedId(null);
 	}, [pathname]);
 
 	const resolved = useMemo(() => technologies.map(resolveTech), [technologies]);
@@ -98,6 +100,17 @@ export default function TechnologyChips({ technologies, label = 'Built with' }: 
 			+ (resolved.reduce((sum, item) => sum + item.children.length, 0))
 			- visible.length
 	);
+	const canOpenDetails = hiddenCount > 0;
+
+	const closeModal = () => {
+		setModalOpen(false);
+		setFocusedId(null);
+	};
+
+	const openDetails = (id?: TechnologyId) => {
+		setFocusedId(id ?? null);
+		setModalOpen(true);
+	};
 
 	if (!resolved.length) return null;
 
@@ -107,14 +120,28 @@ export default function TechnologyChips({ technologies, label = 'Built with' }: 
 				<p className="stack-tech__label">{label}</p>
 				<ul className="tech-chips" aria-label="Technologies used">
 					{visible.map((technology) => (
-						<TechnologyChip key={technology.id} technology={technology} />
+						<TechnologyChip
+							key={technology.id}
+							technology={technology}
+							onOpen={
+								canOpenDetails
+									? () => {
+											if (modalOpen && focusedId === technology.id) {
+												setFocusedId(null);
+												return;
+											}
+											openDetails(technology.id);
+										}
+									: undefined
+							}
+						/>
 					))}
-					{hiddenCount > 0 ? (
+					{canOpenDetails ? (
 						<li>
 							<button
 								type="button"
 								className="tech-chip tech-chip--others"
-								onClick={() => setModalOpen(true)}
+								onClick={() => openDetails()}
 								aria-haspopup="dialog"
 							>
 								<span className="tech-chip__others-count">+{hiddenCount}</span>
@@ -131,23 +158,26 @@ export default function TechnologyChips({ technologies, label = 'Built with' }: 
 				<TechnologyDetailsModal
 					titleId={titleId}
 					technologies={resolved}
-					onClose={() => setModalOpen(false)}
+					focusedId={focusedId}
+					onFocus={setFocusedId}
+					onClose={closeModal}
 				/>
 			) : null}
 		</>
 	);
 }
 
-function TechnologyChip({ technology }: { technology: ResolvedTech }) {
+function TechnologyChip({
+	technology,
+	onOpen,
+}: {
+	technology: ResolvedTech;
+	onOpen?: () => void;
+}) {
 	const [isHover, setIsHover] = useState(false);
-
-	return (
-		<li
-			className={`tech-chip${isHover ? ' is-hover' : ''}`}
-			onMouseEnter={() => setIsHover(true)}
-			onMouseLeave={() => setIsHover(false)}
-			title={technology.subtitle ?? technology.name}
-		>
+	const className = `tech-chip${isHover ? ' is-hover' : ''}`;
+	const content = (
+		<>
 			<span className="tech-chip__icon" aria-hidden="true">
 				<TechIcon iconSrc={technology.iconSrc} faIcon={technology.faIcon} />
 			</span>
@@ -155,6 +185,35 @@ function TechnologyChip({ technology }: { technology: ResolvedTech }) {
 			{technology.subtitle ? (
 				<span className="tech-chip__subtitle">{technology.subtitle}</span>
 			) : null}
+		</>
+	);
+
+	if (onOpen) {
+		return (
+			<li>
+				<button
+					type="button"
+					className={className}
+					onClick={onOpen}
+					onMouseEnter={() => setIsHover(true)}
+					onMouseLeave={() => setIsHover(false)}
+					title={technology.subtitle ?? technology.name}
+					aria-haspopup="dialog"
+				>
+					{content}
+				</button>
+			</li>
+		);
+	}
+
+	return (
+		<li
+			className={className}
+			onMouseEnter={() => setIsHover(true)}
+			onMouseLeave={() => setIsHover(false)}
+			title={technology.subtitle ?? technology.name}
+		>
+			{content}
 		</li>
 	);
 }
@@ -162,12 +221,18 @@ function TechnologyChip({ technology }: { technology: ResolvedTech }) {
 function TechnologyDetailsModal({
 	titleId,
 	technologies,
+	focusedId,
+	onFocus,
 	onClose,
 }: {
 	titleId: string;
 	technologies: ResolvedTech[];
+	focusedId: TechnologyId | null;
+	onFocus: (id: TechnologyId | null) => void;
 	onClose: () => void;
 }) {
+	const focusedRef = useRef<HTMLLIElement | null>(null);
+
 	useEffect(() => {
 		const onKeyDown = (event: KeyboardEvent) => {
 			if (event.key === 'Escape') onClose();
@@ -179,6 +244,16 @@ function TechnologyDetailsModal({
 			document.body.classList.remove('nav-lock');
 		};
 	}, [onClose]);
+
+	useEffect(() => {
+		if (!focusedId) return;
+		const node = focusedRef.current;
+		if (!node) return;
+		const timeout = window.setTimeout(() => {
+			node.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		}, 40);
+		return () => window.clearTimeout(timeout);
+	}, [focusedId]);
 
 	return createPortal(
 		<div className="tech-modal" role="presentation" onClick={onClose}>
@@ -193,7 +268,7 @@ function TechnologyDetailsModal({
 					<div>
 						<p className="tech-modal__eyebrow">Stack details</p>
 						<h2 id={titleId} className="tech-modal__title">
-							Technologies Used
+							Technologies used
 						</h2>
 					</div>
 					<button type="button" className="tech-modal__close" aria-label="Close" onClick={onClose}>
@@ -209,43 +284,57 @@ function TechnologyDetailsModal({
 					</button>
 				</header>
 
-				<ul className="tech-modal__list">
-					{technologies.map((technology) => (
-						<li key={technology.id} className="tech-modal__item">
-							<div className="tech-modal__item-main">
-								<span className="tech-modal__icon" aria-hidden="true">
-									<TechIcon iconSrc={technology.iconSrc} faIcon={technology.faIcon} size={22} />
-								</span>
-								<div className="tech-modal__copy">
-									<div className="tech-modal__name-row">
-										<strong>{technology.name}</strong>
-										{technology.subtitle ? (
-											<span className="tech-modal__subtitle">{technology.subtitle}</span>
+				<ul
+					className="tech-modal__list"
+					onClick={(event) => {
+						if (event.target === event.currentTarget) onFocus(null);
+					}}
+				>
+					{technologies.map((technology) => {
+						const isFocused = focusedId === technology.id;
+						return (
+							<li
+								key={technology.id}
+								ref={isFocused ? focusedRef : undefined}
+								className={`tech-modal__item${isFocused ? ' is-focused' : ''}`}
+								aria-current={isFocused ? 'true' : undefined}
+								onClick={() => onFocus(isFocused ? null : technology.id)}
+							>
+								<div className="tech-modal__item-main">
+									<span className="tech-modal__icon" aria-hidden="true">
+										<TechIcon iconSrc={technology.iconSrc} faIcon={technology.faIcon} size={22} />
+									</span>
+									<div className="tech-modal__copy">
+										<div className="tech-modal__name-row">
+											<strong>{technology.name}</strong>
+											{technology.subtitle ? (
+												<span className="tech-modal__subtitle">{technology.subtitle}</span>
+											) : null}
+										</div>
+										{technology.description ? (
+											<p className="tech-modal__description">{technology.description}</p>
 										) : null}
 									</div>
-									{technology.description ? (
-										<p className="tech-modal__description">{technology.description}</p>
-									) : null}
 								</div>
-							</div>
 
-							{technology.children.length ? (
-								<ul className="tech-modal__children">
-									{technology.children.map((child) => (
-										<li key={child.id} className="tech-modal__child">
-											<span className="tech-modal__child-icon" aria-hidden="true">
-												<TechIcon iconSrc={child.iconSrc} faIcon={child.faIcon} size={16} />
-											</span>
-											<div className="tech-modal__child-copy">
-												<strong>{child.name}</strong>
-												{child.description ? <p>{child.description}</p> : null}
-											</div>
-										</li>
-									))}
-								</ul>
-							) : null}
-						</li>
-					))}
+								{technology.children.length ? (
+									<ul className="tech-modal__children">
+										{technology.children.map((child) => (
+											<li key={child.id} className="tech-modal__child">
+												<span className="tech-modal__child-icon" aria-hidden="true">
+													<TechIcon iconSrc={child.iconSrc} faIcon={child.faIcon} size={16} />
+												</span>
+												<div className="tech-modal__child-copy">
+													<strong>{child.name}</strong>
+													{child.description ? <p>{child.description}</p> : null}
+												</div>
+											</li>
+										))}
+									</ul>
+								) : null}
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		</div>,
