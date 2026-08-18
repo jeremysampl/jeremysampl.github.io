@@ -3,6 +3,7 @@ import React, {
 	type ReactNode,
 	useCallback,
 	useEffect,
+	useLayoutEffect,
 	useMemo,
 	useRef,
 	useState,
@@ -223,7 +224,7 @@ export default function ProjectPage({
 	}, [setMediaAudio]);
 
 	const wasLightboxOpenRef = useRef(false);
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (isOpen) {
 			wasLightboxOpenRef.current = true;
 			return;
@@ -238,6 +239,7 @@ export default function ProjectPage({
 			setActiveIndex(matchIndex);
 		}
 		setResumeTime(returned.currentTime);
+		setAutoplay(returned.play);
 		setMediaAudio({
 			muted: returned.muted,
 			...(typeof returned.volume === 'number' ? { volume: returned.volume } : {}),
@@ -443,6 +445,7 @@ export default function ProjectPage({
 							currentTime: video.currentTime,
 							muted,
 							volume,
+							play: !video.paused,
 						},
 					}
 				: undefined,

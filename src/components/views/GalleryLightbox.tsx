@@ -29,6 +29,7 @@ export type LightboxVideoReturn = {
 	currentTime: number;
 	muted: boolean;
 	volume?: number;
+	play: boolean;
 };
 
 export type MediaAudioState = {
@@ -71,6 +72,7 @@ const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
 const CLICK_ZOOM = 2.5;
 const TAP_MOVE_THRESHOLD = 10;
+const CHROME_IDLE_MS = 2600;
 const THUMB_SCOPE_SELECTOR =
 	'.media-card-grid, .project-gallery-ref, .project-card__visual, .project-card__story, .project-card__panel';
 
@@ -90,6 +92,59 @@ function rectFromElement(el: Element): OriginRect {
 		width: rect.width,
 		height: rect.height,
 	};
+}
+
+/** Visible painted area for object-fit: contain media. */
+function renderedMediaRect(element: HTMLImageElement | HTMLVideoElement): OriginRect {
+	const box = element.getBoundingClientRect();
+	const naturalWidth =
+		element instanceof HTMLVideoElement ? element.videoWidth : element.naturalWidth;
+	const naturalHeight =
+		element instanceof HTMLVideoElement ? element.videoHeight : element.naturalHeight;
+
+	if (!naturalWidth || !naturalHeight) {
+		return rectFromElement(element);
+	}
+
+	const boxAspect = box.width / box.height;
+	const mediaAspect = naturalWidth / naturalHeight;
+	let width: number;
+	let height: number;
+
+	if (mediaAspect > boxAspect) {
+		width = box.width;
+		height = box.width / mediaAspect;
+	} else {
+		height = box.height;
+		width = box.height * mediaAspect;
+	}
+
+	return {
+		top: box.top + (box.height - height) / 2,
+		left: box.left + (box.width - width) / 2,
+		width,
+		height,
+	};
+}
+
+function containMediaSize(
+	containerWidth: number,
+	containerHeight: number,
+	mediaWidth: number,
+	mediaHeight: number,
+): { width: number; height: number } {
+	if (!mediaWidth || !mediaHeight) {
+		return { width: containerWidth, height: containerHeight };
+	}
+
+	const containerAspect = containerWidth / containerHeight;
+	const mediaAspect = mediaWidth / mediaHeight;
+
+	if (mediaAspect > containerAspect) {
+		return { width: containerWidth, height: containerWidth / mediaAspect };
+	}
+
+	return { width: containerHeight * mediaAspect, height: containerHeight };
 }
 
 function galleryPathMatches(element: HTMLElement, path: string): boolean {
@@ -160,12 +215,35 @@ function findThumbnailOrigin(path: string, preferred?: Element | null): OriginRe
 	return element ? rectFromElement(element) : null;
 }
 
+function closeStartRectForVideo(video: HTMLVideoElement): OriginRect {
+	const frame = video.closest('.gallery-lightbox__video-frame');
+	if (frame instanceof HTMLElement) {
+		return rectFromElement(frame);
+	}
+	return renderedMediaRect(video);
+}
+
 function objectFitForElement(element: Element | null): React.CSSProperties['objectFit'] {
 	if (!element) return 'cover';
 	const fit = getComputedStyle(element).objectFit;
 	return fit === 'contain' || fit === 'cover' || fit === 'fill' || fit === 'none' || fit === 'scale-down'
 		? fit
 		: 'cover';
+}
+
+function ensureFilmstripThumbVisible(thumbEl: HTMLElement) {
+	const strip = thumbEl.closest('.media-card-grid--filmstrip');
+	if (!(strip instanceof HTMLElement)) return;
+	const card = thumbEl.closest('.media-card');
+	if (!(card instanceof HTMLElement)) return;
+
+	const stripRect = strip.getBoundingClientRect();
+	const cardRect = card.getBoundingClientRect();
+	const paddingLeft = parseFloat(getComputedStyle(strip).paddingLeft) || 0;
+	if (cardRect.left >= stripRect.left - 2 && cardRect.right <= stripRect.right + 2) return;
+
+	const delta = cardRect.left - (stripRect.left + paddingLeft);
+	strip.scrollBy({ left: delta, behavior: 'auto' });
 }
 
 function pauseVideosIn(root: ParentNode | null) {
@@ -303,6 +381,110 @@ type PinchState = {
 	startMidY: number;
 };
 
+function LightboxVideoSlide({
+	src,
+	active,
+	slideWidth,
+	onVideoRef,
+}: {
+	src: string;
+	active: boolean;
+	slideWidth: number;
+	onVideoRef?: (node: HTMLVideoElement | null) => void;
+}) {
+	const localRef = useRef<HTMLVideoElement>(null);
+	const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
+
+	const measure = useCallback(() => {
+		const video = localRef.current;
+		if (!video?.videoWidth || !video.videoHeight) return;
+		const containerHeight = window.innerHeight;
+		setFrameSize(
+			containMediaSize(slideWidth, containerHeight, video.videoWidth, video.videoHeight),
+		);
+	}, [slideWidth]);
+
+	useLayoutEffect(() => {
+		measure();
+		const video = localRef.current;
+		if (!video) return;
+
+		video.addEventListener('loadedmetadata', measure);
+		window.addEventListener('resize', measure);
+		return () => {
+			video.removeEventListener('loadedmetadata', measure);
+			window.removeEventListener('resize', measure);
+		};
+	}, [measure, src]);
+
+	const setRef = useCallback(
+		(node: HTMLVideoElement | null) => {
+			localRef.current = node;
+			if (active) onVideoRef?.(node);
+		},
+		[active, onVideoRef],
+	);
+
+	return (
+		<div
+			className="gallery-lightbox__video-frame"
+			style={
+				frameSize
+					? { width: `${frameSize.width}px`, height: `${frameSize.height}px` }
+					: undefined
+			}
+		>
+			<video
+				ref={setRef}
+				className="gallery-lightbox__video"
+				src={src}
+				controls={active}
+				playsInline
+				preload="auto"
+			/>
+		</div>
+	);
+}
+
+function FlyingCloseVideo({
+	src,
+	time,
+	style,
+}: {
+	src: string;
+	time: number;
+	style: React.CSSProperties;
+}) {
+	const setRef = useCallback(
+		(node: HTMLVideoElement | null) => {
+			if (!node) return;
+			const apply = () => {
+				try {
+					node.currentTime = time;
+				} catch {
+					/* ignore seek errors during close */
+				}
+			};
+			if (node.readyState >= 1) apply();
+			else node.addEventListener('loadedmetadata', apply, { once: true });
+		},
+		[time],
+	);
+
+	return (
+		<video
+			ref={setRef}
+			className="gallery-lightbox__video gallery-lightbox__video--flying"
+			src={src}
+			style={style}
+			muted
+			playsInline
+			preload="auto"
+			aria-hidden="true"
+		/>
+	);
+}
+
 function LightboxOverlay({
 	session,
 	mediaAudio,
@@ -339,6 +521,10 @@ function LightboxOverlay({
 	const prevSlideIndexRef = useRef<number | null>(null);
 	const handoffCancelRef = useRef<(() => void) | null>(null);
 	const galleryVideoReturnRef = useRef<LightboxVideoReturn | null>(galleryVideo ?? null);
+	const stashedVideoReturnRef = useRef<LightboxVideoReturn | null>(null);
+	const isClosingRef = useRef(false);
+	const chromeIdleTimerRef = useRef<number | null>(null);
+	const closeVideoTimeRef = useRef(0);
 
 	const [slideWidth, setSlideWidth] = useState(() => window.innerWidth);
 	const [dragX, setDragX] = useState(0);
@@ -350,6 +536,12 @@ function LightboxOverlay({
 	const [entered, setEntered] = useState(false);
 	const [closeStyle, setCloseStyle] = useState<React.CSSProperties | undefined>();
 	const [chromeVisible, setChromeVisible] = useState(true);
+	const [metaVisible, setMetaVisible] = useState(true);
+	const [finePointer, setFinePointer] = useState(() =>
+		typeof window !== 'undefined'
+			? window.matchMedia('(hover: hover) and (pointer: fine)').matches
+			: false,
+	);
 	const [zoom, setZoom] = useState(1);
 	const [pan, setPan] = useState({ x: 0, y: 0 });
 	const [zoomAnimating, setZoomAnimating] = useState(false);
@@ -361,6 +553,61 @@ function LightboxOverlay({
 	const nextIndex = (index + 1) % items.length;
 	const canNavigate = items.length > 1;
 	const isZoomed = !isVideo && zoom > 1.02;
+
+	const clearChromeIdleTimer = useCallback(() => {
+		if (chromeIdleTimerRef.current !== null) {
+			window.clearTimeout(chromeIdleTimerRef.current);
+			chromeIdleTimerRef.current = null;
+		}
+	}, []);
+
+	const scheduleChromeIdleHide = useCallback(() => {
+		clearChromeIdleTimer();
+		if (!finePointer) return;
+		chromeIdleTimerRef.current = window.setTimeout(() => {
+			setChromeVisible(false);
+			chromeIdleTimerRef.current = null;
+		}, CHROME_IDLE_MS);
+	}, [clearChromeIdleTimer, finePointer]);
+
+	const revealChrome = useCallback(() => {
+		setChromeVisible(true);
+		scheduleChromeIdleHide();
+	}, [scheduleChromeIdleHide]);
+
+	const onDesktopPointerActivity = useCallback(() => {
+		if (!finePointer) return;
+		revealChrome();
+	}, [finePointer, revealChrome]);
+
+	const onChromeZoneEnter = useCallback(() => {
+		if (!finePointer) return;
+		clearChromeIdleTimer();
+		setChromeVisible(true);
+	}, [clearChromeIdleTimer, finePointer]);
+
+	const onChromeZoneLeave = useCallback(() => {
+		if (!finePointer) return;
+		scheduleChromeIdleHide();
+	}, [finePointer, scheduleChromeIdleHide]);
+
+	useEffect(() => {
+		const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+		const onChange = () => setFinePointer(media.matches);
+		media.addEventListener('change', onChange);
+		return () => media.removeEventListener('change', onChange);
+	}, []);
+
+	useEffect(() => {
+		if (!entered) return;
+		if (finePointer) {
+			setChromeVisible(true);
+			scheduleChromeIdleHide();
+		}
+		return clearChromeIdleTimer;
+	}, [clearChromeIdleTimer, entered, finePointer, index, scheduleChromeIdleHide]);
+
+	useEffect(() => () => clearChromeIdleTimer(), [clearChromeIdleTimer]);
 
 	useEffect(() => {
 		document.body.classList.add('nav-lock');
@@ -552,20 +799,34 @@ function LightboxOverlay({
 		}
 	}, [activeVideoEpoch, isVideo, mediaAudio.muted, mediaAudio.volume]);
 
-	const finishClose = useCallback(() => {
+	const releasePageLock = useCallback(() => {
+		document.body.classList.remove('nav-lock');
+	}, []);
+
+	const finalizeGalleryVideoReturn = useCallback(() => {
 		const tracked = galleryVideoReturnRef.current;
-		const video = videoRef.current;
-		if (tracked && video && isVideo && item.path === tracked.path) {
+		if (!tracked) return;
+
+		if (isVideo && item.path === tracked.path && videoRef.current) {
 			galleryVideoReturnRef.current = {
-				path: tracked.path,
-				currentTime: video.currentTime,
-				muted: video.muted,
-				volume: video.volume,
+				...tracked,
+				currentTime: videoRef.current.currentTime,
+				muted: videoRef.current.muted,
+				volume: videoRef.current.volume,
+				play: !videoRef.current.paused,
 			};
 		}
-		onStashVideoReturn(galleryVideoReturnRef.current);
+
+		stashedVideoReturnRef.current = galleryVideoReturnRef.current;
+	}, [isVideo, item.path]);
+
+	const finishClose = useCallback(() => {
+		isClosingRef.current = false;
+		onStashVideoReturn(stashedVideoReturnRef.current ?? galleryVideoReturnRef.current);
+		stashedVideoReturnRef.current = null;
+		releasePageLock();
 		onClosed();
-	}, [isVideo, item.path, onClosed, onStashVideoReturn]);
+	}, [onClosed, onStashVideoReturn, releasePageLock]);
 
 	useEffect(() => {
 		const tracked = galleryVideoReturnRef.current;
@@ -574,12 +835,14 @@ function LightboxOverlay({
 		if (!video) return;
 
 		const syncReturn = () => {
+			if (isClosingRef.current) return;
 			if (!tracked || item.path !== tracked.path) return;
 			galleryVideoReturnRef.current = {
 				path: tracked.path,
 				currentTime: video.currentTime,
 				muted: video.muted,
 				volume: video.volume,
+				play: !video.paused,
 			};
 		};
 
@@ -590,6 +853,9 @@ function LightboxOverlay({
 
 		video.addEventListener('timeupdate', syncReturn);
 		video.addEventListener('seeked', syncReturn);
+		video.addEventListener('play', syncReturn);
+		video.addEventListener('pause', syncReturn);
+		video.addEventListener('ended', syncReturn);
 		video.addEventListener('volumechange', syncAudio);
 		syncReturn();
 
@@ -597,6 +863,9 @@ function LightboxOverlay({
 			syncReturn();
 			video.removeEventListener('timeupdate', syncReturn);
 			video.removeEventListener('seeked', syncReturn);
+			video.removeEventListener('play', syncReturn);
+			video.removeEventListener('pause', syncReturn);
+			video.removeEventListener('ended', syncReturn);
 			video.removeEventListener('volumechange', syncAudio);
 		};
 	}, [activeVideoEpoch, index, isVideo, item.path, onMediaAudioChange]);
@@ -606,98 +875,108 @@ function LightboxOverlay({
 		setPan({ x: 0, y: 0 });
 	}, []);
 
-	const animateCloseToOrigin = useCallback(() => {
-		pauseVideosIn(stageRef.current);
+	const animateCloseToOrigin = useCallback(
+		(fromDismiss = false) => {
+			const isVideoItem = isGalleryVideo(item);
 
-		if (isGalleryVideo(item)) {
-			finishClose();
-			return;
-		}
-
-		const img = imgRef.current;
-		if (!img) {
-			finishClose();
-			return;
-		}
-
-		const thumbEl = findThumbnailElement(item.path, originEl);
-		if (thumbEl) {
-			const strip = thumbEl.closest('.media-card-grid--filmstrip');
-			if (strip instanceof HTMLElement) {
-				const card = thumbEl.closest('.media-card');
-				if (card instanceof HTMLElement) {
-					const stripRect = strip.getBoundingClientRect();
-					const cardRect = card.getBoundingClientRect();
-					if (cardRect.left < stripRect.left || cardRect.right > stripRect.right) {
-						card.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-					}
-				}
+			if (isVideoItem && videoRef.current) {
+				closeVideoTimeRef.current = videoRef.current.currentTime;
 			}
-		}
 
-		const current = img.getBoundingClientRect();
-		const target = thumbEl
-			? rectFromElement(thumbEl)
-			: origin ?? {
-					top: window.innerHeight * 0.85,
-					left: window.innerWidth / 2 - current.width * 0.12,
-					width: current.width * 0.24,
-					height: current.height * 0.24,
-				};
-		const objectFit = objectFitForElement(thumbEl);
+			finalizeGalleryVideoReturn();
+			isClosingRef.current = true;
+			pauseVideosIn(stageRef.current);
+			releasePageLock();
 
-		setCloseStyle({
-			position: 'fixed',
-			top: current.top,
-			left: current.left,
-			width: current.width,
-			height: current.height,
-			maxWidth: 'none',
-			maxHeight: 'none',
-			margin: 0,
-			transform: 'none',
-			transition: 'none',
-			zIndex: 5,
-			objectFit,
-		});
-		setClosing(true);
-		setDragX(0);
-		setDragY(0);
-		resetZoom();
+			const thumbEl = findThumbnailElement(item.path, originEl);
 
-		requestAnimationFrame(() => {
-			requestAnimationFrame(() => {
+			const mediaEl = isVideoItem ? videoRef.current : imgRef.current;
+			if (!mediaEl) {
+				finishClose();
+				return;
+			}
+
+			if (thumbEl) {
+				ensureFilmstripThumbVisible(thumbEl);
+			}
+
+			if (!fromDismiss) {
+				setDragX(0);
+				setDragY(0);
+				if (!isVideoItem) resetZoom();
+			}
+
+			const measureAndAnimate = () => {
+				const current = isVideoItem
+					? closeStartRectForVideo(videoRef.current!)
+					: renderedMediaRect(imgRef.current!);
+				const target = thumbEl
+					? rectFromElement(thumbEl)
+					: origin ?? {
+							top: window.innerHeight * 0.85,
+							left: window.innerWidth / 2 - current.width * 0.12,
+							width: current.width * 0.24,
+							height: current.height * 0.24,
+						};
+
 				setCloseStyle({
 					position: 'fixed',
-					top: target.top,
-					left: target.left,
-					width: target.width,
-					height: target.height,
+					top: current.top,
+					left: current.left,
+					width: current.width,
+					height: current.height,
 					maxWidth: 'none',
 					maxHeight: 'none',
 					margin: 0,
+					padding: 0,
 					transform: 'none',
-					opacity: 0.15,
-					transition:
-						'top 0.34s cubic-bezier(0.22, 1, 0.36, 1), left 0.34s cubic-bezier(0.22, 1, 0.36, 1), width 0.34s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease',
-					zIndex: 5,
-					objectFit,
+					transition: 'none',
+					zIndex: 1001,
+					objectFit: 'fill',
 				});
-			});
-		});
+				setClosing(true);
 
-		window.setTimeout(finishClose, 360);
-	}, [finishClose, item, origin, originEl, resetZoom]);
+				requestAnimationFrame(() => {
+					setCloseStyle({
+						position: 'fixed',
+						top: target.top,
+						left: target.left,
+						width: target.width,
+						height: target.height,
+						maxWidth: 'none',
+						maxHeight: 'none',
+						margin: 0,
+						padding: 0,
+						transform: 'none',
+						opacity: 0.15,
+						transition:
+							'top 0.34s cubic-bezier(0.22, 1, 0.36, 1), left 0.34s cubic-bezier(0.22, 1, 0.36, 1), width 0.34s cubic-bezier(0.22, 1, 0.36, 1), height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease',
+						zIndex: 1001,
+						objectFit: 'fill',
+					});
+				});
+			};
+
+			requestAnimationFrame(() => {
+				requestAnimationFrame(measureAndAnimate);
+			});
+
+			window.setTimeout(finishClose, finePointer ? 360 : 320);
+		},
+		[finePointer, finalizeGalleryVideoReturn, finishClose, item, origin, originEl, releasePageLock, resetZoom],
+	);
 
 	const goPrev = useCallback(() => {
 		if (!canNavigate || closing || settling || isZoomed) return;
+		revealChrome();
 		onIndexChange(index - 1);
-	}, [canNavigate, closing, index, isZoomed, onIndexChange, settling]);
+	}, [canNavigate, closing, index, isZoomed, onIndexChange, revealChrome, settling]);
 
 	const goNext = useCallback(() => {
 		if (!canNavigate || closing || settling || isZoomed) return;
+		revealChrome();
 		onIndexChange(index + 1);
-	}, [canNavigate, closing, index, isZoomed, onIndexChange, settling]);
+	}, [canNavigate, closing, index, isZoomed, onIndexChange, revealChrome, settling]);
 
 	const settleHorizontal = useCallback(
 		(direction: -1 | 0 | 1) => {
@@ -853,6 +1132,15 @@ function LightboxOverlay({
 		}
 
 		pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+		if (isVideo && (event.target as HTMLElement).closest('.gallery-lightbox__video-frame')) {
+			return;
+		}
+
+		if (isVideo) {
+			event.preventDefault();
+		}
+
 		(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
 
 		if (pointersRef.current.size === 2) {
@@ -940,9 +1228,9 @@ function LightboxOverlay({
 
 		if (state.mode === 'vertical') {
 			const y = Math.max(dy, dy * 0.2);
-			state.x = dx * 0.12;
+			state.x = 0;
 			state.y = y;
-			setDragX(state.x);
+			setDragX(0);
 			setDragY(state.y);
 			return;
 		}
@@ -1019,21 +1307,15 @@ function LightboxOverlay({
 		dragRef.current = null;
 		setDragging(false);
 
-		// Tap with no drag: toggle captions (skip taps on the video player).
+		// Tap with no drag: toggle chrome on touch (letterbox taps; video frame handles its own taps).
 		if (!state.moved) {
-			if (isVideo && videoRef.current) {
-				const rect = videoRef.current.getBoundingClientRect();
-				const { clientX, clientY } = event;
-				if (
-					clientX >= rect.left &&
-					clientX <= rect.right &&
-					clientY >= rect.top &&
-					clientY <= rect.bottom
-				) {
-					return;
-				}
+			if (isVideo) {
+				event.preventDefault();
 			}
-			setChromeVisible((visible) => !visible);
+			if (!finePointer) {
+				setChromeVisible((visible) => !visible);
+				setMetaVisible((visible) => !visible);
+			}
 			return;
 		}
 
@@ -1043,7 +1325,7 @@ function LightboxOverlay({
 		}
 
 		if (state.mode === 'vertical' && state.y > 110 && !isZoomed) {
-			animateCloseToOrigin();
+			animateCloseToOrigin(true);
 			return;
 		}
 
@@ -1073,7 +1355,8 @@ function LightboxOverlay({
 
 	const dismissProgress = Math.min(1, Math.max(0, dragY / 280));
 	const dragScale = isZoomed ? 1 : 1 - dismissProgress * 0.12;
-	const backdropOpacity = entered ? 0.92 - dismissProgress * 0.55 : 0;
+	const backdropOpacity = entered ? 0.55 - dismissProgress * 0.35 : 0;
+	const isDismissing = !isZoomed && dragY > 0;
 	const baseOffset = canNavigate ? -slideWidth : 0;
 	const shouldTransition = !dragging && !suppressTransition && (settling || !closing);
 
@@ -1105,19 +1388,25 @@ function LightboxOverlay({
 				'gallery-lightbox',
 				entered ? 'is-open' : '',
 				closing ? 'is-closing' : '',
+				isDismissing ? 'is-dismissing' : '',
 				chromeVisible ? '' : 'chrome-hidden',
+				metaVisible ? '' : 'meta-hidden',
+				finePointer && !chromeVisible ? 'cursor-hidden' : '',
 				isZoomed ? 'is-zoomed' : '',
 			].filter(Boolean).join(' ')}
 			role="dialog"
 			aria-modal="true"
 			aria-label="Project media gallery"
 			style={{ ['--lightbox-backdrop-opacity' as string]: String(backdropOpacity) }}
+			onMouseMove={onDesktopPointerActivity}
 		>
 			<button
 				type="button"
 				className="gallery-lightbox__close"
 				aria-label="Close gallery"
-				onClick={animateCloseToOrigin}
+				onClick={() => animateCloseToOrigin()}
+				onMouseEnter={onChromeZoneEnter}
+				onMouseLeave={onChromeZoneLeave}
 				disabled={closing}
 			>
 				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -1133,41 +1422,24 @@ function LightboxOverlay({
 
 			<button
 				type="button"
-				className="gallery-lightbox__desc-toggle"
-				aria-pressed={chromeVisible}
-				aria-label={chromeVisible ? 'Hide description' : 'Show description'}
+				className="gallery-lightbox__meta-toggle"
+				aria-pressed={metaVisible}
+				aria-label={metaVisible ? 'Hide description' : 'Show description'}
 				hidden={closing}
-				onClick={() => setChromeVisible((visible) => !visible)}
+				onClick={() => setMetaVisible((visible) => !visible)}
+				onMouseEnter={onChromeZoneEnter}
+				onMouseLeave={onChromeZoneLeave}
 			>
 				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-					{chromeVisible ? (
-						<path
-							d="M4 7.5h16M4 12h16M4 16.5h10"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-						/>
-					) : (
-						<>
-							<path
-								d="M4 7.5h16M4 12h16M4 16.5h10"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-							/>
-							<path
-								d="M15 15.5l5 5M20 15.5l-5 5"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-							/>
-						</>
-					)}
+					<path
+						d="M4 7.5h16M4 12h16M4 16.5h10"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+					/>
 				</svg>
-				<span>{chromeVisible ? 'Hide description' : 'Show description'}</span>
+				<span>{metaVisible ? 'Hide description' : 'Show description'}</span>
 			</button>
 
 			{canNavigate ? (
@@ -1177,6 +1449,8 @@ function LightboxOverlay({
 						className="gallery-lightbox__nav gallery-lightbox__nav--prev"
 						aria-label="Previous image"
 						onClick={goPrev}
+						onMouseEnter={onChromeZoneEnter}
+						onMouseLeave={onChromeZoneLeave}
 						disabled={closing || settling || isZoomed}
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -1195,6 +1469,8 @@ function LightboxOverlay({
 						className="gallery-lightbox__nav gallery-lightbox__nav--next"
 						aria-label="Next image"
 						onClick={goNext}
+						onMouseEnter={onChromeZoneEnter}
+						onMouseLeave={onChromeZoneLeave}
 						disabled={closing || settling || isZoomed}
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -1233,13 +1509,11 @@ function LightboxOverlay({
 								style={{ width: slideWidth }}
 							>
 								{slideIsVideo ? (
-									<video
-										ref={slide.role === 'active' ? setActiveVideoRef : undefined}
-										className="gallery-lightbox__video"
+									<LightboxVideoSlide
 										src={galleryItemUrl(slide.item)}
-										controls={slide.role === 'active'}
-										playsInline
-										preload="auto"
+										active={slide.role === 'active'}
+										slideWidth={slideWidth}
+										onVideoRef={slide.role === 'active' ? setActiveVideoRef : undefined}
 									/>
 								) : (
 									<img
@@ -1257,17 +1531,30 @@ function LightboxOverlay({
 				</div>
 			</div>
 
-			{closing && closeStyle && !isVideo ? (
-				<img
-					className="gallery-lightbox__image gallery-lightbox__image--flying"
-					src={galleryItemUrl(item)}
-					alt=""
-					draggable={false}
-					style={closeStyle}
-				/>
+			{closing && closeStyle ? (
+				isVideo ? (
+					<FlyingCloseVideo
+						src={galleryItemUrl(item)}
+						time={closeVideoTimeRef.current}
+						style={closeStyle}
+					/>
+				) : (
+					<img
+						className="gallery-lightbox__image gallery-lightbox__image--flying"
+						src={galleryItemUrl(item)}
+						alt=""
+						draggable={false}
+						style={closeStyle}
+					/>
+				)
 			) : null}
 
-			<div className="gallery-lightbox__meta" hidden={closing}>
+			<div
+				className="gallery-lightbox__meta"
+				hidden={closing}
+				onMouseEnter={onChromeZoneEnter}
+				onMouseLeave={onChromeZoneLeave}
+			>
 				<h3 className="gallery-lightbox__title">{item.title}</h3>
 				{item.description ? (
 					<p className="gallery-lightbox__caption">{item.description}</p>
