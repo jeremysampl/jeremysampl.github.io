@@ -25,7 +25,11 @@ export default function SlidingText({
 } & HTMLAttributes<HTMLSpanElement>) {
 	const wrapRef = useRef<HTMLSpanElement>(null);
 	const textRef = useRef<HTMLSpanElement>(null);
+	const shiftRef = useRef(0);
+	const returningRef = useRef(false);
 	const [shift, setShift] = useState(0);
+
+	shiftRef.current = shift;
 
 	useEffect(() => {
 		const wrap = wrapRef.current;
@@ -41,9 +45,38 @@ export default function SlidingText({
 
 		const overflowPx = () => Math.max(0, inner.scrollWidth - wrap.clientWidth);
 
+		const easeBack = () => {
+			if (returningRef.current || shiftRef.current <= 0) return;
+			const matrix = getComputedStyle(inner).transform;
+			if (matrix === 'none') {
+				setShift(0);
+				return;
+			}
+			returningRef.current = true;
+			inner.style.animation = 'none';
+			inner.style.transform = matrix;
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					inner.style.transition = 'transform 0.6s ease-in-out';
+					inner.style.transform = 'translateX(0)';
+				});
+			});
+			inner.addEventListener(
+				'transitionend',
+				() => {
+					inner.style.animation = '';
+					inner.style.transition = '';
+					inner.style.transform = '';
+					returningRef.current = false;
+					setShift(0);
+				},
+				{ once: true },
+			);
+		};
+
 		const stop = () => {
 			window.clearTimeout(timeout);
-			setShift(0);
+			easeBack();
 		};
 
 		if (!mobile.matches || reduceMotion.matches) {
@@ -55,10 +88,11 @@ export default function SlidingText({
 			([entry]) => {
 				window.clearTimeout(timeout);
 				if (!entry.isIntersecting) {
-					setShift(0);
+					easeBack();
 					return;
 				}
 				timeout = window.setTimeout(() => {
+					if (returningRef.current) return;
 					setShift(overflowPx());
 				}, delayMs);
 			},
@@ -68,7 +102,11 @@ export default function SlidingText({
 		observer.observe(wrap);
 		mobile.addEventListener('change', stop);
 		return () => {
-			stop();
+			window.clearTimeout(timeout);
+			inner.style.animation = '';
+			inner.style.transition = '';
+			inner.style.transform = '';
+			returningRef.current = false;
 			observer.disconnect();
 			mobile.removeEventListener('change', stop);
 		};
