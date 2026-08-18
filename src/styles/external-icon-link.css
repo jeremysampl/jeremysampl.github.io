@@ -1,0 +1,49 @@
+.external-icon-link {
+	position: relative;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	margin-left: 0.28em;
+	vertical-align: -0.12em;
+	line-height: 0;
+	color: var(--secondary-color);
+	opacity: 0.62;
+	text-decoration: none;
+	flex-shrink: 0;
+	border-radius: 4px;
+	transition: var(--transition-interactive);
+}
+
+.external-icon-link::after {
+	content: "";
+	position: absolute;
+	inset: -12px;
+}
+
+.external-icon-link svg {
+	display: block;
+	width: 1em;
+	height: 1em;
+}
+
+.external-icon-link:hover,
+.external-icon-link:focus-visible {
+	opacity: 1;
+	outline: none;
+}
+
+.external-icon-link:focus-visible {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--secondary-color);
+}
+
+@media (hover: none) {
+	.external-icon-link {
+		opacity: 0.82;
+	}
+}
+
+@media (max-width: 700px) {
+	.external-icon-link::after {
+		inset: -14px;
+	}
+}

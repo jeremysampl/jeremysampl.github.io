@@ -4,16 +4,75 @@
     font-family: 'Roboto Slab', serif;
 }
 
-:root {
-    --secondary-color: #f44336;
-    --dark-grey: #444;
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+    /* Body margin sits outside body background; keep this dark under the home header */
+    background-color: var(--surface-dark);
 }
+
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+    background-color: #fff;
+}
+
+:target,
+[id] {
+    scroll-margin-top: calc(var(--header-height, 64px) + 12px);
+}
+
+/* Firefox: keep Font Awesome on ::before instead of the page font */
+.fa,
+.fa::before,
+.fa::after {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+}
+
+a[href],
+a[href] * {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --secondary-color: #1E6FE8;
+    --secondary-rgb: 30, 111, 232;
+    --secondary-tint: #cde0ff;
+    --dark-grey: #444;
+    --surface-dark: #05070d;
+    --surface-dark-rgb: 5, 7, 13;
+    --text-ink: #05070d;
+    --header-height: 64px;
+    --transition-interactive: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+.app-shell {
+    min-height: calc(100vh - var(--header-height, 64px));
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+.app-shell__content {
+    flex: 1 0 auto;
+}
+
 .section {
-    width: 80%;
-    min-height: calc(93vh - 200px);
+    width: 100%;
+    max-width: none;
+    min-height: calc(100vh - var(--header-height, 64px) - 200px);
     text-align: center;
     margin: 10px auto;
-    padding: 10px 0;
+    padding: 16px clamp(16px, 3vw, 48px);
+    box-sizing: border-box;
 }
 
 /*----- Animations -----*/
@@ -30,20 +89,20 @@
 h1 {
     font-size: 60px;
     font-weight: 900;
-    color: #000;
+    color: var(--text-ink);
     padding: 10px;
 }
 h2 {
     font-size: 36px;
     font-weight: 600;
-    color: #000;
+    color: var(--text-ink);
     padding: 10px;
     margin-top: 10px;
 }
 h3 {
     font-size: 26px;
     font-weight: 700;
-    color:#000;
+    color: var(--text-ink);
     padding: 10px;
 }
 p {
@@ -52,6 +111,23 @@ p {
     font-weight: 500;
     line-height: 22px;
     padding: 10px;
+}
+
+.page-more {
+    width: 100%;
+    max-width: 960px;
+    margin: 40px auto 28px;
+    padding: 4px 0 0;
+    text-align: center;
+}
+
+.page-more__text {
+    margin: 0;
+    padding: 0;
+    color: #777;
+    font-size: clamp(14px, 1.25vw, 15px);
+    font-weight: 500;
+    line-height: 1.5;
 }
 
 /*----- Organizers -----*/

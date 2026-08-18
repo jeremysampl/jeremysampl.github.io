@@ -1,0 +1,36 @@
+.sliding-text {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.sliding-text__inner {
+	white-space: inherit;
+}
+
+.sliding-text.is-marquee .sliding-text__inner {
+	display: inline-block;
+	white-space: nowrap;
+	animation: sliding-text-marquee var(--marquee-duration, 7s) ease-in-out infinite;
+}
+
+@keyframes sliding-text-marquee {
+	0%,
+	12% {
+		transform: translateX(0);
+	}
+
+	46%,
+	62% {
+		transform: translateX(var(--marquee-distance, 0));
+	}
+
+	100% {
+		transform: translateX(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sliding-text.is-marquee .sliding-text__inner {
+		animation: none;
+	}
+}

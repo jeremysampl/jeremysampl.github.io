@@ -1,0 +1,88 @@
+.simple-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 20px;
+	padding: 12px 20px 12px 22px;
+	border-radius: 14px;
+	border: 1px solid transparent;
+	font-size: 14px;
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: 0.01em;
+	text-decoration: none;
+	cursor: pointer;
+	transition: var(--transition-interactive);
+}
+
+.simple-btn__label {
+	min-width: 0;
+}
+
+.simple-btn__arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	transition: transform 180ms ease;
+}
+
+.simple-btn__arrow svg {
+	display: block;
+}
+
+.simple-btn:hover,
+.simple-btn:focus-visible {
+	transform: translateY(-2px);
+	outline: none;
+}
+
+.simple-btn:hover .simple-btn__arrow,
+.simple-btn:focus-visible .simple-btn__arrow {
+	transform: translateX(3px);
+}
+
+.simple-btn--primary {
+	background: linear-gradient(135deg, var(--secondary-color) 0%, #1558c7 100%);
+	color: #fff;
+	box-shadow: 0 10px 24px rgba(var(--secondary-rgb), 0.28);
+}
+
+.simple-btn--primary:hover,
+.simple-btn--primary:focus-visible {
+	filter: brightness(1.05);
+	box-shadow: 0 14px 28px rgba(var(--secondary-rgb), 0.36);
+}
+
+.simple-btn--ghost {
+	background: #fff;
+	color: var(--text-ink);
+	border-color: rgba(0, 0, 0, 0.1);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.simple-btn--ghost:hover,
+.simple-btn--ghost:focus-visible {
+	border-color: rgba(var(--secondary-rgb), 0.35);
+	color: var(--secondary-color);
+	box-shadow: 0 10px 24px rgba(var(--secondary-rgb), 0.14);
+}
+
+.simple-btn--on-dark {
+	background: rgba(255, 255, 255, 0.08);
+	color: #fff;
+	border-color: rgba(255, 255, 255, 0.32);
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+
+.simple-btn--on-dark:hover,
+.simple-btn--on-dark:focus-visible {
+	background: rgba(255, 255, 255, 0.16);
+	border-color: rgba(255, 255, 255, 0.55);
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.32);
+}
