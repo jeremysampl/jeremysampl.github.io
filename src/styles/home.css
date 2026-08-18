@@ -81,7 +81,7 @@
 .hero-bg__glow--one {
     width: min(48vw, 420px);
     height: min(48vw, 420px);
-    top: -8%;
+    top: 20%;
     left: 8%;
     background: rgba(30, 111, 232, 0.35);
 }
@@ -99,7 +99,7 @@
 .hero-bg__glow--three {
     width: min(32vw, 280px);
     height: min(32vw, 280px);
-    top: 40%;
+    top: 55%;
     left: 55%;
     background: rgba(30, 111, 232, 0.18);
     animation-duration: 26s;

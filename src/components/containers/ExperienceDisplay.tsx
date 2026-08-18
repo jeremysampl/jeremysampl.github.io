@@ -7,7 +7,9 @@ import "../../styles/experience.css";
 export default function ExperienceDisplay({
 	id,
 	name,
+	companyUrl,
 	location,
+	mapUrl,
 	title,
 	dateRange,
 	image,
@@ -19,7 +21,9 @@ export default function ExperienceDisplay({
 }: {
 	id?: string;
 	name: string;
+	companyUrl?: string;
 	location: string;
+	mapUrl?: string;
 	title: string;
 	dateRange: string;
 	image: string;
@@ -42,8 +46,10 @@ export default function ExperienceDisplay({
 					<EntryCardHeader
 						title={title}
 						subtitle={name}
+						subtitleHref={companyUrl}
 						dateRange={dateRange}
 						location={location}
+						locationHref={mapUrl}
 						subtitleAs="h2"
 					>
 						<StackMeta links={links} technologies={technologies} label="Technologies used" />

@@ -16,7 +16,9 @@ export type ExperienceEntry = {
 	/** id of the matching card, for hash links */
 	anchor: string;
 	company: string;
+	companyUrl?: string;
 	location: string;
+	mapUrl?: string;
 	role: string;
 	start: ExperienceDate;
 	end: ExperienceDate;
@@ -70,59 +72,60 @@ function formatExperienceDate(date: ExperienceDate, style: DateRangeStyle): stri
 	return `${monthName(date.month, style)} ${date.year}`;
 }
 
+const wateringCanSharedDetails = {
+	company: 'The Watering Can Flower Market',
+	companyUrl: 'https://thewateringcan.ca/',
+	location: 'Lincoln, ON, Canada',
+	mapUrl: 'https://www.google.com/maps/search/?api=1&query=The+Watering+Can+Flower+Market,+Vineland,+ON',
+	role: 'Software Developer – Co-op',
+};
+
 /** Jobs on the Experience page, newest first. */
 export const experiences: ExperienceEntry[] = [
 	{
-		id: 'watering-can-2024',
-		anchor: 'watering-can-2024',
-		company: 'The Watering Can Flower Market',
-		location: 'Lincoln, ON, Canada',
-		role: 'Software Developer Co-op',
-		start: { month: 5, year: 2024 },
-		end: { month: 8, year: 2024 },
-		image: 'watering-can-second-coop.jpg',
+		id: 'watering-can-2023',
+		anchor: 'watering-can-2023',
+		...wateringCanSharedDetails,
+		start: { month: 5, year: 2023 },
+		end: { month: 8, year: 2023 },
+		image: 'watering-can-coop.jpg',
 		descriptionTitle:
-			'During my second summer co-op at The Watering Can, I was already familiar with their systems and I truly felt part of the core team! Here is a summary of my second co-op:',
+			'During my first 4-month co-op at The Watering Can, I had the opportunity to work on a major project that had a significant impact on the company\'s operations! Here is a summary of my accomplishments during the term:',
 		points: [
-			'Maintained and regularly updated their website and 3+ web applications, including implementing new features, fixing bugs, general testing, and much more.',
 			[
-				'Created new RESTful APIs to modernize and modularize existing APIs to support core functionality of a React-based point of sale (POS) system.',
-				'Used object-oriented programming techniques to significantly improve readability, scalability, and maintainability.',
+				'Led the end-to-end development of an extension to their existing custom point of sale (POS) system to better integrate their restaurant and retail operations across a single unified platform.',
+				'Assumed project ownership and maintained constant communication with staff and management to ensure the system met their needs and exceeded expectations.',
+				'Engineered custom WordPress plugins using PHP and jQuery to create intuitive interfaces for POS device configurations, permitting managers to easily configure and administer POS devices, including modifying their interface, items they can sell, and much more.',
+				'Developed a jQuery library for managers to design and organize table layout maps in WordPress to display on the React POS system, providing staff with an interactive and straightforward way to view and manage table orders and statuses.',
+				'Implemented WebSocket communication to synchronize the data, including table orders and statuses, in real-time on all devices, ensuring consistent, up-to-date information as well as simultaneously cutting down on API calls and improving performance.',
+				'Built APIs in PHP to handle all requests, including ensuring proper authentication as well as fetching and storing any data necessary from a MySQL database, securely bridging the gap between the React POS system and the WordPress backend.',
 			],
-			'Revamped complex MySQL query structures and leveraged strategic indexing in a large relational database, resulting in significant efficiency improvements.',
-			'Facilitated the smooth deployment of new features and patches to production by conducting extensive testing and incorporating user feedback.',
-			'Consistently monitored a ticketing system to quickly resolve bugs, discuss potential new features, and track the status of known issues.',
+			[
+				'Engineered a chits application for ordered food and drinks, providing a streamlined and efficient way to process and manage restaurant orders.',
+				'Replaced an outdated system with a new lightweight React application, offering seamless integration with the aforementioned POS system.',
+				'Architected a pipeline where ordered food and drinks on the POS system are automatically sent to the correct chit screen or printer in real-time, ensuring that orders are processed efficiently and accurately according to their configuration in the WordPress backend.',
+				'Designed a notification system using WebSocket connections to alert staff when a table is ready to be served, improving overall productivity and catering to one of many highly-requested features from staff.',
+				'Packaged and distributed the application with Electron, implementing a GitHub Actions CI/CD pipeline to automate over-the-air updates.',
+			],
 		],
 	},
 	{
-		id: 'watering-can-2023',
-		anchor: 'watering-can-2023',
-		company: 'The Watering Can Flower Market',
-		location: 'Lincoln, ON, Canada',
-		role: 'Software Developer Co-op',
-		start: { month: 5, year: 2023 },
-		end: { month: 8, year: 2023 },
+		id: 'watering-can-2024',
+		anchor: 'watering-can-2024',
+		...wateringCanSharedDetails,
+		start: { month: 5, year: 2024 },
+		end: { month: 8, year: 2024 },
 		image: 'watering-can-mossscape-bg.jpg',
 		descriptionTitle:
-			'During my first 4-month co-op at The Watering Can, I had the opportunity to work on many exciting projects with some extremely talented individuals! Here is a summary of my first co-op at the company:',
+			'During my second summer co-op at The Watering Can, I was already quite familiar with their systems and I truly felt part of the core team! Here is a summary of my second term:',
 		points: [
+			'Developed and/or maintained 10+ custom plugins using PHP and jQuery to power key features of a WordPress website and 3+ React applications, ensuring seamless integration across all components and preserving a unified system.',
 			[
-				'Led the end-to-end development of an extension to their existing custom point of sale (POS) system to support their restaurant operations.',
-				'Assumed project ownership and maintained constant communication with staff and management to ensure the system met their needs and exceeded expectations.',
-				'Developed a new interactive map that displays table statuses and links tables to their orders.',
-				'Integrated WebSocket connections to ensure the data is shown in real-time on all devices simultaneously, cutting down on API calls and improving performance.',
-				'Created APIs to handle all requests, fetching and storing any data necessary.',
+				'Built new RESTful APIs in PHP to modernize and modularize legacy APIs to support core functionality of a React-based point of sale (POS) system.',
+				'Applied object-oriented programming techniques to significantly improve readability, scalability, and maintainability.',
 			],
-			[
-				'Engineered a new chits application for ordered food and drinks.',
-				'Replaced an outdated system with a new lightweight React application, offering significantly improved integration with their pre-existing systems.',
-				'Produced a system that processes incoming chits, sending them to the correct screen, and handling the printing of chits to the desired location.',
-				'Created seamless data synchronization between all devices, permitting multiple instances of the program to run simultaneously on different screens.',
-			],
-			[
-				'Developed and maintained custom WordPress plugins that extend the functionality of their website and create a more seamless integration with the POS system.',
-				'Designed and implemented easy-to-use manager interfaces for intuitive data viewing and system configuration, such as POS device settings and chit printing locations.',
-			],
+			'Optimized complex MySQL query structures, leveraged strategic indexing, and implemented lookup tables in a large relational database to improve load times by up to 80% in some cases.',
+			'Integrated third-party APIs such as Google Recaptcha to enhance security and user experience on their website.',
 		],
 	},
 ];

@@ -12,7 +12,9 @@ export default function ExperiencePage() {
 						key={experience.id}
 						id={experience.anchor}
 						name={experience.company}
+						companyUrl={experience.companyUrl}
 						location={experience.location}
+						mapUrl={experience.mapUrl}
 						title={experience.role}
 						dateRange={experienceDateRange(experience, 'long')}
 						image={experience.image}

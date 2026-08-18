@@ -83,7 +83,7 @@ export default function AboutPage() {
 							, through fast learning and measurable contributions, I earned the opportunity
 							to lead the end-to-end development of a major point of sale (POS) system
 							extension that enabled the company to more tightly integrate their restaurant
-							and retail operations by merging them under a single unified system.
+							and retail operations by consolidating them into a single unified system.
 						</li>
 						<li>
 							When I work on personal and group projects, I don't shy away from engineering
