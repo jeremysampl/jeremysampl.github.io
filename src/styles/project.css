@@ -22,6 +22,25 @@
 	align-items: start;
 }
 
+@media (min-width: 901px) {
+	.project-card__hero {
+		align-items: stretch;
+	}
+
+	.project-card__body {
+		align-self: start;
+	}
+
+	.project-card__media {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+
+	.project-card__visual .media-card-grid--filmstrip {
+		flex: 0 0 auto;
+	}
+}
+
 .project-card__visual {
 	display: flex;
 	flex-direction: column;

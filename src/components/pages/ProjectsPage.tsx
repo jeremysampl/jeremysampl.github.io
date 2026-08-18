@@ -22,7 +22,7 @@ export default function ProjectsPage() {
 			</MediaCardGrid>
 			<aside className="page-more" aria-label="GitHub">
 				<p className="page-more__text">
-					Looking for more source code?{' '}
+					Looking for information about other projects I've worked on?{' '}
 					<InlineLink to="https://github.com/jeremysampl">Visit my GitHub</InlineLink>
 				</p>
 			</aside>

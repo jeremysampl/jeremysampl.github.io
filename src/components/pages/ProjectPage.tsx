@@ -108,6 +108,9 @@ export default function ProjectPage({
 	const [activeIndex, setActiveIndex] = useState(initialIndex);
 	const [autoplay, setAutoplay] = useState(true);
 	const [frameAspect, setFrameAspect] = useState<number | null>(null);
+	const [bodyMinAspect, setBodyMinAspect] = useState<number | null>(null);
+	const bodyRef = useRef<HTMLDivElement>(null);
+	const visualRef = useRef<HTMLDivElement>(null);
 	const [slideDurationMs, setSlideDurationMs] = useState<number | null>(AUTOPLAY_MS);
 	const [videoProgress, setVideoProgress] = useState(0);
 	const [chromeVisible, setChromeVisible] = useState(false);
@@ -165,6 +168,54 @@ export default function ProjectPage({
 			cancelled = true;
 		};
 	}, [listed, lightboxItems]);
+
+	const syncVisualMinAspect = useCallback(() => {
+		const body = bodyRef.current;
+		const visual = visualRef.current;
+		if (!body || !visual || !window.matchMedia('(min-width: 901px)').matches) {
+			setBodyMinAspect(null);
+			return;
+		}
+
+		const bodyHeight = body.offsetHeight;
+		const filmstrip = visual.querySelector('.media-card-grid--filmstrip');
+		const filmstripHeight = filmstrip?.getBoundingClientRect().height ?? 0;
+		const mediaWidth = visual.clientWidth;
+		const minMediaHeight = bodyHeight - filmstripHeight;
+
+		if (mediaWidth > 0 && minMediaHeight > 0) {
+			setBodyMinAspect(mediaWidth / minMediaHeight);
+		} else {
+			setBodyMinAspect(null);
+		}
+	}, []);
+
+	useLayoutEffect(() => {
+		syncVisualMinAspect();
+
+		const body = bodyRef.current;
+		const visual = visualRef.current;
+		if (!body || !visual) return;
+
+		const observer = new ResizeObserver(syncVisualMinAspect);
+		observer.observe(body);
+		observer.observe(visual);
+
+		const media = window.matchMedia('(min-width: 901px)');
+		media.addEventListener('change', syncVisualMinAspect);
+
+		return () => {
+			observer.disconnect();
+			media.removeEventListener('change', syncVisualMinAspect);
+		};
+	}, [syncVisualMinAspect]);
+
+	const effectiveFrameAspect = useMemo(() => {
+		if (frameAspect == null && bodyMinAspect == null) return null;
+		if (frameAspect == null) return bodyMinAspect;
+		if (bodyMinAspect == null) return frameAspect;
+		return Math.min(frameAspect, bodyMinAspect);
+	}, [bodyMinAspect, frameAspect]);
 
 	const canNavigate = lightboxItems.length > 1;
 	const safeIndex = lightboxItems.length
@@ -453,7 +504,7 @@ export default function ProjectPage({
 	};
 
 	const mediaStyle = {
-		['--project-hero-aspect' as string]: frameAspect ? String(frameAspect) : '16 / 10',
+		['--project-hero-aspect' as string]: effectiveFrameAspect ? String(effectiveFrameAspect) : '16 / 10',
 	} as CSSProperties;
 
 	const story =
@@ -476,7 +527,7 @@ export default function ProjectPage({
 			<article className="project-card">
 				<div className="project-card__panel entry-card">
 					<div className="project-card__hero">
-						<div className="project-card__visual">
+						<div className="project-card__visual" ref={visualRef}>
 							{heroSrc && heroItem ? (
 								<div
 									className={`project-card__media${touchChrome && chromeVisible ? ' is-chrome-visible' : ''}${touchChrome && chromeInteractive ? ' is-chrome-interactive' : ''}`}
@@ -813,7 +864,7 @@ export default function ProjectPage({
 							) : null}
 						</div>
 
-						<div className="project-card__body">
+						<div className="project-card__body" ref={bodyRef}>
 							<header className="project-card__header">
 								<h1 className="project-card__name">{project.name}</h1>
 								<p className="project-card__tagline">{project.title}</p>
