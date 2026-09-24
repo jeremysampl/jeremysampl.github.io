@@ -28,14 +28,14 @@ const projectsStrip: GalleryItem[] = [
 		description: 'The projects page allows you to manage your projects and view other users\' projects.',
 	},
 	{
-		title: 'Project filtering',
-		path: 'geckode/filter-projects.png',
-		description: 'Fine-tuned filters allow users to quickly find the projects they are looking for or discover new ones.',
-	},
-	{
 		title: 'Project creation',
 		path: 'geckode/create-project.png',
 		description: 'The project creation modal allows you to create a new project with a name and thumbnail.',
+	},
+	{
+		title: 'Project filtering',
+		path: 'geckode/filter-projects.png',
+		description: 'Fine-tuned filters allow users to quickly find the projects they are looking for or discover new ones.',
 	},
 	{
 		title: 'Project details',
@@ -45,12 +45,7 @@ const projectsStrip: GalleryItem[] = [
 ];
 
 const editorsStrip: GalleryItem[] = [
-    {
-        title: 'Sprite editor',
-        path: 'geckode/sprite-editor.png',
-        description: 'The sprite editor allows users to create and edit sprites for their projects.',
-    },
-    {
+	{
         title: 'Tilemap editor',
         path: 'geckode/tilemap-editor.png',
         description: 'The tilemap editor allows users to create and edit the worlds in their games.',
@@ -64,6 +59,11 @@ const editorsStrip: GalleryItem[] = [
         title: 'Tile editor',
         path: 'geckode/tile-editor.png',
         description: 'The tile editor allows users to create and edit the tiles for their tilesets.',
+    },
+    {
+        title: 'Sprite editor',
+        path: 'geckode/sprite-editor.png',
+        description: 'The sprite editor allows users to create and edit sprites for their projects.',
     },
 ];
 
@@ -154,13 +154,13 @@ export default function GeckodePage() {
 							Prospective users can easily create an account using an email or a Google account. Existing users
 							can use the same method to login:
 						</p>
-						<ProjectFilmstrip media={loginStrip} aspectRatio={[3, 3.6]} />
+						<ProjectFilmstrip media={loginStrip} aspectRatio="natural" flex="auto" />
 						
 						<h3>Project Management</h3>
 						<p>
 							Users have access to projects, in which they can create, manage, and view them straight from the projects page:
 						</p>
-						<ProjectFilmstrip media={projectsStrip} aspectRatio={[3, 4]} maxPerRow={2} />
+						<ProjectFilmstrip media={projectsStrip} aspectRatio="natural" maxPerRow={2} flex="auto" />
 
 						<h2>Projects</h2>
 
@@ -168,21 +168,21 @@ export default function GeckodePage() {
 						<p>
 							Projects can be developed using the editor, which provides a suite of tools for creating and editing games:
 						</p>
-						<ProjectFilmstrip media={[platformerGame, ...editorsStrip]} maxPerRow={2} aspectRatio={1} />
+						<ProjectFilmstrip media={[platformerGame, ...editorsStrip]} maxPerRow={2} aspectRatio="natural" flex="auto" />
 
 						<h3>Sharing</h3>
 						<p>
 							Projects can be shared with other users, allowing them to edit or simply view your projects. Sharing can be done
 							with individual users, such as friends or colleagues, or with organizations, such as a classroom or team:
 						</p>
-						<ProjectFilmstrip media={shareStrip} maxPerRow={2} />
+						<ProjectFilmstrip media={shareStrip} maxPerRow={2} aspectRatio="natural" flex="auto" />
 
 						<h3>Organizations</h3>
 						<p>
 							Organizations can be used to quickly create, manage and share projects among a group of users, such as a classroom
 							or team:
 						</p>
-						<ProjectFilmstrip media={organizationsStrip} aspectRatio={[17, 9]} />
+						<ProjectFilmstrip media={organizationsStrip} aspectRatio="natural" />
 
 						<h2>Demo Video</h2>
 
@@ -190,10 +190,10 @@ export default function GeckodePage() {
 							Here is the original demo video of Geckode showcased at the end of the capstone course:
 						</p>
 
-						<ProjectFilmstrip media={[demoVideo]} aspectRatio={[16, 9]} />
+						<ProjectFilmstrip media={[demoVideo]} aspectRatio="natural" />
 
 						<h2>Underlying Implementation</h2>
-						<ProjectFilmstrip media={howItWorksStrip} aspectRatio={[5, 3.5]} />
+						<ProjectFilmstrip media={howItWorksStrip} aspectRatio="natural" />
 
 						<h3>Frontend</h3>
 

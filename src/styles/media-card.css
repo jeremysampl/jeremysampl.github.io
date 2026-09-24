@@ -63,6 +63,16 @@
 	pointer-events: none;
 }
 
+.media-card--natural .media-card__media {
+	aspect-ratio: auto;
+}
+
+.media-card--natural .media-card__thumb {
+	height: auto;
+	object-fit: contain;
+	vertical-align: top;
+}
+
 .media-card__play {
 	position: absolute;
 	inset: 0;
@@ -158,6 +168,29 @@
 	margin: 14px 0 4px;
 }
 
+.media-card-grid--flex {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	grid-template-columns: none;
+	width: 100%;
+}
+
+.media-card-grid--flex > .media-card-grid__row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 12px;
+	width: 100%;
+	min-width: 0;
+}
+
+.media-card-grid--flex > .media-card-grid__row > .media-card {
+	flex: none;
+	width: 100%;
+	min-width: 0;
+}
+
 @media (min-width: 700px) {
 	.media-card-grid--inline {
 		grid-template-columns: repeat(
@@ -174,6 +207,24 @@
 			)
 		);
 		gap: 16px;
+	}
+
+	.media-card-grid--flex {
+		gap: 16px;
+	}
+
+	.media-card-grid--flex > .media-card-grid__row {
+		flex-direction: row;
+		align-items: var(--media-inline-align, center);
+		gap: 16px;
+	}
+
+	.media-card-grid--flex > .media-card-grid__row > .media-card {
+		/* width: 0 so grow factors (not intrinsic image width) own the row */
+		flex: var(--media-card-flex, 1) 1 0;
+		width: 0;
+		min-width: 0;
+		max-width: 100%;
 	}
 }
 

@@ -1,10 +1,20 @@
-import React, { type CSSProperties, type MouseEvent } from 'react';
+import React, { type CSSProperties, type MouseEvent, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../displays/Icon';
+import {
+	type MediaAspectRatio,
+	type MediaMaxPerRow,
+	type MediaStripAlign,
+	type MediaStripAspectRatio,
+} from './MediaFlexGrid';
 import '../../styles/media-card.css';
 
-export type MediaAspectRatio = string | number | readonly [number, number];
-export type MediaMaxPerRow = 1 | 2 | 3;
+export type {
+	MediaAspectRatio,
+	MediaMaxPerRow,
+	MediaStripAlign,
+	MediaStripAspectRatio,
+};
 
 function cssAspectRatio(value: MediaAspectRatio): string {
 	if (typeof value === 'number') return String(value);
@@ -21,6 +31,12 @@ export type MediaCardProps = {
 	compact?: boolean;
 	active?: boolean;
 	path?: string;
+	/** Size the thumb from the media's own aspect ratio. */
+	naturalAspect?: boolean;
+	/** Flex grow weight within its row. */
+	flex?: number;
+	/** Fires with width/height once the thumb's intrinsic size is known. */
+	onIntrinsicAspect?: (ratio: number) => void;
 	onClick?: (event: MouseEvent<HTMLElement>, origin: HTMLElement) => void;
 };
 
@@ -30,12 +46,39 @@ function MediaCardBody({
 	alt,
 	isVideo,
 	path,
-}: Pick<MediaCardProps, 'title' | 'src' | 'alt' | 'isVideo' | 'path'>) {
+	onIntrinsicAspect,
+}: Pick<MediaCardProps, 'title' | 'src' | 'alt' | 'isVideo' | 'path' | 'onIntrinsicAspect'>) {
+	const imageRef = useRef<HTMLImageElement>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
+
+	useEffect(() => {
+		if (!onIntrinsicAspect) return;
+
+		if (isVideo) {
+			const video = videoRef.current;
+			if (video && video.readyState >= 1 && video.videoWidth && video.videoHeight) {
+				onIntrinsicAspect(video.videoWidth / video.videoHeight);
+			}
+			return;
+		}
+
+		const image = imageRef.current;
+		if (image?.complete && image.naturalWidth && image.naturalHeight) {
+			onIntrinsicAspect(image.naturalWidth / image.naturalHeight);
+		}
+	}, [isVideo, onIntrinsicAspect, src]);
+
+	const reportAspect = (width: number, height: number) => {
+		if (!onIntrinsicAspect || !width || !height) return;
+		onIntrinsicAspect(width / height);
+	};
+
 	return (
 		<>
 			<span className="media-card__media">
 				{isVideo ? (
 					<video
+						ref={videoRef}
 						className="media-card__thumb"
 						src={src}
 						data-gallery-path={path}
@@ -43,14 +86,23 @@ function MediaCardBody({
 						playsInline
 						preload="metadata"
 						aria-hidden="true"
+						onLoadedMetadata={(event) => {
+							const video = event.currentTarget;
+							reportAspect(video.videoWidth, video.videoHeight);
+						}}
 					/>
 				) : (
 					<img
+						ref={imageRef}
 						className="media-card__thumb"
 						src={src}
 						data-gallery-path={path}
 						alt={alt ?? title}
 						loading="lazy"
+						onLoad={(event) => {
+							const image = event.currentTarget;
+							reportAspect(image.naturalWidth, image.naturalHeight);
+						}}
 					/>
 				)}
 				{isVideo ? (
@@ -66,10 +118,15 @@ function MediaCardBody({
 	);
 }
 
-function mediaCardClassName({ compact, active }: Pick<MediaCardProps, 'compact' | 'active'>) {
+function mediaCardClassName({
+	compact,
+	active,
+	naturalAspect,
+}: Pick<MediaCardProps, 'compact' | 'active' | 'naturalAspect'>) {
 	return [
 		'media-card',
 		compact ? 'media-card--compact' : '',
+		naturalAspect ? 'media-card--natural' : '',
 		active ? 'is-active' : '',
 	]
 		.filter(Boolean)
@@ -85,16 +142,31 @@ export default function MediaCard({
 	compact,
 	active,
 	path,
+	naturalAspect,
+	flex,
+	onIntrinsicAspect,
 	onClick,
 }: MediaCardProps) {
 	const originFrom = (el: HTMLElement) =>
 		el.querySelector<HTMLElement>('.media-card__thumb') ?? el;
-	const className = mediaCardClassName({ compact, active });
+	const className = mediaCardClassName({ compact, active, naturalAspect });
+	const style =
+		flex != null ? ({ '--media-card-flex': String(flex) } as CSSProperties) : undefined;
+	const body = (
+		<MediaCardBody
+			title={title}
+			src={src}
+			alt={alt}
+			isVideo={isVideo}
+			path={path}
+			onIntrinsicAspect={onIntrinsicAspect}
+		/>
+	);
 
 	if (href) {
 		return (
-			<Link to={href} className={className}>
-				<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} path={path} />
+			<Link to={href} className={className} style={style}>
+				{body}
 			</Link>
 		);
 	}
@@ -103,13 +175,15 @@ export default function MediaCard({
 		<button
 			type="button"
 			className={className}
+			style={style}
 			onClick={(event) => onClick?.(event, originFrom(event.currentTarget))}
 		>
-			<MediaCardBody title={title} src={src} alt={alt} isVideo={isVideo} path={path} />
+			{body}
 		</button>
 	);
 }
 
+/** Plain CSS grid (and filmstrip) container. Prefer MediaFlexGrid for weighted/natural rows. */
 export function MediaCardGrid({
 	children,
 	columns = 2,
@@ -122,9 +196,11 @@ export function MediaCardGrid({
 	columns?: 2 | 3;
 	variant?: 'grid' | 'filmstrip' | 'inline';
 	gridRef?: React.Ref<HTMLDivElement>;
-	aspectRatio?: MediaAspectRatio;
+	aspectRatio?: MediaStripAspectRatio;
 	maxPerRow?: MediaMaxPerRow;
 }) {
+	const natural = aspectRatio === 'natural';
+
 	const className = [
 		'media-card-grid',
 		variant === 'filmstrip' ? 'media-card-grid--filmstrip' : '',
@@ -135,7 +211,7 @@ export function MediaCardGrid({
 		.join(' ');
 
 	const style = {
-		...(aspectRatio != null ? { '--media-card-aspect': cssAspectRatio(aspectRatio) } : {}),
+		...(aspectRatio != null && !natural ? { '--media-card-aspect': cssAspectRatio(aspectRatio) } : {}),
 		...(variant === 'inline' ? { '--media-inline-max': String(maxPerRow) } : {}),
 	} as CSSProperties;
 
