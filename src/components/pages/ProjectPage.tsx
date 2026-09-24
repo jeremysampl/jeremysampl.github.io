@@ -16,7 +16,7 @@ import ProjectMediaGrid, {
 } from '../containers/ProjectMediaGrid';
 import type { InfoCardItem } from '../containers/InfoCardGrid';
 import StackMeta from '../containers/StackMeta';
-import type { TechnologyItem } from '../containers/TechnologyChips';
+import type { TechnologyItem } from '../../data/technologies';
 import Icon from '../displays/Icon';
 import InlineLink from '../displays/InlineLink';
 import { ProjectId, getProject, projectThumbnailSrc, resolveProjectTechnologies } from '../../data/projects';
@@ -25,7 +25,6 @@ import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 
 export type { GalleryItem };
 export { ProjectFilmstrip, ProjectGalleryRef };
-export type { TechnologyItem } from '../containers/TechnologyChips';
 
 const AUTOPLAY_MS = 4500;
 const SWIPE_THRESHOLD = 48;

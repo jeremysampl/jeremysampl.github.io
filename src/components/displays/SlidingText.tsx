@@ -15,12 +15,14 @@ export default function SlidingText({
 	text,
 	enabled = true,
 	delayMs = 1100,
+	mobileOnly = true,
 	className,
 	...rest
 }: {
 	text: string;
 	enabled?: boolean;
 	delayMs?: number;
+	mobileOnly?: boolean;
 	className?: string;
 } & HTMLAttributes<HTMLSpanElement>) {
 	const wrapRef = useRef<HTMLSpanElement>(null);
@@ -39,7 +41,6 @@ export default function SlidingText({
 			return;
 		}
 
-		const mobile = window.matchMedia('(max-width: 700px)');
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 		let timeout = 0;
 
@@ -74,12 +75,8 @@ export default function SlidingText({
 			);
 		};
 
-		const stop = () => {
-			window.clearTimeout(timeout);
-			easeBack();
-		};
-
-		if (!mobile.matches || reduceMotion.matches) {
+		const shouldAnimateForViewport = !mobileOnly || window.matchMedia('(max-width: 700px)').matches;
+		if (!shouldAnimateForViewport || reduceMotion.matches) {
 			setShift(0);
 			return;
 		}
@@ -100,7 +97,6 @@ export default function SlidingText({
 		);
 
 		observer.observe(wrap);
-		mobile.addEventListener('change', stop);
 		return () => {
 			window.clearTimeout(timeout);
 			inner.style.animation = '';
@@ -108,9 +104,8 @@ export default function SlidingText({
 			inner.style.transform = '';
 			returningRef.current = false;
 			observer.disconnect();
-			mobile.removeEventListener('change', stop);
 		};
-	}, [text, enabled, delayMs]);
+	}, [text, enabled, delayMs, mobileOnly]);
 
 	const classes = ['sliding-text', className, shift > 0 ? 'is-marquee' : '']
 		.filter(Boolean)

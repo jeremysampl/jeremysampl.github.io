@@ -56,7 +56,7 @@ function MediaCardBody({
 				{isVideo ? (
 					<span className="media-card__play" aria-hidden="true">
 						<span className="media-card__play-icon">
-							<Icon name="play" size={22} color="#fff" />
+							<Icon name="play" size={22} color="#fff" style={{ transform: 'translateX(3px)' }} />
 						</span>
 					</span>
 				) : null}

@@ -10,7 +10,7 @@
 .project-card {
 	width: 100%;
 	max-width: var(--project-page-width);
-	margin: 8px auto 20px;
+	margin: 0 auto 20px;
 }
 
 /* Panel chrome comes from .entry-card */
@@ -706,6 +706,11 @@
 	flex: 0 0 auto;
 	width: clamp(84px, 22%, 120px);
 	min-width: 84px;
+}
+
+.project-card__story .bold {
+	font-weight: bold;
+	color: var(--text-ink);
 }
 
 

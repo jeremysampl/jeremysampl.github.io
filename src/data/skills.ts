@@ -1,11 +1,20 @@
-import { ProjectId, projects, projectHasTechnology, getProject, projectHref, projectThumbnailSrc } from './projects';
-import { ExperienceId, getExperience, experienceDateRange, experienceHref } from './experience';
+import { ProjectId, projects, getProject, projectHref, projectThumbnailSrc } from './projects';
+import { ExperienceId, getExperience, experienceDateRange, experienceHref, experiences } from './experience';
 import {
 	TechnologyCategory,
 	TechnologyId,
 	getTechnology,
 	technologyIconSrc,
+	technologyItemsHasTechnology,
 } from './technologies';
+import {
+	type CourseId,
+	type EducationId,
+	educationName,
+	courseId,
+	courseHref,
+	getCourse,
+} from './courses';
 
 export type SkillCategory = TechnologyCategory;
 
@@ -14,8 +23,9 @@ export type SkillCategory = TechnologyCategory;
  */
 export type SkillUsage =
 	| { kind: 'experience'; experienceId: ExperienceId }
+	| { kind: 'course'; educationId: EducationId; courseId: CourseId }
 	| { kind: 'site' }
-	| { kind: 'general'; label: string };
+	| { kind: 'general'; label: string; faIcon?: string };
 
 export type SkillDefinition = {
 	technologyId: TechnologyId;
@@ -38,11 +48,12 @@ type ResolvedSkillUsageSource =
 
 export type ResolvedSkillUsage = {
 	key: string;
-	kind: 'project' | 'experience' | 'site' | 'general';
+	kind: 'project' | 'experience' | 'course' | 'site' | 'general';
 	label: string;
 	sublabel?: string;
 	href?: string;
 	thumbnail?: string;
+	faIcon?: string;
 };
 
 export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkillUsage {
@@ -77,11 +88,22 @@ export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkil
 				href: '/',
 				thumbnail: '/images/misc/js-logo.svg'
 			};
+		case 'course': {
+			const course = getCourse(usage.educationId, usage.courseId);
+			return {
+				key: `course-${usage.educationId}-${usage.courseId}`,
+				kind: 'course',
+				label: educationName(usage.educationId),
+				sublabel: `${course.prefix} ${course.code} · ${course.name}`,
+				href: courseHref(usage.educationId, usage.courseId),
+			};
+		}
 		case 'general':
 			return {
 				key: `general-${usage.label}`,
 				kind: 'general',
 				label: usage.label,
+				faIcon: usage.faIcon,
 			};
 	}
 }
@@ -89,11 +111,16 @@ export function resolveSkillUsage(usage: ResolvedSkillUsageSource): ResolvedSkil
 function buildSkill(definition: SkillDefinition): Skill {
 	const technology = getTechnology(definition.technologyId);
 	const projectUsages = projects
-		.filter((project) => projectHasTechnology(project, definition.technologyId))
+		.filter((project) => technologyItemsHasTechnology(project.technologies, definition.technologyId))
 		.map((project) => ({ kind: 'project' as const, projectId: project.id }));
+	const experienceUsages = experiences
+		.filter((experience) => technologyItemsHasTechnology(experience.technologies, definition.technologyId))
+		.map((experience) => ({ kind: 'experience' as const, experienceId: experience.id }));
 	const extraUsages = definition.usages ?? [];
-	const experienceUsages = extraUsages.filter((usage) => usage.kind === 'experience');
-	const otherUsages = extraUsages.filter((usage) => usage.kind !== 'experience');
+	const courseUsages = extraUsages.filter((usage) => usage.kind === 'course');
+	const otherUsages = extraUsages.filter(
+		(usage) => usage.kind !== 'experience' && usage.kind !== 'course',
+	);
 
 	return {
 		technologyId: technology.id,
@@ -102,8 +129,8 @@ function buildSkill(definition: SkillDefinition): Skill {
 		icon: technology.icon,
 		iconSrc: technologyIconSrc(technology),
 		faIcon: technology.faIcon,
-		// Experience, then projects, then site/general.
-		usages: [...experienceUsages, ...projectUsages, ...otherUsages],
+		// Experience, then projects, then courses, then site/general.
+		usages: [...experienceUsages, ...projectUsages, ...courseUsages, ...otherUsages],
 	};
 }
 
@@ -111,132 +138,105 @@ export const skillCategories: { id: SkillCategory | 'all'; label: string }[] = [
 	{ id: 'all', label: 'All' },
 	{ id: 'languages', label: 'Languages' },
 	{ id: 'frameworks', label: 'Libraries & frameworks' },
-	{ id: 'tools', label: 'Databases & tools' },
+	{ id: 'tools', label: 'Tools' },
 ];
 
 /** Skills on the home page wheel. Other techs can still live in technologies.ts. */
 const skillDefinitions: SkillDefinition[] = [
 	// Languages
-	{ technologyId: 'python' },
 	{
-		technologyId: 'php',
+		technologyId: 'python',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '1MD3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '2C03') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '2XC3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '3TB3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '4CR3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '4NL3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '4AL3') },
 		],
 	},
+	{ technologyId: 'php' },
 	{
 		technologyId: 'html',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
 			{ kind: 'site' },
 		],
 	},
 	{
 		technologyId: 'css',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
 			{ kind: 'site' },
+		],
+	},
+	{ technologyId: 'javascript' },
+	{ technologyId: 'typescript', usages: [{ kind: 'site' }] },
+	{
+		technologyId: 'java',
+		usages: [
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '2C03') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '2ME3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('SFWRENG', '3S03') },
 		],
 	},
 	{
-		technologyId: 'javascript',
+		technologyId: 'bash',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
-			{ kind: 'site' },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '1XC3') },
+			{ kind: 'general', label: 'Scripts for personal projects', faIcon: 'terminal' },
 		],
 	},
-	{ technologyId: 'typescript', usages: [{ kind: 'site' }] },
-	{ technologyId: 'java' },
 
 	// Libraries & frameworks
-	{
-		technologyId: 'django',
-		usages: [],
-	},
-	{
-		technologyId: 'wordpress',
-		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
-		],
-	},
+	{ technologyId: 'django' },
+	{ technologyId: 'wordpress' },
 	{
 		technologyId: 'react',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
 			{ kind: 'site' },
 		],
 	},
-	{
-		technologyId: 'nextjs',
-		usages: [],
-	},
-	{
-		technologyId: 'nodejs',
-		usages: [],
-	},
-	{
-		technologyId: 'jquery',
-		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
-		],
-	},
-	{
-		technologyId: 'electron',
-		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
-		],
-	},
+	{ technologyId: 'nextjs' },
+	{ technologyId: 'nodejs' },
+	{ technologyId: 'jquery' },
+	{ technologyId: 'electron' },
+	{ technologyId: 'tailwindcss' },
+	{ technologyId: 'redux' },
+	{ technologyId: 'zustand' },
 
-	// Databases & tools
+	// Tools
 	{
-		technologyId: 'mysql',
+		technologyId: 'linux',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '1XC3') },
+			{ kind: 'course', educationId: 'mcmaster', courseId: courseId('COMPSCI', '3SH3') },
+			{ kind: 'general', label: 'My primary everyday operating system', faIcon: 'desktop' },
 		],
-	},
-	{
-		technologyId: 'postgresql',
-		usages: [],
-	},
-	{
-		technologyId: 'rest-apis',
-		usages: [{ kind: 'experience', experienceId: 'watering-can-2024' }],
 	},
 	{
 		technologyId: 'git',
-		usages: [{ kind: 'general', label: 'Version control on every project & co-op' }],
+		usages: [{ kind: 'general', label: 'Version control on every project & co-op', faIcon: 'cog' }],
 	},
+	{ technologyId: 'mysql' },
+	{ technologyId: 'postgresql' },
+	{ technologyId: 'rest-apis' },
+	{ technologyId: 'cicd' },
+	{ technologyId: 'docker' },
+	{ technologyId: 'websocket' },
+	{ technologyId: 'redis' },
+	{ technologyId: 'yjs' },
 	{
-		technologyId: 'cicd',
+		technologyId: 'cursor',
 		usages: [
-			{ kind: 'experience', experienceId: 'watering-can-2024' },
-			{ kind: 'experience', experienceId: 'watering-can-2023' },
+			{ kind: 'general', label: 'Personal projects to improve development efficiency', faIcon: 'code' },
 		],
 	},
 	{
-		technologyId: 'docker',
-		usages: [],
+		technologyId: 'codex',
+		usages: [
+			{ kind: 'general', label: 'Personal projects to improve development efficiency', faIcon: 'code' },
+		],
 	},
-	{
-		technologyId: 'websocket',
-		usages: [{ kind: 'experience', experienceId: 'watering-can-2023' }],
-	},
-	{
-		technologyId: 'redis',
-		usages: [],
-	},
-	{
-		technologyId: 'yjs',
-		usages: [],
-	}
 ];
 
 export const skills: Skill[] = skillDefinitions.map(buildSkill);

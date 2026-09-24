@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 import {
 	aboutIntro,
-	education,
-	leadership,
+	educationEntries,
+	leadershipEntries,
 	spokenLanguages,
 	type AboutEntry,
 } from '../../data/about';
@@ -12,16 +12,22 @@ import { EntryCardHeader } from '../containers/EntryCard';
 import InlineLink from '../displays/InlineLink';
 import '../../styles/about.css';
 import { getExperience } from '../../data/experience';
+import { educationAnchorId } from '../../data/courses';
 
 function AboutEntryCard({
 	entry,
+	anchorId,
 	children,
 }: {
 	entry: AboutEntry;
+	anchorId?: string;
 	children?: ReactNode;
 }) {
 	return (
 		<article className="entry-card about-entry">
+			{anchorId ? (
+				<span id={anchorId} className="course-history__hash-anchor" aria-hidden="true" />
+			) : null}
 			<div className="entry-card__body">
 				<EntryCardHeader
 					title={entry.title}
@@ -46,6 +52,7 @@ function AboutEntryCard({
 export default function AboutPage() {
 	const wateringCan2023 = getExperience('watering-can-2023');
 	const geckode = getProject('geckode');
+	const primaryEducationAnchor = educationEntries.length ? educationAnchorId(educationEntries[0].id) : 'education';
 
 	return (
 		<section className="section about">
@@ -58,8 +65,8 @@ export default function AboutPage() {
 				<div className="about-intro__body">
 					<h2 className="about-intro__name">{aboutIntro.name}</h2>
 					<p className="about-intro__text">
-						I am a software developer and recent computer science graduate from McMaster
-						University, with eight months of experience building full-stack, event-driven
+						I am a full-stack software developer and recent computer science graduate from
+						McMaster University with eight months of experience building full-stack, event-driven
 						applications from past co-op positions.
 					</p>
 					<p className="about-intro__text">
@@ -69,7 +76,7 @@ export default function AboutPage() {
 					<ul className="entry-card__points">
 						<li>
 							While I was in{' '}
-							<InlineLink to="#education">
+							<InlineLink to={`#${primaryEducationAnchor}`}>
 								school
 							</InlineLink>
 							, I pursued the highest possible grade while
@@ -105,14 +112,18 @@ export default function AboutPage() {
 
 			<div className="about-block" id="education">
 				<h2>Education</h2>
-				<AboutEntryCard entry={education}>
-					<CourseHistory />
-				</AboutEntryCard>
+				{educationEntries.map((entry) => (
+					<AboutEntryCard key={entry.id} entry={entry} anchorId={educationAnchorId(entry.id)}>
+						<CourseHistory educationId={entry.id} />
+					</AboutEntryCard>
+				))}
 			</div>
 
 			<div className="about-block" id="leadership">
 				<h2>Leadership</h2>
-				<AboutEntryCard entry={leadership} />
+				{leadershipEntries.map((entry) => (
+					<AboutEntryCard key={entry.id} entry={entry} />
+				))}
 			</div>
 
 			<div className="about-block" id="languages">

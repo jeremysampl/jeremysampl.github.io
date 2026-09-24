@@ -10,6 +10,7 @@ export type TechnologyId =
 	| 'java'
 	| 'csharp'
 	| 'c'
+	| 'bash'
 	| 'xaml'
 	| 'arduino'
 	| 'app-inventor'
@@ -18,21 +19,42 @@ export type TechnologyId =
 	| 'react'
 	| 'nextjs'
 	| 'nodejs'
+	| 'express'
 	| 'jquery'
 	| 'electron'
+	| 'tailwindcss'
+	| 'redux'
+	| 'zustand'
+	| 'linux'
+	| 'git'
 	| 'mysql'
 	| 'postgresql'
 	| 'rest-apis'
-	| 'git'
 	| 'cicd'
 	| 'docker'
 	| 'websocket'
 	| 'redis'
 	| 'yjs'
+	| 'jwt'
+	| 'nginx'
+	| 'cursor'
+	| 'codex'
 	| 'phaser'
-	| 'tailwindcss'
 	| 'blockly'
 	| 'woocommerce';
+
+export type TechnologyChild = {
+	id: TechnologyId;
+	description?: string;
+};
+
+export type TechnologyItem = {
+	id: TechnologyId;
+	featured?: boolean;
+	subtitle?: string;
+	description?: string;
+	children?: Omit<TechnologyItem, 'children'>[];
+};
 
 export type Technology = {
 	id: TechnologyId;
@@ -57,6 +79,7 @@ export const technologies: Technology[] = [
 	{ id: 'java', name: 'Java', category: 'languages', icon: 'java.png' },
 	{ id: 'csharp', name: 'C#', category: 'languages', icon: 'c-sharp.png' },
 	{ id: 'c', name: 'C', category: 'languages', icon: 'c.png' },
+	{ id: 'bash', name: 'Bash', category: 'languages', icon: 'bash.svg' },
 	{ id: 'xaml', name: 'XAML', category: 'languages', icon: 'xaml.png' },
 	{ id: 'arduino', name: 'Arduino', category: 'languages', icon: 'arduino.svg', iconPadding: 5 },
 	{ id: 'app-inventor', name: 'MIT App Inventor', category: 'languages', icon: 'app-inventor.png' },
@@ -67,23 +90,31 @@ export const technologies: Technology[] = [
 	{ id: 'react', name: 'React', category: 'frameworks', icon: 'react.png' },
 	{ id: 'nextjs', name: 'Next.js', category: 'frameworks', icon: 'next-js.svg' },
 	{ id: 'nodejs', name: 'Node.js', category: 'frameworks', icon: 'node-js.svg' },
+	{ id: 'express', name: 'Express', category: 'frameworks', icon: 'express.svg' },
 	{ id: 'jquery', name: 'jQuery', category: 'frameworks', icon: 'jquery.png' },
 	{ id: 'electron', name: 'Electron', category: 'frameworks', icon: 'electron.svg' },
+	{ id: 'tailwindcss', name: 'Tailwind CSS', category: 'other', icon: 'tailwind-css.svg' },
+	{ id: 'redux', name: 'Redux', category: 'frameworks', icon: 'redux.svg' },
+	{ id: 'zustand', name: 'Zustand', category: 'frameworks', icon: 'zustand.svg' },
 
-	// Databases & tools
+	// Tools
+	{ id: 'linux', name: 'Linux', category: 'tools', icon: 'linux.svg' },
+	{ id: 'git', name: 'Git', category: 'tools', icon: 'git.svg' },
 	{ id: 'mysql', name: 'MySQL', category: 'tools', icon: 'mysql.png' },
 	{ id: 'postgresql', name: 'PostgreSQL', category: 'tools', icon: 'postgresql.svg' },
 	{ id: 'rest-apis', name: 'REST APIs', category: 'tools', faIcon: 'exchange' },
-	{ id: 'git', name: 'Git', category: 'tools', icon: 'git.svg' },
 	{ id: 'cicd', name: 'CI/CD', category: 'tools', faIcon: 'refresh' },
 	{ id: 'docker', name: 'Docker', category: 'tools', icon: 'docker.svg' },
 	{ id: 'websocket', name: 'WebSocket', category: 'tools', icon: 'websocket.webp' },
 	{ id: 'redis', name: 'Redis', category: 'tools', icon: 'redis.svg' },
 	{ id: 'yjs', name: 'Yjs', category: 'tools', icon: 'yjs.png' },
+	{ id: 'jwt', name: 'JSON Web Tokens', category: 'tools', icon: 'jwt.svg' },
+	{ id: 'nginx', name: 'nginx', category: 'tools', icon: 'nginx.svg' },
+	{ id: 'cursor', name: 'Cursor', category: 'tools', icon: 'cursor.svg' },
+	{ id: 'codex', name: 'Codex', category: 'tools', icon: 'openai.svg' },
 
 	// Other
 	{ id: 'phaser', name: 'Phaser', category: 'other', icon: 'phaser.png' },
-	{ id: 'tailwindcss', name: 'Tailwind CSS', category: 'other', icon: 'tailwind-css.svg' },
 	{ id: 'blockly', name: 'Blockly', category: 'other', icon: 'blockly.svg' },
 	{ id: 'woocommerce', name: 'WooCommerce', category: 'other', icon: 'woocommerce.svg' },
 ];
@@ -100,4 +131,10 @@ export function getTechnology(id: TechnologyId): Technology {
 
 export function technologyIconSrc(technology: Technology): string | undefined {
 	return technology.icon ? `/images/languages/${technology.icon}` : undefined;
+}
+
+export function technologyItemsHasTechnology(technologyItems: TechnologyItem[], technologyId: TechnologyId): boolean {
+	return technologyItems.some((technologyItem) =>
+		technologyItem.id === technologyId || technologyItem.children?.some((child) => child.id === technologyId)
+	);
 }

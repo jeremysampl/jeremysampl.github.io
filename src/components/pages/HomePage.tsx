@@ -52,7 +52,7 @@ export default function HomePage() {
 				<Spacer height="30"/>
 				<h2>About Me</h2>
 				<p>Education, leadership, and a bit more about who I am.</p>
-				<SimpleButton text="Learn more" url="/about" variant="ghost" />
+				<SimpleButton text="Learn more" url="/about" variant="ghost" style={{ marginTop: 10 }} />
 			</section>
 		</>
 	);

@@ -11,6 +11,128 @@ export const coursePrefixes = [
 
 export type CoursePrefix = (typeof coursePrefixes)[number];
 
+export type EducationId = 'mcmaster';
+
+/** Stable identifier for a course (used for cross-linking). */
+export type CourseId = `${CoursePrefix}-${string}`;
+
+export function educationName(educationId: EducationId): string {
+	switch (educationId) {
+		case 'mcmaster':
+			return 'McMaster University';
+	}
+}
+
+/** Convert `(prefix, code)` into a stable `CourseId`, e.g. `COMPSCI-1MD3`. */
+export function courseId(prefix: CoursePrefix, code: string): CourseId {
+	return `${prefix}-${code}` as CourseId;
+}
+
+function parseCourseId(id: CourseId): { prefix: CoursePrefix; code: string } {
+	const [prefixStr, ...rest] = id.split('-');
+	const code = rest.join('-');
+	const prefix = prefixStr as CoursePrefix;
+	if (!coursePrefixes.includes(prefix)) {
+		throw new Error(`Unknown course prefix in id: ${id}`);
+	}
+	return { prefix, code };
+}
+
+function canonicalizeCode(code: string): string {
+	// Supports linking multi-term courses by root code, e.g. 4ZP6 (instead of 4ZP6A/4ZP6B).
+	return code.replace(/[A-Z]$/i, '');
+}
+
+export function educationAnchorId(educationId: EducationId): string {
+	return `education-${educationId}`;
+}
+
+/** DOM id for the matching row in the course history table. */
+export function courseAnchorId(educationId: EducationId, prefix: CoursePrefix, code: string): string {
+	return `course-${educationId}-${prefix}-${code}`;
+}
+
+/** Hash URL for linking to a specific course row on the About page. */
+export function courseHref(educationId: EducationId, id: CourseId): string {
+	const { prefix, code } = parseCourseId(id);
+	const canonicalCourse = `${prefix}-${canonicalizeCode(code)}`;
+	return `/about?education=${educationId}&course=${encodeURIComponent(canonicalCourse)}#${educationAnchorId(educationId)}`;
+}
+
+function academicYearsForEducation(educationId: EducationId): AcademicYear[] {
+	return academicYears[educationId];
+}
+
+export function getCourse(
+	educationId: EducationId,
+	id: CourseId,
+): { prefix: CoursePrefix; code: string; name: string } {
+	const { prefix, code } = parseCourseId(id);
+	const canonicalInput = canonicalizeCode(code);
+
+	for (const year of academicYearsForEducation(educationId)) {
+		for (const semester of year.semesters) {
+			for (const course of semester.courses) {
+				const currentCanonical = canonicalizeCode(course.code);
+				const nextCanonical = course.nextCode ? canonicalizeCode(course.nextCode) : null;
+
+				// Normal course code match.
+				if (
+					course.prefix === prefix &&
+					(course.code === code || currentCanonical === canonicalInput)
+				) {
+					return { prefix, code: canonicalInput, name: course.name };
+				}
+
+				// Multi-term courses can display a "next" code for the second term.
+				if (
+					course.prefix === prefix &&
+					course.nextCode != null &&
+					(course.nextCode === code || nextCanonical === canonicalInput)
+				) {
+					return { prefix, code: canonicalInput, name: course.name };
+				}
+			}
+		}
+	}
+
+	throw new Error(`Unknown course id: ${id}`);
+}
+
+/**
+ * Multi-term courses (where `terms === 2`) span two rows in the UI.
+ * When linking to either term, highlight both.
+ */
+export function getCourseTermCodes(
+	educationId: EducationId,
+	prefix: CoursePrefix,
+	code: string,
+): string[] {
+	const canonicalInput = canonicalizeCode(code);
+
+	for (const year of academicYearsForEducation(educationId)) {
+		for (const semester of year.semesters) {
+			for (const course of semester.courses) {
+				if (!course.terms) continue;
+				if (course.prefix !== prefix) continue;
+
+				const next = course.nextCode ?? course.code;
+				const matches =
+					course.code === code ||
+					next === code ||
+					canonicalizeCode(course.code) === canonicalInput ||
+					canonicalizeCode(next) === canonicalInput;
+				if (!matches) continue;
+
+				const codes = [course.code, next];
+				return Array.from(new Set(codes));
+			}
+		}
+	}
+
+	return [code];
+}
+
 export type GradePoint = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export type Term = 'fall' | 'winter' | 'spring' | 'summer';
@@ -52,111 +174,113 @@ export type AcademicYear = {
 	semesters: Semester[];
 };
 
-export const academicYears: AcademicYear[] = [
-	{
-		level: 1,
-		startYear: 2022,
-		semesters: [
-			{
-				term: 'fall',
-				courses: [
-					{ prefix: 'COMPSCI', code: '1JC3', name: 'Introduction to Computational Thinking', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '1MD3', name: 'Introduction to Programming', units: 3, grade: 12 },
-					{ prefix: 'GERMAN', code: '1Z06A', nextCode: '1Z06B', name: 'Beginner\'s Intensive German', units: 6, grade: 12, terms: 2 },
-					{ prefix: 'MATH', code: '1B03', name: 'Linear Algebra I', units: 3, grade: 12 },
-					{ prefix: 'MATH', code: '1ZA3', name: 'Engineering Mathematics I', units: 3, grade: 12 },
-				],
-			},
-			{
-				term: 'winter',
-				courses: [
-					{ prefix: 'COMPSCI', code: '1DM3', name: 'Discrete Mathematics for Computer Science', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '1XC3', name: 'Development Basics', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '1XD3', name: 'Introduction to Software Design Using Web Programming', units: 3, grade: 12 },
-					{ prefix: 'MATH', code: '1ZB3', name: 'Engineering Mathematics II-A', units: 3, grade: 12 },
-				],
-			},
-		],
-	},
-	{
-		level: 2,
-		startYear: 2023,
-		semesters: [
-			{
-				term: 'fall',
-				courses: [
-					{ prefix: 'COMPSCI', code: '2C03', name: 'Data Structures and Algorithms', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '2GA3', name: 'Computer Architecture', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '2LC3', name: 'Logical Reasoning for Computer Science', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '2ME3', name: 'Introduction to Software Development', units: 3, grade: 12 },
-					{ prefix: 'SUSTAIN', code: '1S03', name: 'Introduction to Sustainability', units: 3, grade: 12 },
-					
-				],
-			},
-			{
-				term: 'winter',
-				courses: [
-					{ prefix: 'COMPSCI', code: '2AC3', name: 'Automata and Computability', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '2DB3', name: 'Databases', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '2SD3', name: 'Concurrent Systems', units: 3, grade: 11 },
-					{ prefix: 'COMPSCI', code: '2XC3', name: 'Algorithms and Software Design', units: 3, grade: 12 },
-					{ prefix: 'INNOVATE', code: '1Z03', name: 'Artificial Intelligence - Innovative Technologies', units: 3, grade: 12 },
-				],
-			},
-		],
-	},
-	{
-		level: 3,
-		startYear: 2024,
-		semesters: [
-			{
-				term: 'fall',
-				courses: [
-					{ prefix: 'COMPSCI', code: '3MI3', name: 'Principles of Programming Languages', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '3SH3', name: 'Operating Systems', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '4CR3', name: 'Applied Cryptography', units: 3, grade: 12 },
-					{ prefix: 'MATH', code: '2X03', name: 'Advanced Calculus I', units: 3, grade: 10 },
-					{ prefix: 'STATS', code: '2D03', name: 'Introduction to Probability', units: 3, grade: 12 },
-				],
-			},
-			{
-				term: 'winter',
-				courses: [
-					{ prefix: 'COMPSCI', code: '3AC3', name: 'Algorithms and Complexity', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '3DM3', name: 'Introduction to Data Mining', units: 3, grade: 10 },
-					{ prefix: 'COMPSCI', code: '3N03', name: 'Computer Networks and Security', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '3TB3', name: 'Syntax-Based Tools and Compilers', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '4NL3', name: 'Natural Language Processing', units: 3, grade: 11 },
-				],
-			},
-		],
-	},
-	{
-		level: 4,
-		startYear: 2025,
-		semesters: [
-			{
-				term: 'fall',
-				courses: [
-					{ prefix: 'COMPSCI', code: '4AL3', name: 'Applications of Machine Learning', units: 3, grade: 11 },
-					{ prefix: 'COMPSCI', code: '4O03', name: 'Linear Optimization', units: 3, grade: 12 },
-					{ prefix: 'COMPSCI', code: '4ZP6A', nextCode: '4ZP6B', name: 'Capstone Project', units: 6, grade: 12, terms: 2 },
-					{ prefix: 'MATH', code: '2Z03', name: 'Engineering Math III', units: 3, grade: 11 },
-					{ prefix: 'PHYSICS', code: '1D03', name: 'Introductory Mechanics', units: 3, grade: 12 },
-				],
-			},
-			{
-				term: 'winter',
-				courses: [
-					{ prefix: 'COMPSCI', code: '4E03', name: 'Performance Analysis of Computer Systems', units: 3, grade: 10 },
-					{ prefix: 'MATH', code: '2ZZ3', name: 'Engineering Math IV', units: 3, grade: 12 },
-					{ prefix: 'SFWRENG', code: '3S03', name: 'Software Testing', units: 3, grade: 12 },
-					{ prefix: 'STATS', code: '2MB3', name: 'Statistical Methods and Applications', units: 3, grade: 10 },
-				],
-			},
-		],
-	},
-];
+export const academicYears: Record<EducationId, AcademicYear[]> = {
+	mcmaster: [
+		{
+			level: 1,
+			startYear: 2022,
+			semesters: [
+				{
+					term: 'fall',
+					courses: [
+						{ prefix: 'COMPSCI', code: '1JC3', name: 'Introduction to Computational Thinking', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '1MD3', name: 'Introduction to Programming', units: 3, grade: 12 },
+						{ prefix: 'GERMAN', code: '1Z06A', nextCode: '1Z06B', name: 'Beginner\'s Intensive German', units: 6, grade: 12, terms: 2 },
+						{ prefix: 'MATH', code: '1B03', name: 'Linear Algebra I', units: 3, grade: 12 },
+						{ prefix: 'MATH', code: '1ZA3', name: 'Engineering Mathematics I', units: 3, grade: 12 },
+					],
+				},
+				{
+					term: 'winter',
+					courses: [
+						{ prefix: 'COMPSCI', code: '1DM3', name: 'Discrete Mathematics for Computer Science', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '1XC3', name: 'Development Basics', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '1XD3', name: 'Introduction to Software Design Using Web Programming', units: 3, grade: 12 },
+						{ prefix: 'MATH', code: '1ZB3', name: 'Engineering Mathematics II-A', units: 3, grade: 12 },
+					],
+				},
+			],
+		},
+		{
+			level: 2,
+			startYear: 2023,
+			semesters: [
+				{
+					term: 'fall',
+					courses: [
+						{ prefix: 'COMPSCI', code: '2C03', name: 'Data Structures and Algorithms', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '2GA3', name: 'Computer Architecture', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '2LC3', name: 'Logical Reasoning for Computer Science', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '2ME3', name: 'Introduction to Software Development', units: 3, grade: 12 },
+						{ prefix: 'SUSTAIN', code: '1S03', name: 'Introduction to Sustainability', units: 3, grade: 12 },
+						
+					],
+				},
+				{
+					term: 'winter',
+					courses: [
+						{ prefix: 'COMPSCI', code: '2AC3', name: 'Automata and Computability', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '2DB3', name: 'Databases', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '2SD3', name: 'Concurrent Systems', units: 3, grade: 11 },
+						{ prefix: 'COMPSCI', code: '2XC3', name: 'Algorithms and Software Design', units: 3, grade: 12 },
+						{ prefix: 'INNOVATE', code: '1Z03', name: 'Artificial Intelligence - Innovative Technologies', units: 3, grade: 12 },
+					],
+				},
+			],
+		},
+		{
+			level: 3,
+			startYear: 2024,
+			semesters: [
+				{
+					term: 'fall',
+					courses: [
+						{ prefix: 'COMPSCI', code: '3MI3', name: 'Principles of Programming Languages', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '3SH3', name: 'Operating Systems', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '4CR3', name: 'Applied Cryptography', units: 3, grade: 12 },
+						{ prefix: 'MATH', code: '2X03', name: 'Advanced Calculus I', units: 3, grade: 10 },
+						{ prefix: 'STATS', code: '2D03', name: 'Introduction to Probability', units: 3, grade: 12 },
+					],
+				},
+				{
+					term: 'winter',
+					courses: [
+						{ prefix: 'COMPSCI', code: '3AC3', name: 'Algorithms and Complexity', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '3DM3', name: 'Introduction to Data Mining', units: 3, grade: 10 },
+						{ prefix: 'COMPSCI', code: '3N03', name: 'Computer Networks and Security', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '3TB3', name: 'Syntax-Based Tools and Compilers', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '4NL3', name: 'Natural Language Processing', units: 3, grade: 11 },
+					],
+				},
+			],
+		},
+		{
+			level: 4,
+			startYear: 2025,
+			semesters: [
+				{
+					term: 'fall',
+					courses: [
+						{ prefix: 'COMPSCI', code: '4AL3', name: 'Applications of Machine Learning', units: 3, grade: 11 },
+						{ prefix: 'COMPSCI', code: '4O03', name: 'Linear Optimization', units: 3, grade: 12 },
+						{ prefix: 'COMPSCI', code: '4ZP6A', nextCode: '4ZP6B', name: 'Capstone Project', units: 6, grade: 12, terms: 2 },
+						{ prefix: 'MATH', code: '2Z03', name: 'Engineering Math III', units: 3, grade: 11 },
+						{ prefix: 'PHYSICS', code: '1D03', name: 'Introductory Mechanics', units: 3, grade: 12 },
+					],
+				},
+				{
+					term: 'winter',
+					courses: [
+						{ prefix: 'COMPSCI', code: '4E03', name: 'Performance Analysis of Computer Systems', units: 3, grade: 10 },
+						{ prefix: 'MATH', code: '2ZZ3', name: 'Engineering Math IV', units: 3, grade: 12 },
+						{ prefix: 'SFWRENG', code: '3S03', name: 'Software Testing', units: 3, grade: 12 },
+						{ prefix: 'STATS', code: '2MB3', name: 'Statistical Methods and Applications', units: 3, grade: 10 },
+					],
+				},
+			],
+		},
+	]
+} as const;
 
 export type DisplayGrade = GradePoint | 'COM' | 'MT';
 
@@ -252,7 +376,7 @@ function collectCourses(semesters: DisplaySemester[]): DisplayCourse[] {
 	return semesters.flatMap((semester) => semester.courses);
 }
 
-export function buildTranscript(years: AcademicYear[] = academicYears): Transcript {
+export function buildTranscript(years: AcademicYear[]): Transcript {
 	const buckets = new Map<string, DisplayCourse[]>();
 	const meta = new Map<string, { startYear: number; term: Term; level: AcademicYear['level'] }>();
 
@@ -349,6 +473,10 @@ export function buildTranscript(years: AcademicYear[] = academicYears): Transcri
 		years: displayYears,
 		overall: weightedGpa(displayYears.flatMap((year) => collectCourses(year.semesters))),
 	};
+}
+
+export function buildTranscriptForEducation(educationId: EducationId): Transcript {
+	return buildTranscript(academicYearsForEducation(educationId));
 }
 
 export function yearLabel(year: DisplayYear): string {

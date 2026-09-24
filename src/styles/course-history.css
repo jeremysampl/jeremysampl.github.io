@@ -2,6 +2,18 @@
 	display: none;
 }
 
+.course-history__hash-anchor {
+	display: block;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.course-table__row.is-focused {
+	background: rgba(var(--secondary-rgb), 0.06);
+	border-color: rgba(var(--secondary-rgb), 0.35);
+}
+
 .course-table__head,
 .course-table__row {
 	display: grid;
@@ -24,9 +36,10 @@
 }
 
 .course-table__head {
-	flex-shrink: 0;
+	position: sticky;
+	top: -12px;
 	z-index: 2;
-	margin: 0;
+	margin: -12px -12px 0;
 	padding: 10px 24px;
 	background: #fff;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -42,7 +55,7 @@
 .course-table__g12,
 .course-table__g4,
 .course-table__units {
-	text-align: right;
+	text-align: center;
 	font-variant-numeric: tabular-nums;
 }
 
