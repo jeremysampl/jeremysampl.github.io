@@ -1,99 +1,6 @@
-import ProjectPage, { ProjectFilmstrip, type TechnologyItem } from '../ProjectPage';
+import ProjectPage, { ProjectFilmstrip } from '../ProjectPage';
 import { getProject } from '../../../data/projects';
 import type { GalleryItem } from '../../../types/gallery';
-
-const technologies: TechnologyItem[] = [
-    {
-		id: 'nextjs',
-		featured: true,
-		description: 'App router, API routes, and useful server-side rendering features.',
-	},
-	{
-		id: 'react',
-		featured: true,
-		description: 'Frontend framework for the Geckode editor and website.',
-		children: [
-			{
-				id: 'typescript',
-				description: `Used instead of plain JavaScript for its strongly typed models,
-                    helping prevent unnecessary bugs and improve code readability.`,
-			},
-			{
-				id: 'html',
-			},
-			{
-				id: 'css',
-			},
-			{
-				id: 'tailwindcss',
-				description: 'Inline styling for rapid development..',
-			},
-		],
-	},
-    {
-        id: 'blockly',
-        description: 'Google\'s open-source block-based programming library used to create the Geckode editor.',
-    },
-	{
-		id: 'phaser',
-		description: `2D physics engine highly tailored for the Geckode editor. Custom JavaScript code generation from
-            Blockly blocks carefully combine with sprite parameters from React to create complex Phaser game logic, such as
-            sprite movement, object collisions, gravity, and much more.`,
-	},
-	{
-		id: 'yjs',
-		featured: true,
-		description: `Used for its conflict-free replicated data types (CRDTs), which allow multiple users to work on the
-            same project simultaneously without conflicts. Paired with hand-crafted custom merging logic to enable full
-            offline editing capabilities, avoiding data corruption such as circular references.`,
-	},
-	{
-		id: 'django',
-        featured: true,
-		description: `Main backend APIs for the app, handling user accounts, organizations, project storage, permissions,
-            and more.`,
-		children: [
-			{
-				id: 'python',
-			},
-            {
-                id: 'rest-apis',
-                description: 'Used the Django REST Framework to create structured API responses and validation.',
-            },
-			{
-				id: 'postgresql',
-				description: 'Primary datastore for users, organizations, and project metadata.',
-			},
-		],
-	},
-	{
-		id: 'nodejs',
-        featured: true,
-		description: `WebSocket server to rapidly sync real-time changes between project collaborators, checking
-            necessary permissions, sending essential updates to each connected client, and ensuring data consistency.`,
-		children: [
-			{
-				id: 'websocket',
-				description: `Live project-specific channels that ferry Yjs updates between collaborators, including
-                    connected user information and project state updates.`,
-			},
-		],
-	},
-    {
-        id: 'redis',
-        featured: true,
-        description: `Extremely fast in-memory datastore for the bidirectional transport of data between the Django backend
-            (single source of truth) and the WebSocket server to update connected clients about data changes from sources
-            outside the scope of the WebSocket connection as well as funnel validated updates from clients to the backend
-            for processing and storage, avoiding costly API calls and ensuring data integrity at all times.`,
-    },
-	{
-		id: 'docker',
-		featured: true,
-		description: 'Local and deployed stacks for the web app, backend APIs, database, and Redis in one compose setup.',
-	},
-	
-];
 
 const platformerGame: GalleryItem = {
 	title: 'Platformer game',
@@ -228,6 +135,18 @@ export default function GeckodePage() {
                             MakeCode.
 						</p>
 
+						<h3>My Role in the Project</h3>
+						<p>
+							Geckode was developed as a final-year capstone project in collaboration with 4 other students.
+							As backend lead, I was responsible for designing and implementing the core backend functionality of the platform,
+							including the APIs, authentication system, database schema, project storage, project sharing, real-time collaboration,
+							and much more.
+							This involved making design decisions about all aspects of the backend, from the technologies used to the
+							manner in which they communicate with each other. However, I also significantly contributed to the frontend,
+							including creating reusable React components and pages for the platform, as well as collaborating with the other team
+							members to implement compatible project state management and synchronization with the backend.
+						</p>
+
 						<h2>Accounts</h2>
 
 						<h3>Register/Login</h3>
@@ -249,7 +168,7 @@ export default function GeckodePage() {
 						<p>
 							Projects can be developed using the editor, which provides a suite of tools for creating and editing games:
 						</p>
-						<ProjectFilmstrip media={[platformerGame, ...editorsStrip]} />
+						<ProjectFilmstrip media={[platformerGame, ...editorsStrip]} maxPerRow={2} aspectRatio={1} />
 
 						<h3>Sharing</h3>
 						<p>
@@ -263,9 +182,139 @@ export default function GeckodePage() {
 							Organizations can be used to quickly create, manage and share projects among a group of users, such as a classroom
 							or team:
 						</p>
-						<ProjectFilmstrip media={organizationsStrip} />
+						<ProjectFilmstrip media={organizationsStrip} aspectRatio={[17, 9]} />
+
+						<h2>Demo Video</h2>
+
+						<p>
+							Here is the original demo video of Geckode showcased at the end of the capstone course:
+						</p>
+
+						<ProjectFilmstrip media={[demoVideo]} aspectRatio={[16, 9]} />
+
+						<h2>Underlying Implementation</h2>
+						<ProjectFilmstrip media={howItWorksStrip} aspectRatio={[5, 3.5]} />
+
+						<h3>Frontend</h3>
+
+						<h4>React (Next.js) & TypeScript</h4>
+						<p>
+							Arguably the most important part of the project, the frontend was built using{' '}
+							<span className="bold">React (Next.js)</span> and{' '}
+							<span className="bold">TypeScript</span>.
+							React was chosen for its ability to create reusable components and pages, while TypeScript was chosen for its
+							strong type system to help avoid runtime errors and improve code readability.
+						</p>
+
+						<h4>Blockly</h4>
+						<p>
+							Blocks are the core of the platform, and are used to create the games. Therefore, we needed a sophisticated block editor.
+							After researching the options, we settled on <span className="bold">Blockly</span>, an
+							open-source block editor developed by Google. Blockly is a powerful tool that allowed us to create a block editor that
+							is both easy to use and powerful enough to handle the complex logic of the games. We could have built our own block
+							editor, but Blockly was the most mature and well-supported option, and, in fact, it is used by most existing block
+							coding platforms like Scratch and MakeCode due to these reasons.
+						</p>
+
+						<h4>Zustand</h4>
+						<p>
+							As with any other block coding platform, we needed a way to easily manage the state of the projects, including sprites.
+							To accomplish this, we used <span className="bold">Zustand</span>, a lightweight state management library
+							for React. Zustand was chosen for its simplicity and ease of use, as well as its performance and scalability.
+							It also allowed us to dynamically tie sprite states to blocks, allowing for a seamless and responsive experience.
+							Furthermore, Zustand allowed us to easily implement real-time collaboration by accessing and sharing the state of
+							projects outside of React's component tree, allowing for a more efficient and scalable implementation (more on this later).
+						</p>
+
+						<h4>Phaser</h4>
+						<p>
+							Once we introduced blocks and sprites into the project, we needed a way to render them and to handle the logic of the games.
+							Existing platforms like Scratch and MakeCode use a custom rendering engine, but we wanted to differentiate ourselves
+							by using a real physics engine to handle the movement and interactions of the games.
+							We looked into building our own physics engine from scratch, but it would have taken a significant amount of time and
+							effort, and it would have diverted our focus away from the core features of the platform so we decided to use{' '}
+							<span className="bold">Phaser</span>, an open-source game physics framework.
+							With complex custom logic, we synchronized the sprites and their respective blocks to the Phaser game canvas, enabling
+							real-time rendering and interaction of the games, including sprite movement, collisions, and tilemap .
+						</p>
+
+						<h3>Backend</h3>
+
+						<h4>Django</h4>
+						<p>
+							For the backend, we used <span className="bold">Django</span>, a powerful web framework for Python.
+							Django was chosen for its powerful features, such as its ORM, its built-in admin interface, and its
+							built-in authentication system.
+							The <span className="bold">Django REST Framework</span> enabled us to easily create standardized RESTful APIs, streamlining
+							the development process and allowing for a more efficient and scalable implementation.
+						</p>
+
+						<h4>PostgreSQL</h4>
+						<p>
+							For persistent data storage, we used the de facto standard for production Django projects,{' '}
+							<span className="bold">PostgreSQL</span>.
+							It is reliable, fast, and managed directly by Django, allowing for a seamless and efficient data storage solution.
+						</p>
+
+						<h3>Real-time Collaboration Layer</h3>
+
+						<h4>Yjs</h4>
+						<p>
+							To implement real-time collaboration, I decided to use <span className="bold">Yjs</span>, an open-source CRDT (Conflict-free
+							Replicated Data Type) library that synchronizes a shared document and automatically handles merge conflicts deterministically.
+							Yjs was chosen for its ability to handle the complex state management of the projects, including sprites and tilemaps,
+							as well as its performance and scalability.
+						</p>
+						<p>
+							State for any given project is stored in a single shared Yjs document via{' '}
+							Yjs-specific shared types, such as Array and Map, and any changes made to those shared types are automatically merged and
+							synchronized by Yjs. Custom-made algorithms that I designed and implemented listen for the changes and update local Blockly,
+							Phaser, and Zustand state accordingly via their respective APIs, ensuring that different users see the same updates in
+							real-time.
+						</p>
+
+						<h4>Node.js</h4>
+						<p>
+							A shared Yjs document needs to be synced to all connected clients in real-time. To accomplish this, I engineered a custom{' '}
+							<span className="bold">Node.js</span> WebSocket server that listens for changes to the Yjs document and broadcasts them to all
+							connected clients. Node.js was chosen instead of attempting to use Django Channels due to the fact that Yjs runs natively
+							in JavaScript and Node.js is a mature and well-supported runtime environment for this purpose.
+							Furthermore, separating the synchronization logic from the backend allows for a more modular and scalable implementation,
+							ensuring that the backend can focus on its core responsibilities of handling requests and responses, while the Node.js server
+							can focus on synchronizing the Yjs document to all connected clients in real-time.
+						</p>
+						<p>
+							When a client initially opens a project, it connects to the WebSocket server and requests the latest state of the Yjs document.
+							To authenticate, the client sends its JWT token to the server, which is then verified via an API call to the Django backend.
+							This API call obtains the stored Yjs document if it was not already loaded on the WebSocket server, as well as the client's
+							permissions for the project and other important information about the user.
+							Once authenticated, the client receives the latest state of the Yjs document and begins listening for changes.
+							Depending on the client's permissions, the WebSocket server will either allow the client to make changes to the Yjs document,
+							or will only allow the client to view the project.
+						</p>
+
+						<h4>Redis</h4>
+						<p>
+							Large amounts of API calls can be very taxing on the backend, especially when they are all happening simultaneously.
+							In order to enable automatic project saving, I decided to use <span className="bold">Redis</span>, an in-memory data store
+							that is capable of acting both as a cache and a message broker, allowing for a more efficient and scalable implementation.
+						</p>
+						<p>
+							As a replacement for API calls, upon a debounced project save event, the Node.js server stores the latest state of the Yjs
+							document in Redis and sets a flag that the project is queued for saving.
+							Django listens for these changes in the Redis store and updates the project in the database accordingly, signaling to the
+							Node.js server that the project has been saved via the same flag. Throughout this process, the Node.js server broadcasts
+							saving state updates to all connected clients, ensuring that users can be certain that the project has been saved.
+						</p>
+						<p>
+							Another important use case for Redis is to store information about each connected client.
+							This is extremely useful for the Django backend to track which clients are connected to which projects in real-time,
+							enabling any external changes, such as project updates (name, description, thumbnail, collaborators, etc.) via API calls,
+							to be broadcast to the appropriate clients so that they can be immediately reflected in the UI. This also ensures that
+							user permissions (or lack thereof) are updated in real-time, giving or taking away users' abilities to view, edit, or share
+							the project instantly without forcing them to refresh the page.
+						</p>
 					</>
-                    // TODO: Add details about the physics engine, the real-time collaboration, and how they work
 				),
 			}}
 			overview={{
@@ -287,7 +336,7 @@ export default function GeckodePage() {
 					},
 				],
 			}}
-			technologies={technologies}
+			technologies={project.technologies}
 			siteIconSrc="/images/projects/geckode/geckode-icon.png"
 			siteIconAlt="Geckode"
 			gallery={[platformerGame, ...editorsStrip, ...shareStrip, ...organizationsStrip, ...howItWorksStrip, demoVideo, ...projectsStrip, ...loginStrip]}
