@@ -133,6 +133,7 @@ export default function ProjectPage({
 	autoplayRef.current = autoplay;
 	const chromeVisibleRef = useRef(chromeVisible);
 	chromeVisibleRef.current = chromeVisible;
+	const filmstripAutoChangeRef = useRef(false);
 
 	const { volume, muted } = mediaAudio;
 	const effectiveMuted = muted || isVideoPlaying;
@@ -240,6 +241,7 @@ export default function ProjectPage({
 	const advanceSlide = useCallback(() => {
 		if (!autoplayRef.current || !canNavigate || advancedForSlideRef.current) return;
 		advancedForSlideRef.current = true;
+		filmstripAutoChangeRef.current = true;
 		setActiveIndex((current) => (current + 1) % lightboxItems.length);
 	}, [canNavigate, lightboxItems.length]);
 
@@ -858,6 +860,7 @@ export default function ProjectPage({
 									media={lightboxItems}
 									variant="filmstrip"
 									activePath={heroPath}
+									autoActiveChangeRef={filmstripAutoChangeRef}
 									onSelect={(index) => goTo(index)}
 								/>
 							) : null}

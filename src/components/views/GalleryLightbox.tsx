@@ -73,6 +73,22 @@ const MAX_ZOOM = 4;
 const CLICK_ZOOM = 2.5;
 const TAP_MOVE_THRESHOLD = 10;
 const CHROME_IDLE_MS = 2600;
+/** Bottom strip of the video where native scrubbing / controls live. */
+const VIDEO_CONTROLS_HIT_HEIGHT = 72;
+/** Ignore pan release coast below this speed (px/ms). */
+const PAN_MOMENTUM_MIN_VELOCITY = 0.6;
+/** Friction for slow drags (higher = stops sooner). */
+const PAN_FRICTION_SLOW = 0.0062;
+/** Friction for hard flicks (lower = longer glide). */
+const PAN_FRICTION_FAST = 0.00135;
+/** Speeds (px/ms) that map to slow/fast friction. */
+const PAN_FRICTION_SPEED_SLOW = 0.75;
+const PAN_FRICTION_SPEED_FAST = 1.7;
+/** Recent pointer samples used to estimate release velocity. */
+const PAN_VELOCITY_WINDOW_MS = 64;
+/** Prefer this recent span when measuring flick speed. */
+const PAN_VELOCITY_FLICK_MS = 32;
+const PAN_COAST_EASING = 'cubic-bezier(0.12, 0.78, 0.16, 1)';
 const THUMB_SCOPE_SELECTOR =
 	'.media-card-grid, .project-gallery-ref, .project-card__visual, .project-card__story, .project-card__panel';
 
@@ -370,7 +386,14 @@ type DragState = {
 	mode: PointerMode;
 	moved: boolean;
 	isTouch: boolean;
+	fromVideo: boolean;
 };
+
+function isVideoControlsTouch(clientY: number, frame: Element): boolean {
+	const rect = frame.getBoundingClientRect();
+	if (clientY < rect.top || clientY > rect.bottom) return false;
+	return rect.bottom - clientY <= VIDEO_CONTROLS_HIT_HEIGHT;
+}
 
 type PinchState = {
 	startDistance: number;
@@ -525,6 +548,16 @@ function LightboxOverlay({
 	const isClosingRef = useRef(false);
 	const chromeIdleTimerRef = useRef<number | null>(null);
 	const closeVideoTimeRef = useRef(0);
+	const panCoastTimerRef = useRef<number | null>(null);
+	const panVelocitySamplesRef = useRef<Array<{ x: number; y: number; t: number }>>([]);
+	const panCoastingRef = useRef(false);
+	const panCoastRef = useRef<{
+		start: { x: number; y: number };
+		end: { x: number; y: number };
+		startCenter: { x: number; y: number };
+		durationMs: number;
+		startedAt: number;
+	} | null>(null);
 
 	const [slideWidth, setSlideWidth] = useState(() => window.innerWidth);
 	const [dragX, setDragX] = useState(0);
@@ -547,7 +580,9 @@ function LightboxOverlay({
 	const [zoomAnimating, setZoomAnimating] = useState(false);
 
 	zoomRef.current = zoom;
-	panRef.current = pan;
+	if (!panCoastingRef.current && dragRef.current?.mode !== 'pan') {
+		panRef.current = pan;
+	}
 
 	const prevIndex = (index - 1 + items.length) % items.length;
 	const nextIndex = (index + 1) % items.length;
@@ -871,6 +906,15 @@ function LightboxOverlay({
 	}, [activeVideoEpoch, index, isVideo, item.path, onMediaAudioChange]);
 
 	const resetZoom = useCallback(() => {
+		if (panCoastTimerRef.current !== null) {
+			window.clearTimeout(panCoastTimerRef.current);
+			panCoastTimerRef.current = null;
+		}
+		panCoastingRef.current = false;
+		panCoastRef.current = null;
+		panVelocitySamplesRef.current = [];
+		const img = imgRef.current;
+		if (img) img.style.transition = 'none';
 		setZoom(1);
 		setPan({ x: 0, y: 0 });
 	}, []);
@@ -1024,6 +1068,151 @@ function LightboxOverlay({
 		};
 	}, []);
 
+	const paintPanZoom = useCallback((nextPan: { x: number; y: number }, nextZoom = zoomRef.current) => {
+		panRef.current = nextPan;
+		const img = imgRef.current;
+		if (!img) return;
+		img.style.transition = 'none';
+		img.style.transform = `translate3d(${nextPan.x}px, ${nextPan.y}px, 0) scale(${nextZoom})`;
+	}, []);
+
+	const stopPanMomentum = useCallback(() => {
+		if (!panCoastingRef.current) return;
+
+		if (panCoastTimerRef.current !== null) {
+			window.clearTimeout(panCoastTimerRef.current);
+			panCoastTimerRef.current = null;
+		}
+
+		const img = imgRef.current;
+		const coast = panCoastRef.current;
+		let current = { ...panRef.current };
+
+		if (img && coast) {
+			// Translate follows the visual center 1:1, so recover pan from center delta.
+			const rect = img.getBoundingClientRect();
+			current = {
+				x: coast.start.x + (rect.left + rect.width / 2 - coast.startCenter.x),
+				y: coast.start.y + (rect.top + rect.height / 2 - coast.startCenter.y),
+			};
+		}
+
+		panCoastingRef.current = false;
+		panCoastRef.current = null;
+
+		if (img) {
+			img.style.transition = 'none';
+			void img.offsetWidth;
+			img.style.transform = `translate3d(${current.x}px, ${current.y}px, 0) scale(${zoomRef.current})`;
+		}
+		panRef.current = current;
+		setPan(current);
+	}, []);
+
+	useEffect(() => () => stopPanMomentum(), [stopPanMomentum]);
+
+	const frictionForPanSpeed = useCallback((speed: number) => {
+		const span = Math.max(0.001, PAN_FRICTION_SPEED_FAST - PAN_FRICTION_SPEED_SLOW);
+		const t = Math.min(1, Math.max(0, (speed - PAN_FRICTION_SPEED_SLOW) / span));
+		const curved = t * t;
+		return PAN_FRICTION_SLOW + (PAN_FRICTION_FAST - PAN_FRICTION_SLOW) * curved;
+	}, []);
+
+	const startPanMomentum = useCallback(
+		(vx: number, vy: number) => {
+			stopPanMomentum();
+			const speed = Math.hypot(vx, vy);
+			if (speed < PAN_MOMENTUM_MIN_VELOCITY) return;
+
+			const img = imgRef.current;
+			if (!img) return;
+
+			const friction = frictionForPanSpeed(speed);
+			const start = { ...panRef.current };
+			const unconstrained = {
+				x: start.x + vx / friction,
+				y: start.y + vy / friction,
+			};
+			const end = clampPan(zoomRef.current, unconstrained);
+			const intendedDist = Math.hypot(unconstrained.x - start.x, unconstrained.y - start.y);
+			const actualDist = Math.hypot(end.x - start.x, end.y - start.y);
+			if (actualDist < 0.5) return;
+
+			let durationMs = Math.log(Math.max(speed, PAN_MOMENTUM_MIN_VELOCITY) / 0.028) / friction;
+			if (intendedDist > 0.1) durationMs *= actualDist / intendedDist;
+			durationMs = Math.min(1400, Math.max(140, durationMs));
+
+			img.style.transition = 'none';
+			img.style.transform = `translate3d(${start.x}px, ${start.y}px, 0) scale(${zoomRef.current})`;
+			void img.offsetWidth;
+			const startRect = img.getBoundingClientRect();
+
+			panCoastingRef.current = true;
+			panCoastRef.current = {
+				start,
+				end,
+				startCenter: {
+					x: startRect.left + startRect.width / 2,
+					y: startRect.top + startRect.height / 2,
+				},
+				durationMs,
+				startedAt: performance.now(),
+			};
+
+			img.style.transition = `transform ${durationMs}ms ${PAN_COAST_EASING}`;
+			img.style.transform = `translate3d(${end.x}px, ${end.y}px, 0) scale(${zoomRef.current})`;
+
+			panCoastTimerRef.current = window.setTimeout(() => {
+				panCoastTimerRef.current = null;
+				panCoastingRef.current = false;
+				panCoastRef.current = null;
+				img.style.transition = 'none';
+				panRef.current = end;
+				setPan({ ...end });
+			}, durationMs + 20);
+		},
+		[clampPan, frictionForPanSpeed, stopPanMomentum],
+	);
+
+	const recordPanVelocitySample = useCallback((clientX: number, clientY: number) => {
+		const t = performance.now();
+		const samples = panVelocitySamplesRef.current;
+		samples.push({ x: clientX, y: clientY, t });
+		while (samples.length > 0 && t - samples[0].t > PAN_VELOCITY_WINDOW_MS) {
+			samples.shift();
+		}
+	}, []);
+
+	const panVelocityFromSamples = useCallback(() => {
+		const samples = panVelocitySamplesRef.current;
+		if (samples.length < 2) return { vx: 0, vy: 0 };
+
+		const last = samples[samples.length - 1];
+		let first = samples[0];
+		for (let i = samples.length - 2; i >= 0; i -= 1) {
+			first = samples[i];
+			if (last.t - samples[i].t >= PAN_VELOCITY_FLICK_MS) break;
+		}
+
+		const dt = last.t - first.t;
+		if (dt < 6) return { vx: 0, vy: 0 };
+		return {
+			vx: (last.x - first.x) / dt,
+			vy: (last.y - first.y) / dt,
+		};
+	}, []);
+
+	useLayoutEffect(() => {
+		if (panCoastingRef.current) return;
+		if (dragRef.current?.mode === 'pan') return;
+		const img = imgRef.current;
+		if (!img) return;
+		img.style.transition = zoomAnimating
+			? 'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1)'
+			: 'none';
+		img.style.transform = `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`;
+	}, [pan, zoom, zoomAnimating]);
+
 	const setZoomAroundPoint = useCallback(
 		(nextZoomRaw: number, clientX: number, clientY: number, animate = false) => {
 			const img = imgRef.current;
@@ -1113,6 +1302,9 @@ function LightboxOverlay({
 
 		const isTouch = event.pointerType === 'touch';
 
+		stopPanMomentum();
+		panVelocitySamplesRef.current = [];
+
 		// Desktop on video: native controls handle interaction
 		if (isVideo && !isTouch) return;
 
@@ -1127,13 +1319,16 @@ function LightboxOverlay({
 				mode: 'undecided',
 				moved: false,
 				isTouch: false,
+				fromVideo: false,
 			};
 			return;
 		}
 
 		pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
-		if (isVideo && (event.target as HTMLElement).closest('.gallery-lightbox__video-frame')) {
+		const videoFrame = (event.target as HTMLElement).closest('.gallery-lightbox__video-frame');
+		// Leave the bottom controls strip alone so scrubbing still works.
+		if (isVideo && videoFrame && isVideoControlsTouch(event.clientY, videoFrame)) {
 			return;
 		}
 
@@ -1169,6 +1364,7 @@ function LightboxOverlay({
 			mode: isZoomed ? 'pan' : 'undecided',
 			moved: false,
 			isTouch: true,
+			fromVideo: Boolean(videoFrame),
 		};
 
 		if (isZoomed) {
@@ -1178,6 +1374,7 @@ function LightboxOverlay({
 				panX: panRef.current.x,
 				panY: panRef.current.y,
 			};
+			recordPanVelocitySample(event.clientX, event.clientY);
 		}
 
 		setDragging(true);
@@ -1217,7 +1414,8 @@ function LightboxOverlay({
 				x: panStartRef.current.panX + (event.clientX - panStartRef.current.x),
 				y: panStartRef.current.panY + (event.clientY - panStartRef.current.y),
 			});
-			setPan(nextPan);
+			recordPanVelocitySample(event.clientX, event.clientY);
+			paintPanZoom(nextPan);
 			return;
 		}
 
@@ -1280,6 +1478,7 @@ function LightboxOverlay({
 					mode: zoomRef.current > 1.02 ? 'pan' : 'undecided',
 					moved: true,
 					isTouch: true,
+					fromVideo: false,
 				};
 				panStartRef.current = {
 					x: point.x,
@@ -1307,8 +1506,17 @@ function LightboxOverlay({
 		dragRef.current = null;
 		setDragging(false);
 
-		// Tap with no drag: toggle chrome on touch (letterbox taps; video frame handles its own taps).
+		// Tap with no drag.
 		if (!state.moved) {
+			// Video body taps still toggle play/pause (controls strip was left alone above).
+			if (state.fromVideo) {
+				const video = videoRef.current;
+				if (video) {
+					if (video.paused) void video.play().catch(() => {});
+					else video.pause();
+				}
+				return;
+			}
 			if (isVideo) {
 				event.preventDefault();
 			}
@@ -1320,7 +1528,17 @@ function LightboxOverlay({
 		}
 
 		if (state.mode === 'pan') {
-			if (zoomRef.current <= 1.02) resetZoom();
+			if (zoomRef.current <= 1.02) {
+				resetZoom();
+				return;
+			}
+			const { vx, vy } = panVelocityFromSamples();
+			panVelocitySamplesRef.current = [];
+			if (Math.hypot(vx, vy) < PAN_MOMENTUM_MIN_VELOCITY) {
+				setPan({ ...panRef.current });
+				return;
+			}
+			startPanMomentum(vx, vy);
 			return;
 		}
 
@@ -1369,10 +1587,9 @@ function LightboxOverlay({
 					: 'none',
 		  };
 
-	const activeImageStyle: React.CSSProperties = {
-		transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
-		transition: zoomAnimating ? 'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
-	};
+	const activeImageStyle: React.CSSProperties | undefined = zoomAnimating
+		? { transition: 'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1)' }
+		: undefined;
 
 	const slides = canNavigate
 		? [
@@ -1555,14 +1772,16 @@ function LightboxOverlay({
 				onMouseEnter={onChromeZoneEnter}
 				onMouseLeave={onChromeZoneLeave}
 			>
-				<h3 className="gallery-lightbox__title">{item.title}</h3>
+				<div className="gallery-lightbox__meta-row">
+					<h3 className="gallery-lightbox__title">{item.title}</h3>
+					{canNavigate ? (
+						<span className="gallery-lightbox__counter">
+							{index + 1} / {items.length}
+						</span>
+					) : null}
+				</div>
 				{item.description ? (
 					<p className="gallery-lightbox__caption">{item.description}</p>
-				) : null}
-				{canNavigate ? (
-					<p className="gallery-lightbox__counter">
-						{index + 1} / {items.length}
-					</p>
 				) : null}
 			</div>
 		</div>,

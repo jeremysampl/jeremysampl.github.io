@@ -124,11 +124,14 @@ function scrollActiveFilmstripThumbIntoView(strip: HTMLElement) {
 	strip.scrollBy({ left: delta, behavior: 'smooth' });
 }
 
+const FILMSTRIP_USER_SCROLL_GRACE_MS = 2500;
+
 export default function ProjectMediaGrid({
 	media,
 	variant = 'grid',
 	activePath,
 	onSelect,
+	autoActiveChangeRef,
 	aspectRatio,
 	maxPerRow = 3,
 	flex,
@@ -139,6 +142,12 @@ export default function ProjectMediaGrid({
 	activePath?: string;
 	/** If provided, filmstrip/grid selection calls this instead of opening the lightbox. */
 	onSelect?: (index: number, item: GalleryItem) => void;
+	/**
+	 * When the parent sets this to true before an activePath change, the filmstrip
+	 * treats that change as automatic (e.g. autoplay) and may skip follow-scroll
+	 * if the user recently panned the strip.
+	 */
+	autoActiveChangeRef?: React.MutableRefObject<boolean>;
 	aspectRatio?: MediaStripAspectRatio;
 	maxPerRow?: MediaMaxPerRow;
 	flex?: MediaStripFlex;
@@ -146,24 +155,72 @@ export default function ProjectMediaGrid({
 }) {
 	const { openLightbox } = useGalleryLightbox();
 	const gridRef = useRef<HTMLDivElement>(null);
+	const ignoreProgrammaticScrollRef = useRef(false);
+	const programmaticScrollTimerRef = useRef<number | null>(null);
+	const userScrollGraceUntilRef = useRef(0);
+	const forceScrollOnSelectRef = useRef(false);
 	const naturalAspect = aspectRatio === 'natural';
 	const useFlexRows = variant === 'inline' && (flex != null || naturalAspect);
+
+	useEffect(() => {
+		if (variant !== 'filmstrip') return;
+		const strip = gridRef.current;
+		if (!strip) return;
+
+		const onScroll = () => {
+			if (ignoreProgrammaticScrollRef.current) return;
+			userScrollGraceUntilRef.current = Date.now() + FILMSTRIP_USER_SCROLL_GRACE_MS;
+		};
+
+		strip.addEventListener('scroll', onScroll, { passive: true });
+		return () => {
+			strip.removeEventListener('scroll', onScroll);
+			if (programmaticScrollTimerRef.current !== null) {
+				window.clearTimeout(programmaticScrollTimerRef.current);
+				programmaticScrollTimerRef.current = null;
+			}
+		};
+	}, [variant]);
 
 	useEffect(() => {
 		if (variant !== 'filmstrip' || !activePath) return;
 		const strip = gridRef.current;
 		if (!strip) return;
 
+		const forceScroll = forceScrollOnSelectRef.current;
+		forceScrollOnSelectRef.current = false;
+		const automaticChange = Boolean(autoActiveChangeRef?.current);
+		if (autoActiveChangeRef) autoActiveChangeRef.current = false;
+
+		if (
+			!forceScroll &&
+			automaticChange &&
+			Date.now() < userScrollGraceUntilRef.current
+		) {
+			return;
+		}
+
 		const frame = window.requestAnimationFrame(() => {
+			ignoreProgrammaticScrollRef.current = true;
 			scrollActiveFilmstripThumbIntoView(strip);
+			if (programmaticScrollTimerRef.current !== null) {
+				window.clearTimeout(programmaticScrollTimerRef.current);
+			}
+			programmaticScrollTimerRef.current = window.setTimeout(() => {
+				ignoreProgrammaticScrollRef.current = false;
+				programmaticScrollTimerRef.current = null;
+			}, 450);
 		});
 		return () => window.cancelAnimationFrame(frame);
-	}, [activePath, media, variant]);
+	}, [activePath, autoActiveChangeRef, media, variant]);
 
 	if (!media.length) return null;
 
 	const handleSelect = (index: number, item: GalleryItem, origin: HTMLElement) => {
 		if (onSelect) {
+			if (variant === 'filmstrip') {
+				forceScrollOnSelectRef.current = true;
+			}
 			onSelect(index, item);
 			return;
 		}
