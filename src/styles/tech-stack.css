@@ -82,14 +82,38 @@
     pointer-events: none;
 }
 
+/* Idle spin is a real CSS transform animation (not a custom-property rAF
+   update). Firefox restyles every descendant when --orbit-rotation changes;
+   compositor keyframes avoid that. Counter-rotate icons with a matching
+   reverse animation so they stay upright. Drag/inertia use .is-dragging and
+   inline transforms instead. */
+@keyframes orbit-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbit-spin-cancel {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
 .orbit__ring {
     position: absolute;
     inset: 0;
     z-index: 2;
     isolation: isolate;
     pointer-events: none;
-    transform: rotate(var(--orbit-rotation, 0deg));
-    will-change: transform;
+    transform: rotate(0deg);
+}
+
+.orbit:not(.is-dragging) .orbit__ring {
+    animation: orbit-spin var(--orbit-spin-period, 62s) linear infinite;
+}
+
+.orbit.is-frozen:not(.is-dragging) .orbit__ring {
+    animation-play-state: paused;
 }
 
 .orbit__item {
@@ -129,8 +153,15 @@
     height: 100%;
     position: relative;
     z-index: 1;
-    transform: rotate(calc(-1 * var(--orbit-rotation, 0deg)));
-    will-change: transform;
+    transform: rotate(0deg);
+}
+
+.orbit:not(.is-dragging) .orbit__spin-cancel {
+    animation: orbit-spin-cancel var(--orbit-spin-period, 62s) linear infinite;
+}
+
+.orbit.is-frozen:not(.is-dragging) .orbit__spin-cancel {
+    animation-play-state: paused;
 }
 
 .orbit__node {
@@ -255,9 +286,8 @@
     stroke-linecap: round;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    filter:
-        drop-shadow(0 1px 2px rgba(var(--secondary-rgb), 0.22))
-        drop-shadow(0 0 5px rgba(var(--secondary-rgb), 0.18));
+    /* Avoid SVG filter drop-shadows — Firefox re-rasters them every frame while
+       stroke-dashoffset animates, which is costly on mobile. */
     animation-name: orbit-hub-cycle;
     animation-timing-function: linear;
     animation-fill-mode: forwards;

@@ -16,7 +16,7 @@ const galleryStrip: GalleryItem[] = [
 
 const mediaViewStrip: GalleryItem[] = [
     {
-        title: 'Desktop media view',
+        title: 'Desktop image view',
         path: 'smb-media-viewer/desktop-image-view.png',
         description: 'The desktop version of the image view.',
     },

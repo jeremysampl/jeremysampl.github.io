@@ -27,9 +27,11 @@ import '../../styles/tech-stack.css';
 const AUTO_CYCLE_MS = 3400;
 /** Degrees per second for the idle spin (~62s per turn). */
 const SPIN_DEG_PER_SEC = 360 / 62;
+const SPIN_PERIOD_S = 360 / SPIN_DEG_PER_SEC;
 const DRAG_START_PX_MOUSE = 6;
-const DRAG_START_PX_TOUCH = 36;
-const DRAG_START_ANGLE_TOUCH = 16;
+/** Touch: claim quickly so the ring tracks the finger; vertical scroll still wins when angle hasn't changed. */
+const DRAG_START_PX_TOUCH = 8;
+const DRAG_START_ANGLE_TOUCH = 4;
 const INERTIA_FRICTION = 0.925;
 const INERTIA_MIN_VELOCITY = 0.02;
 /** Delay before mouse hover starts previewing a skill in the ring. */
@@ -81,6 +83,67 @@ function shortestAngleDelta(from: number, to: number) {
 	while (delta > 180) delta -= 360;
 	while (delta < -180) delta += 360;
 	return delta;
+}
+
+type SpinClock = {
+	t0: number;
+	angle0: number;
+	paused: boolean;
+	pauseAngle: number;
+};
+
+function createSpinClock(now = performance.now()): SpinClock {
+	return { t0: now, angle0: 0, paused: false, pauseAngle: 0 };
+}
+
+function readSpinClock(clock: SpinClock, now = performance.now()) {
+	if (clock.paused) return clock.pauseAngle;
+	return clock.angle0 + ((now - clock.t0) / 1000) * SPIN_DEG_PER_SEC;
+}
+
+function pauseSpinClock(clock: SpinClock, now = performance.now()) {
+	if (clock.paused) return;
+	clock.pauseAngle = readSpinClock(clock, now);
+	clock.paused = true;
+}
+
+function resumeSpinClock(clock: SpinClock, now = performance.now()) {
+	if (!clock.paused) return;
+	clock.angle0 = clock.pauseAngle;
+	clock.t0 = now;
+	clock.paused = false;
+}
+
+function resetSpinClock(clock: SpinClock, angle: number, now = performance.now()) {
+	clock.angle0 = angle;
+	clock.t0 = now;
+	clock.paused = false;
+	clock.pauseAngle = angle;
+}
+
+/**
+ * Sample the ring's current spin angle. Prefer the Web Animations API (reliable
+ * with compositor CSS animations); fall back to a JS clock that mirrors the CSS spin.
+ * getComputedStyle/matrix often returns 0deg for accelerated animations, which made
+ * drag handoff jump.
+ */
+function sampleRingRotation(ring: HTMLElement, clock: SpinClock) {
+	try {
+		for (const animation of ring.getAnimations()) {
+			if (animation.playState !== 'running' && animation.playState !== 'paused') {
+				continue;
+			}
+			const effect = animation.effect;
+			if (!(effect instanceof KeyframeEffect)) continue;
+			const progress = effect.getComputedTiming().progress;
+			if (progress == null) continue;
+			return progress * 360;
+		}
+	} catch {
+		// getAnimations / KeyframeEffect unavailable
+	}
+
+	return readSpinClock(clock);
 }
 
 /**
@@ -185,6 +248,10 @@ export default function TechStack() {
 	const fineHover = useFineHover();
 
 	const ringWrapRef = useRef<HTMLDivElement>(null);
+	const orbitRootRef = useRef<HTMLDivElement>(null);
+	const ringRef = useRef<HTMLDivElement>(null);
+	const spinCancelElsRef = useRef<HTMLElement[]>([]);
+	const spinClockRef = useRef<SpinClock>(createSpinClock());
 	const rotationRef = useRef(0);
 	const dragPointerId = useRef<number | null>(null);
 	const dragLastAngle = useRef(0);
@@ -194,7 +261,6 @@ export default function TechStack() {
 	const velocityRef = useRef(0);
 	const lastMoveStamp = useRef(0);
 	const inertiaFrame = useRef<number | null>(null);
-	const spinFrame = useRef<number | null>(null);
 	const previewEnterTimerRef = useRef<number | null>(null);
 	const previewLeaveTimerRef = useRef<number | null>(null);
 	const hoveredSkillRef = useRef<Skill | null>(null);
@@ -247,12 +313,82 @@ export default function TechStack() {
 		setHoveredSkill(null);
 	}
 
-	function applyRotation(next: number) {
-		rotationRef.current = next;
-		const wrap = ringWrapRef.current;
-		if (wrap) {
-			wrap.style.setProperty('--orbit-rotation', `${next}deg`);
+	function refreshSpinCancelEls() {
+		const ring = ringRef.current;
+		if (!ring) {
+			spinCancelElsRef.current = [];
+			return;
 		}
+		spinCancelElsRef.current = Array.from(ring.querySelectorAll<HTMLElement>('.orbit__spin-cancel'));
+	}
+
+	function applyManualTransforms(deg: number) {
+		rotationRef.current = deg;
+		const ring = ringRef.current;
+		if (ring) {
+			ring.style.transform = `rotate(${deg}deg)`;
+		}
+		const opposite = `rotate(${-deg}deg)`;
+		for (const el of spinCancelElsRef.current) {
+			el.style.transform = opposite;
+		}
+	}
+
+	/** Capture the live CSS-animated angle, then take over with inline transforms. */
+	function beginManualSpin() {
+		const ring = ringRef.current;
+		const root = orbitRootRef.current;
+		if (!ring || !root) return;
+
+		refreshSpinCancelEls();
+
+		const alreadyManual = root.classList.contains('is-dragging');
+		const angle = alreadyManual
+			? rotationRef.current
+			: sampleRingRotation(ring, spinClockRef.current);
+
+		// Sync class before React re-renders so animation stops on this frame.
+		root.classList.add('is-dragging');
+		applyManualTransforms(angle);
+		pauseSpinClock(spinClockRef.current);
+		setIsDragging(true);
+	}
+
+	/** Hand control back to the compositor CSS animation from the current angle. */
+	function endManualSpin() {
+		const ring = ringRef.current;
+		const root = orbitRootRef.current;
+		const normalized = ((rotationRef.current % 360) + 360) % 360;
+		const delay = `${-(normalized / 360) * SPIN_PERIOD_S}s`;
+		const frozen = Boolean(root?.classList.contains('is-frozen'));
+
+		if (ring) {
+			ring.style.transform = '';
+			ring.style.animation = 'none';
+		}
+		for (const el of spinCancelElsRef.current) {
+			el.style.transform = '';
+			el.style.animation = 'none';
+		}
+
+		root?.classList.remove('is-dragging');
+		void ring?.offsetWidth;
+
+		if (ring) {
+			ring.style.animation = '';
+			ring.style.animationDelay = delay;
+		}
+		for (const el of spinCancelElsRef.current) {
+			el.style.animation = '';
+			el.style.animationDelay = delay;
+		}
+
+		resetSpinClock(spinClockRef.current, normalized);
+		if (frozen) {
+			pauseSpinClock(spinClockRef.current);
+		}
+
+		setIsDragging(false);
 	}
 
 	const visibleSkills = useMemo(
@@ -265,6 +401,10 @@ export default function TechStack() {
 	useEffect(() => {
 		hoveredSkillRef.current = hoveredSkill;
 	}, [hoveredSkill]);
+
+	useEffect(() => {
+		refreshSpinCancelEls();
+	}, []);
 
 	function handleCategoryChange(next: SkillCategory | 'all') {
 		if (next === category) return;
@@ -292,32 +432,14 @@ export default function TechStack() {
 	const isFrozen = Boolean(previewSkill || pinnedSkill);
 	const isAutoCycling = !isFrozen && visibleSkills.length > 0;
 
-	// Idle spin (paused while frozen or dragging; inertia handles release).
+	// Keep the JS spin clock aligned with CSS animation-play-state while frozen.
 	useEffect(() => {
-		if (isFrozen || isDragging) {
-			if (spinFrame.current != null) {
-				cancelAnimationFrame(spinFrame.current);
-				spinFrame.current = null;
-			}
-			return;
+		if (isDragging) return;
+		if (isFrozen) {
+			pauseSpinClock(spinClockRef.current);
+		} else {
+			resumeSpinClock(spinClockRef.current);
 		}
-
-		let last = performance.now();
-
-		const tick = (now: number) => {
-			const dt = Math.min(0.05, (now - last) / 1000);
-			last = now;
-			applyRotation(rotationRef.current + SPIN_DEG_PER_SEC * dt);
-			spinFrame.current = requestAnimationFrame(tick);
-		};
-
-		spinFrame.current = requestAnimationFrame(tick);
-		return () => {
-			if (spinFrame.current != null) {
-				cancelAnimationFrame(spinFrame.current);
-				spinFrame.current = null;
-			}
-		};
 	}, [isFrozen, isDragging]);
 
 	useEffect(() => {
@@ -325,9 +447,6 @@ export default function TechStack() {
 			clearPreviewHoverTimers();
 			if (inertiaFrame.current != null) {
 				cancelAnimationFrame(inertiaFrame.current);
-			}
-			if (spinFrame.current != null) {
-				cancelAnimationFrame(spinFrame.current);
 			}
 		};
 	}, []);
@@ -371,11 +490,11 @@ export default function TechStack() {
 			if (Math.abs(velocityRef.current) < INERTIA_MIN_VELOCITY) {
 				inertiaFrame.current = null;
 				velocityRef.current = 0;
-				setIsDragging(false);
+				endManualSpin();
 				return;
 			}
 
-			applyRotation(rotationRef.current + velocityRef.current * dt * 60);
+			applyManualTransforms(rotationRef.current + velocityRef.current * dt * 60);
 			inertiaFrame.current = requestAnimationFrame(tick);
 		};
 
@@ -419,16 +538,13 @@ export default function TechStack() {
 
 		if (!dragMoved.current) {
 			if (isTouch) {
-				// Prefer vertical page scroll until the gesture is clearly along the ring.
-				const mostlyVertical = Math.abs(dy) > Math.abs(dx) * 1.15;
-				if (mostlyVertical && angleDelta < DRAG_START_ANGLE_TOUCH + 6) {
-					return;
-				}
-				if (distance < DRAG_START_PX_TOUCH && angleDelta < DRAG_START_ANGLE_TOUCH) {
-					return;
-				}
-				if (angleDelta < DRAG_START_ANGLE_TOUCH * 0.65 && distance < DRAG_START_PX_TOUCH * 1.35) {
-					return;
+				// Claim as soon as the finger arcs around the ring. Only yield to page
+				// scroll when movement is clearly vertical and hasn't rotated yet.
+				const mostlyVertical = Math.abs(dy) > Math.abs(dx) * 1.2;
+				if (angleDelta < DRAG_START_ANGLE_TOUCH) {
+					if (mostlyVertical || distance < DRAG_START_PX_TOUCH) {
+						return;
+					}
 				}
 			} else if (distance < DRAG_START_PX_MOUSE) {
 				return;
@@ -436,7 +552,13 @@ export default function TechStack() {
 
 			dragMoved.current = true;
 			suppressClick.current = true;
-			setIsDragging(true);
+			const pointerStartAngle = angleFromCenter(dragOrigin.current.x, dragOrigin.current.y, wrap);
+			beginManualSpin();
+			// Include the motion that crossed the drag threshold so the ring doesn't lag the finger.
+			const catchUp = shortestAngleDelta(pointerStartAngle, angle);
+			if (catchUp !== 0) {
+				applyManualTransforms(rotationRef.current + catchUp);
+			}
 			dragLastAngle.current = angle;
 			lastMoveStamp.current = performance.now();
 			wrap.setPointerCapture(event.pointerId);
@@ -451,7 +573,7 @@ export default function TechStack() {
 		dragLastAngle.current = angle;
 		lastMoveStamp.current = now;
 		velocityRef.current = delta / (dt / 16.67);
-		applyRotation(rotationRef.current + delta);
+		applyManualTransforms(rotationRef.current + delta);
 		event.preventDefault();
 	}
 
@@ -465,6 +587,10 @@ export default function TechStack() {
 		}
 
 		if (!dragMoved.current) {
+			// Tap after interrupting inertia: stay held until release, then resume CSS spin.
+			if (orbitRootRef.current?.classList.contains('is-dragging')) {
+				endManualSpin();
+			}
 			return;
 		}
 
@@ -472,7 +598,7 @@ export default function TechStack() {
 			startInertia();
 		} else {
 			velocityRef.current = 0;
-			setIsDragging(false);
+			endManualSpin();
 		}
 	}
 
@@ -515,7 +641,7 @@ export default function TechStack() {
 		height: geometry.ring,
 		'--icon-size': `${geometry.icon}px`,
 		'--radius': `${geometry.radius}px`,
-		'--orbit-rotation': `${rotationRef.current}deg`,
+		'--orbit-spin-period': `${SPIN_PERIOD_S}s`,
 	} as CSSProperties;
 
 	const hubStyle: CSSProperties = { width: geometry.hub, height: geometry.hub };
@@ -529,7 +655,10 @@ export default function TechStack() {
 	const dragClass = isDragging ? ' is-dragging' : '';
 
 	return (
-		<div className={`orbit${isFrozen ? ' is-frozen' : ''}${cropClass}${landscapeClass}${dragClass}`}>
+		<div
+			ref={orbitRootRef}
+			className={`orbit${isFrozen ? ' is-frozen' : ''}${cropClass}${landscapeClass}${dragClass}`}
+		>
 			<div className="orbit__tabs" role="tablist" aria-label="Skill categories">
 				{skillCategories.map((option) => {
 					const selected = category === option.id;
@@ -561,7 +690,7 @@ export default function TechStack() {
 				>
 					<span className="orbit__guide" aria-hidden="true" />
 
-					<div className="orbit__ring" role="group" aria-label="Skills">
+					<div className="orbit__ring" ref={ringRef} role="group" aria-label="Skills">
 						{skills.map((skill) => {
 							const isVisible = visibleNames.has(skill.name);
 							const visibleIndex = isVisible
