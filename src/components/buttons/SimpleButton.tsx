@@ -9,6 +9,7 @@ type SimpleButtonProps = {
 	text: string;
 	variant?: SimpleButtonVariant;
 	ariaHasPopup?: 'dialog';
+	style?: React.CSSProperties;
 } & (
 	| { url: string; onClick?: never }
 	| { url?: never; onClick: () => void }
@@ -37,6 +38,7 @@ export default function SimpleButton({
 	onClick,
 	variant = 'primary',
 	ariaHasPopup,
+	style,
 }: SimpleButtonProps) {
 	const className = `simple-btn simple-btn--${variant}`;
 	const content = (
@@ -53,6 +55,7 @@ export default function SimpleButton({
 				className={className}
 				onClick={onClick}
 				aria-haspopup={ariaHasPopup}
+				style={style}
 			>
 				{content}
 			</button>
@@ -66,6 +69,7 @@ export default function SimpleButton({
 				smooth
 				to={url}
 				scroll={scrollToElementWithHeaderOffset}
+				style={style}
 			>
 				{content}
 			</HashLink>
@@ -73,7 +77,7 @@ export default function SimpleButton({
 	}
 
 	return (
-		<Link className={className} to={url}>
+		<Link className={className} to={url} style={style}>
 			{content}
 		</Link>
 	);

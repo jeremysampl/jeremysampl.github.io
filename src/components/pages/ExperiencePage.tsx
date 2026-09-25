@@ -1,6 +1,5 @@
 import ExperienceDisplay from '../containers/ExperienceDisplay';
 import { experienceDateRange, experiences } from '../../data/experience';
-import { experienceTechnologies } from '../../data/experienceTechnologies';
 
 export default function ExperiencePage() {
 	return (
@@ -19,8 +18,8 @@ export default function ExperiencePage() {
 						dateRange={experienceDateRange(experience, 'long')}
 						image={experience.image}
 						descriptionTitle={experience.descriptionTitle}
+						technologies={experience.technologies}
 						points={experience.points}
-						technologies={experienceTechnologies[experience.id]}
 					/>
 				))}
 			</div>

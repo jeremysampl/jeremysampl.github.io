@@ -12,6 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import Icon from '../displays/Icon';
+import SlidingText from '../displays/SlidingText';
 import useWindowSize from '../../hooks/useWindowSize';
 import { scrollToElementWithHeaderOffset } from '../../utils/scroll';
 import {
@@ -47,7 +48,7 @@ type Tier = {
 
 const TIERS: Record<'mobile' | 'tablet' | 'desktop', Tier> = {
 	mobile: { ring: 560, iconMax: 56, iconMin: 34, trackInset: 28, hubFraction: 0.7 },
-	tablet: { ring: 620, iconMax: 64, iconMin: 42, trackInset: 36, hubFraction: 0.7 },
+	tablet: { ring: 680, iconMax: 64, iconMin: 42, trackInset: 36, hubFraction: 0.68 },
 	desktop: { ring: 950, iconMax: 76, iconMin: 48, trackInset: 42, hubFraction: 0.68 },
 };
 
@@ -116,9 +117,11 @@ function useOrbitGeometry(count: number) {
 			const labelClearance = 36;
 			const availableW = width - (sectionPad + stagePad + labelClearance) * 2;
 			if (tierKey === 'desktop') {
-				// Slightly below the full tier size; trim only when the viewport is genuinely short.
 				const heightCap = height - headerPx - 70;
 				ring = Math.max(240, Math.min(tier.ring, availableW, Math.max(heightCap, tier.ring - 36)));
+			} else if (tierKey === 'tablet') {
+				const heightCap = height - headerPx - 70;
+				ring = Math.max(240, Math.min(tier.ring, availableW + 120, Math.max(heightCap, tier.ring - 36)));
 			} else {
 				const chromeY = 72 + stagePad * 2 + labelClearance;
 				const availableH = height - headerPx - chromeY;
@@ -127,7 +130,7 @@ function useOrbitGeometry(count: number) {
 		}
 
 		const hubCap = cropMode === 'sides'
-			? width * 0.78
+			? width * 0.9
 			: isLandscapePhone
 				? width * 0.72
 				: ring;
@@ -263,16 +266,31 @@ export default function TechStack() {
 		hoveredSkillRef.current = hoveredSkill;
 	}, [hoveredSkill]);
 
-	useEffect(() => {
+	function handleCategoryChange(next: SkillCategory | 'all') {
+		if (next === category) return;
+
+		const currentAuto = visibleSkills.length ? visibleSkills[autoIndex % visibleSkills.length] : null;
+		const featured = pinnedSkill ?? (fineHover ? hoveredSkill : null) ?? currentAuto;
+		const nextVisible = skills.filter((skill) => next === 'all' || skill.category === next);
+		const keepIndex = featured ? nextVisible.findIndex((skill) => skill.name === featured.name) : -1;
+
 		clearPreviewHoverTimers();
 		setHoveredSkill(null);
-		setPinnedSkill(null);
-		setAutoIndex(0);
-	}, [category]);
+
+		if (keepIndex >= 0) {
+			setAutoIndex(keepIndex);
+			setPinnedSkill(pinnedSkill?.name === featured?.name ? nextVisible[keepIndex] : null);
+		} else {
+			setAutoIndex(0);
+			setPinnedSkill(null);
+		}
+
+		setCategory(next);
+	}
 
 	const previewSkill = fineHover ? hoveredSkill : null;
 	const isFrozen = Boolean(previewSkill || pinnedSkill);
-	const isAutoCycling = !isFrozen && !isDragging && visibleSkills.length > 0;
+	const isAutoCycling = !isFrozen && visibleSkills.length > 0;
 
 	// Idle spin (paused while frozen or dragging; inertia handles release).
 	useEffect(() => {
@@ -522,7 +540,7 @@ export default function TechStack() {
 							role="tab"
 							aria-selected={selected}
 							className={`orbit__tab${selected ? ' is-active' : ''}`}
-							onClick={() => setCategory(option.id)}
+							onClick={() => handleCategoryChange(option.id)}
 						>
 							{option.label}
 						</button>
@@ -630,7 +648,7 @@ export default function TechStack() {
 								<div className="orbit__hub-status">
 									<span className={`orbit__hub-dot orbit__hub-dot--${mode}`} aria-hidden="true" />
 									<span>
-										{mode === 'pinned' ? 'Pinned (tap to unpin)' : mode === 'preview' ? 'Previewing' : 'Auto-cycling'}
+										{mode === 'pinned' ? 'Pinned (tap to unpin)' : mode === 'preview' ? 'Previewing' : 'Auto-cycling (tap to pin)'}
 									</span>
 								</div>
 
@@ -672,16 +690,37 @@ export default function TechStack() {
 																	? 'briefcase'
 																	: resolved.kind === 'site'
 																	? 'globe'
-																	: 'lightbulb-o'
+																		: resolved.kind === 'course'
+																			? 'book'
+																			: resolved.faIcon ?? 'lightbulb-o'
 															}
-															color={resolved.kind === 'general' ? '#777' : 'var(--secondary-color)'}
+															color="var(--secondary-color)"
+															size={24}
 														/>
 													)}
 												</span>
 												<span className="orbit__usage-text">
-													<span className="orbit__usage-label">{resolved.label}</span>
+													{resolved.label.length > 22 ? (
+														<SlidingText
+															text={resolved.label}
+															enabled
+															mobileOnly={false}
+															className="orbit__usage-label"
+														/>
+													) : (
+														<span className="orbit__usage-label">{resolved.label}</span>
+													)}
 													{resolved.sublabel ? (
-														<span className="orbit__usage-sublabel">{resolved.sublabel}</span>
+														resolved.sublabel.length > 22 ? (
+															<SlidingText
+																text={resolved.sublabel}
+																enabled
+																mobileOnly={false}
+																className="orbit__usage-sublabel"
+															/>
+														) : (
+															<span className="orbit__usage-sublabel">{resolved.sublabel}</span>
+														)
 													) : null}
 												</span>
 												{resolved.href ? (
@@ -694,7 +733,7 @@ export default function TechStack() {
 
 										return (
 											<li key={`${activeSkill.name}-${resolved.key}-${index}`}>
-												{resolved.href && resolved.kind === 'experience' ? (
+												{resolved.href && (resolved.kind === 'experience' || resolved.kind === 'course') ? (
 													<HashLink
 														className={className}
 														smooth

@@ -6,21 +6,8 @@ import {
 	type TechnologyId,
 	getTechnology,
 	technologyIconSrc,
+	type TechnologyItem,
 } from '../../data/technologies';
-
-export type TechnologyChild = {
-	id: TechnologyId;
-	description?: string;
-};
-
-export type TechnologyItem = {
-	id: TechnologyId;
-	/** If any item is featured, only those show as chips; the rest go under Others. */
-	featured?: boolean;
-	subtitle?: string;
-	description?: string;
-	children?: TechnologyChild[];
-};
 
 type ResolvedTech = {
 	id: TechnologyId;

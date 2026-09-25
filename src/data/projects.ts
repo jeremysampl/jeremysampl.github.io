@@ -1,7 +1,8 @@
-import { TechnologyId, getTechnology, technologyIconSrc } from './technologies';
+import { type TechnologyId, getTechnology, technologyIconSrc, type TechnologyItem } from './technologies';
 
 export type ProjectId =
 	| 'geckode'
+	| 'smb-media-viewer'
 	| 'stock-assist'
 	| 'terra-exodus'
 	| 'rc-tank'
@@ -26,7 +27,7 @@ export type ProjectEntry = {
 	title: string;
 	/** Relative to /images/projects/ */
 	thumbnail: string;
-	technologies: ProjectTechnologyRef[];
+	technologies: TechnologyItem[];
 	/** Repo name under jeremysampl/, or a full URL */
 	github?: string;
 	website?: string;
@@ -50,8 +51,193 @@ export const projects: ProjectEntry[] = [
 		name: 'Geckode',
 		title: 'Multi-user block coding platform',
 		thumbnail: 'geckode/platformer-game.png',
-		technologies: ['nodejs', 'nextjs', 'react', 'html', 'css', 'tailwindcss', 'typescript', 'rest-apis', 'django', 'python', 'postgresql', 'redis', 'docker', 'phaser', 'websocket', 'yjs'],
+		technologies: [
+			{
+				id: 'nextjs',
+				featured: true,
+				description: 'App router, API routes, and useful server-side rendering features.',
+			},
+			{
+				id: 'react',
+				featured: true,
+				description: 'Frontend framework for the Geckode editor and website.',
+				children: [
+					{
+						id: 'typescript',
+						description: `Used instead of plain JavaScript for its strongly typed models,
+							helping prevent unnecessary bugs and improve code readability.`,
+					},
+					{
+						id: 'html',
+					},
+					{
+						id: 'css',
+					},
+					{
+						id: 'tailwindcss',
+						description: 'Inline styling for rapid development.',
+					},
+				],
+			},
+			{
+				id: 'blockly',
+				description: 'Google\'s open-source block-based programming library used to create the Geckode editor.',
+			},
+			{
+				id: 'phaser',
+				description: `2D physics engine highly tailored for the Geckode editor. Custom JavaScript code generation from
+					Blockly blocks carefully combine with sprite parameters from React to create complex Phaser game logic, such as
+					sprite movement, object collisions, gravity, and much more.`,
+			},
+			{
+				id: 'yjs',
+				featured: true,
+				description: `Used for its conflict-free replicated data types (CRDTs), which allow multiple users to work on the
+					same project simultaneously without conflicts. Paired with hand-crafted custom merging logic to enable full
+					offline editing capabilities, avoiding data corruption such as circular references.`,
+			},
+			{
+				id: 'django',
+				featured: true,
+				description: `Main backend APIs for the app, handling user accounts, organizations, project storage, permissions,
+					and more.`,
+				children: [
+					{
+						id: 'python',
+					},
+					{
+						id: 'rest-apis',
+						description: 'Used the Django REST Framework to create structured API responses and validation.',
+					},
+					{
+						id: 'postgresql',
+						description: 'Primary datastore for users, organizations, and project metadata.',
+					},
+				],
+			},
+			{
+				id: 'nodejs',
+				featured: true,
+				description: `WebSocket server to rapidly sync real-time changes between project collaborators, checking
+					necessary permissions, sending essential updates to each connected client, and ensuring data consistency.`,
+				children: [
+					{
+						id: 'websocket',
+						description: `Live project-specific channels that ferry Yjs updates between collaborators, including
+							connected user information and project state updates.`,
+					},
+				],
+			},
+			{
+				id: 'redis',
+				featured: true,
+				description: `Extremely fast in-memory datastore for the bidirectional transport of data between the Django backend
+					(single source of truth) and the WebSocket server to update connected clients about data changes from sources
+					outside the scope of the WebSocket connection as well as funnel validated updates from clients to the backend
+					for processing and storage, avoiding costly API calls and ensuring data integrity at all times.`,
+			},
+			{
+				id: 'zustand',
+				featured: true,
+				description: `State management library for the web app. Synchronizes some state with Yjs to enable real-time
+					collaboration.`,
+			},
+			{
+				id: 'docker',
+				featured: true,
+				description: 'Local and deployed stacks for the web app, backend APIs, database, and Redis in one compose setup.',
+			},
+			{
+				id: 'nginx',
+				description: 'Reverse proxy for routing requests to the appropriate services.',
+			},
+			{
+				id: 'linux',
+				description: 'Configured server for hosting the application.',
+			},
+			{
+				id: 'jwt',
+				description: 'Tokens used for authentication and authorization of users on the WebSocket server.',
+			},
+			{
+				id: 'cicd',
+				description: 'GitHub Actions pipeline for automated testing and deployment of the web app and backend services.',
+			},
+			{
+				id: 'playwright',
+				description: `Used for end-to-end testing typical user flows and edge cases. Tests are run automatically before
+					each deployment to ensure the frontend React components and the overall application are working as intended.`,
+			},
+			{
+				id: 'vitest',
+				description: `Used for unit testing the web app. Tests are run automatically before each deployment to ensure the
+					frontend React components and the overall application are working as intended.`,
+			},
+			{
+				id: 'pytest',
+				description: `Used for extensive testing of the backend Django server. All tests are run automatically before each
+					deployment to ensure the application is working as expected and catch any regressions.`,
+			},
+		],
 		website: 'https://geckode.ca/playground-editor',
+	},
+	{
+		id: 'smb-media-viewer',
+		slug: 'smb-media-viewer',
+		name: 'SMB Media Viewer',
+		title: 'Media viewer for SMB shares',
+		thumbnail: 'smb-media-viewer/desktop-gallery.png',
+		technologies: [
+			{
+				id: 'react',
+				featured: true,
+				description: 'Frontend for browsing shares, viewing media, and managing cast slideshows.',
+				children: [
+					{ id: 'typescript' },
+					{ id: 'html' },
+					{ id: 'css' },
+				],
+			},
+			{
+				id: 'nodejs',
+				featured: true,
+				description: 'Backend for authentication, indexing, thumbnails, video transcoding, serving media, and cast support.',
+				children: [
+					{
+					id: 'express',
+					description: 'Fast and lightweight HTTP API for login, browse, media streaming, admin, downloads, and casting.',
+					},
+				],
+			},
+			{
+				id: 'sqlite',
+				description: `Local databases for the media index and cache metadata (capture time, duration, thumb keys, open
+					counts, etc.).`,
+			},
+			{
+				id: 'docker',
+				featured: true,
+				description: `Compose setup for the frontend and backend images, so the app can run locally or on a server with one
+					stack.`,
+			},
+			{
+				id: 'nginx',
+				description: 'Serves the built frontend in production and proxies API requests to the backend.',
+			},
+			{
+				id: 'sharp',
+				description: 'Image processing for thumbnails and quality tiers, so media loads faster and uses less bandwidth.',
+			},
+			{
+				id: 'ffmpeg',
+				description: 'Video posters, remuxing, and transcoding for browser compatibility and lower-bandwidth quality tiers.',
+			},
+			{
+				id: 'jwt',
+				description: 'Signed session cookies and media/cast URL tokens for authentication without exposing filesystem paths.',
+			},
+		],
+		github: 'smb-media-viewer',
 	},
 	{
 		id: 'terra-exodus',
@@ -60,7 +246,7 @@ export const projects: ProjectEntry[] = [
 		name: 'Terra Exodus',
 		title: 'Console-based shooter game',
 		thumbnail: 'terra-exodus/gameplay.png',
-		technologies: ['python'],
+		technologies: [{ id: 'python' }],
 		github: 'ascii-shooter',
 	},
 	{
@@ -70,7 +256,7 @@ export const projects: ProjectEntry[] = [
 		name: 'StockAssist',
 		title: 'Inventory management system',
 		thumbnail: 'inventory-manager/home.png',
-		technologies: ['java'],
+		technologies: [{ id: 'java' }],
 		github: 'inventory-system',
 	},
 	{
@@ -80,7 +266,7 @@ export const projects: ProjectEntry[] = [
 		name: 'RC Tank',
 		title: '3D-printed Arduino remote-controlled tank',
 		thumbnail: 'rc-tank/final-tank.jpg',
-		technologies: ['arduino', 'app-inventor'],
+		technologies: [{ id: 'arduino' }, { id: 'app-inventor' }],
 	},
 	{
 		id: 'blackjack',
@@ -89,7 +275,7 @@ export const projects: ProjectEntry[] = [
 		name: 'Blackjack',
 		title: 'Casino card game',
 		thumbnail: 'blackjack/lose.png',
-		technologies: ['python'],
+		technologies: [{ id: 'python' }],
 		github: 'blackjack',
 	},
 	{
@@ -99,10 +285,7 @@ export const projects: ProjectEntry[] = [
 		name: 'Tic Tac Toe',
 		title: 'Classic paper/pencil game',
 		thumbnail: 'tic-tac-toe/gameplay.png',
-		technologies: [
-			{ id: 'csharp', subtitle: '60%' },
-			{ id: 'xaml', subtitle: '40%' },
-		],
+		technologies: [ { id: 'csharp' }, { id: 'xaml' } ],
 		github: 'tictactoe',
 	},
 ];
@@ -153,10 +336,6 @@ export function projectThumbnailSrc(id: ProjectId): string {
 
 export function projectTechnologyId(ref: ProjectTechnologyRef): TechnologyId {
 	return typeof ref === 'string' ? ref : ref.id;
-}
-
-export function projectHasTechnology(project: ProjectEntry, technologyId: TechnologyId): boolean {
-	return project.technologies.some((ref) => projectTechnologyId(ref) === technologyId);
 }
 
 export function resolveProjectTechnologies(project: ProjectEntry): ResolvedProjectTechnology[] {

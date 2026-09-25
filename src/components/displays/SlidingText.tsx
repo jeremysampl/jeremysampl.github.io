@@ -15,17 +15,23 @@ export default function SlidingText({
 	text,
 	enabled = true,
 	delayMs = 1100,
+	mobileOnly = true,
 	className,
 	...rest
 }: {
 	text: string;
 	enabled?: boolean;
 	delayMs?: number;
+	mobileOnly?: boolean;
 	className?: string;
 } & HTMLAttributes<HTMLSpanElement>) {
 	const wrapRef = useRef<HTMLSpanElement>(null);
 	const textRef = useRef<HTMLSpanElement>(null);
+	const shiftRef = useRef(0);
+	const returningRef = useRef(false);
 	const [shift, setShift] = useState(0);
+
+	shiftRef.current = shift;
 
 	useEffect(() => {
 		const wrap = wrapRef.current;
@@ -35,18 +41,42 @@ export default function SlidingText({
 			return;
 		}
 
-		const mobile = window.matchMedia('(max-width: 700px)');
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 		let timeout = 0;
 
 		const overflowPx = () => Math.max(0, inner.scrollWidth - wrap.clientWidth);
 
-		const stop = () => {
-			window.clearTimeout(timeout);
-			setShift(0);
+		const easeBack = () => {
+			if (returningRef.current || shiftRef.current <= 0) return;
+			const matrix = getComputedStyle(inner).transform;
+			if (matrix === 'none') {
+				setShift(0);
+				return;
+			}
+			returningRef.current = true;
+			inner.style.animation = 'none';
+			inner.style.transform = matrix;
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					inner.style.transition = 'transform 0.6s ease-in-out';
+					inner.style.transform = 'translateX(0)';
+				});
+			});
+			inner.addEventListener(
+				'transitionend',
+				() => {
+					inner.style.animation = '';
+					inner.style.transition = '';
+					inner.style.transform = '';
+					returningRef.current = false;
+					setShift(0);
+				},
+				{ once: true },
+			);
 		};
 
-		if (!mobile.matches || reduceMotion.matches) {
+		const shouldAnimateForViewport = !mobileOnly || window.matchMedia('(max-width: 700px)').matches;
+		if (!shouldAnimateForViewport || reduceMotion.matches) {
 			setShift(0);
 			return;
 		}
@@ -55,10 +85,11 @@ export default function SlidingText({
 			([entry]) => {
 				window.clearTimeout(timeout);
 				if (!entry.isIntersecting) {
-					setShift(0);
+					easeBack();
 					return;
 				}
 				timeout = window.setTimeout(() => {
+					if (returningRef.current) return;
 					setShift(overflowPx());
 				}, delayMs);
 			},
@@ -66,13 +97,15 @@ export default function SlidingText({
 		);
 
 		observer.observe(wrap);
-		mobile.addEventListener('change', stop);
 		return () => {
-			stop();
+			window.clearTimeout(timeout);
+			inner.style.animation = '';
+			inner.style.transition = '';
+			inner.style.transform = '';
+			returningRef.current = false;
 			observer.disconnect();
-			mobile.removeEventListener('change', stop);
 		};
-	}, [text, enabled, delayMs]);
+	}, [text, enabled, delayMs, mobileOnly]);
 
 	const classes = ['sliding-text', className, shift > 0 ? 'is-marquee' : '']
 		.filter(Boolean)

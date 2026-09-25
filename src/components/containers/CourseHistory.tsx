@@ -1,15 +1,21 @@
 import { useEffect, useId, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-	buildTranscript,
+	buildTranscriptForEducation,
 	formatCourseGpa4,
 	formatGpa12,
 	formatGpa4,
 	letterGrade,
+	courseAnchorId,
+	educationName,
+	type CoursePrefix,
+	type EducationId,
 	semesterLabel,
 	yearLabel,
+	getCourseTermCodes,
 	type DisplayCourse,
 	type GpaSummary,
+	educationAnchorId,
 } from '../../data/courses';
 import AppModal from './AppModal';
 import SimpleButton from '../buttons/SimpleButton';
@@ -68,15 +74,45 @@ function CourseGrade({ course }: { course: DisplayCourse }) {
 	);
 }
 
-export default function CourseHistory() {
+export default function CourseHistory({ educationId }: { educationId: EducationId }) {
 	const [open, setOpen] = useState(false);
 	const titleId = useId();
-	const { pathname } = useLocation();
-	const transcript = useMemo(() => buildTranscript(), []);
+	const { pathname, hash, search } = useLocation();
+	const navigate = useNavigate();
+	const transcript = useMemo(() => buildTranscriptForEducation(educationId), [educationId]);
+
+	const params = useMemo(() => new URLSearchParams(search), [search]);
+	const targetEducationId = params.get('education');
+	const targetCourseRaw = params.get('course');
+	const targetCourseBits = targetCourseRaw?.split('-') ?? [];
+	const [targetPrefix, ...targetCodeParts] = targetCourseBits as [string | undefined, ...string[]];
+	const targetCode = targetCodeParts.join('-');
+
+	const focusedPrefix: CoursePrefix | null =
+		pathname === '/about' && targetEducationId === educationId && targetPrefix != null ? (targetPrefix as CoursePrefix) : null;
+
+	const isTargetForThisEducation =
+		pathname === '/about' &&
+		targetCourseRaw != null &&
+		targetEducationId === educationId &&
+		targetPrefix != null &&
+		targetCode.length > 0;
+
+	const focusedTermCodes = useMemo(() => {
+		if (!isTargetForThisEducation || focusedPrefix == null || !targetCode) return null;
+		return getCourseTermCodes(educationId, focusedPrefix, targetCode);
+	}, [educationId, focusedPrefix, isTargetForThisEducation, targetCode]);
+
+	const primaryFocusAnchorId = useMemo(() => {
+		if (!isTargetForThisEducation || focusedPrefix == null) return null;
+		if (focusedTermCodes == null || focusedTermCodes.length === 0) return null;
+		// Scroll to the first displayed term row (e.g. 4ZP6A for a 4ZP6 multi-term course).
+		return courseAnchorId(educationId, focusedPrefix, focusedTermCodes[0]);
+	}, [educationId, focusedPrefix, isTargetForThisEducation, focusedTermCodes]);
 
 	useEffect(() => {
-		setOpen(false);
-	}, [pathname]);
+		setOpen(isTargetForThisEducation);
+	}, [isTargetForThisEducation]);
 
 	if (!transcript.years.length) return null;
 
@@ -92,7 +128,26 @@ export default function CourseHistory() {
 				<CourseHistoryModal
 					titleId={titleId}
 					transcript={transcript}
-					onClose={() => setOpen(false)}
+					educationId={educationId}
+					focusedPrefix={focusedPrefix}
+					focusedTermCodes={focusedTermCodes}
+					primaryFocusAnchorId={primaryFocusAnchorId}
+					onClose={() => {
+						setOpen(false);
+						if (search.includes('course=')) {
+							navigate(
+								{
+									pathname,
+									hash: `#${educationAnchorId(educationId)}`,
+								},
+								{ replace: true },
+							);
+							return;
+						}
+						if (hash.startsWith('#course-')) {
+							navigate({ pathname, hash: `#${educationAnchorId(educationId)}` }, { replace: true });
+						}
+					}}
 				/>
 			) : null}
 		</>
@@ -102,36 +157,42 @@ export default function CourseHistory() {
 function CourseHistoryModal({
 	titleId,
 	transcript,
+	educationId,
+	focusedPrefix,
+	focusedTermCodes,
+	primaryFocusAnchorId,
 	onClose,
 }: {
 	titleId: string;
-	transcript: ReturnType<typeof buildTranscript>;
+	transcript: ReturnType<typeof buildTranscriptForEducation>;
+	educationId: EducationId;
+	focusedPrefix: CoursePrefix | null;
+	focusedTermCodes: string[] | null;
+	primaryFocusAnchorId: string | null;
 	onClose: () => void;
 }) {
 	const [details, setDetails] = useState(false);
+	useEffect(() => {
+		if (!primaryFocusAnchorId) return;
+		const node = document.querySelector<HTMLDivElement>(
+			`.course-table__row#${CSS.escape(primaryFocusAnchorId)}`,
+		);
+		if (!node) return;
+		const timeout = window.setTimeout(() => {
+			node.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		}, 40);
+		return () => window.clearTimeout(timeout);
+	}, [primaryFocusAnchorId]);
 
 	return (
 		<AppModal
 			titleId={titleId}
 			eyebrow="Academic record"
-			title="Course history"
+			title={educationName(educationId)}
 			onClose={onClose}
 			size="wide"
 			action={
 				<ToggleSwitch label="Details" checked={details} onChange={setDetails} />
-			}
-			afterHeader={
-				<div className="course-table__head" role="row">
-					<span role="columnheader">Prefix</span>
-					<span role="columnheader">Code</span>
-					<span role="columnheader">Name</span>
-					<div className="course-table__grades">
-						<span role="columnheader">Letter</span>
-						<span role="columnheader">12-pt</span>
-						<span role="columnheader">4.0</span>
-						<span role="columnheader">Units</span>
-					</div>
-				</div>
 			}
 			footer={
 				<div className="course-history__overall">
@@ -140,12 +201,12 @@ function CourseHistoryModal({
 						{transcript.overall.gpa12 != null && transcript.overall.gpa4 != null ? (
 							<>
 								<strong>{formatGpa12(transcript.overall.gpa12)}</strong>
-								<span> / 12</span>
+								<span>&nbsp;/ 12</span>
 								<span className="course-history__sep" aria-hidden="true">
 									·
 								</span>
 								<strong>{formatGpa4(transcript.overall.gpa4)}</strong>
-								<span> / 4.0</span>
+								<span>&nbsp;/ 4.0</span>
 								<span className="course-history__sep" aria-hidden="true">
 									·
 								</span>
@@ -169,6 +230,17 @@ function CourseHistoryModal({
 				role="table"
 				aria-label="Courses by semester"
 			>
+				<div className="course-table__head" role="row">
+					<span role="columnheader">Prefix</span>
+					<span role="columnheader">Code</span>
+					<span role="columnheader">Name</span>
+					<div className="course-table__grades">
+						<span role="columnheader">Letter</span>
+						<span role="columnheader">12-pt</span>
+						<span role="columnheader">4.0</span>
+						<span role="columnheader">Units</span>
+					</div>
+				</div>
 				{transcript.years.map((year) => (
 					<div key={year.startYear} className="course-table__year" role="rowgroup">
 						<div className="course-table__banner" role="row">
@@ -192,10 +264,19 @@ function CourseHistoryModal({
 
 								{semester.courses.map((course, index) => {
 									const isMultiTerm = course.grade === 'MT';
+									const anchorId = courseAnchorId(educationId, course.prefix, course.code);
+									const shouldHighlight =
+										focusedPrefix != null &&
+										focusedTermCodes != null &&
+										course.prefix === focusedPrefix &&
+										focusedTermCodes.includes(course.code);
 									return (
 										<div
 											key={`${course.prefix}-${course.code}-${index}`}
-											className={`course-table__row${isMultiTerm ? ' course-table__row--mt' : ''}`}
+											id={anchorId}
+											className={`course-table__row${isMultiTerm ? ' course-table__row--mt' : ''}${
+												shouldHighlight ? ' is-focused' : ''
+											}`}
 											role="row"
 										>
 											<div className="course-table__id">

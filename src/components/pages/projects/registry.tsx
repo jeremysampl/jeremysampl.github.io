@@ -6,10 +6,12 @@ import RCTankPage from './RCTankPage';
 import StockAssistPage from './StockAssistPage';
 import TerraExodusPage from './TerraExodusPage';
 import TicTacToePage from './TicTacToePage';
+import SMBMediaViewerPage from './SMBMediaViewerPage';
 
 /** Maps each project id to its page. Add a page here when adding a project. */
 export const projectPages = {
 	geckode: GeckodePage,
+	'smb-media-viewer': SMBMediaViewerPage,
 	'terra-exodus': TerraExodusPage,
 	'stock-assist': StockAssistPage,
 	'rc-tank': RCTankPage,

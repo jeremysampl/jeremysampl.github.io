@@ -16,7 +16,7 @@ import ProjectMediaGrid, {
 } from '../containers/ProjectMediaGrid';
 import type { InfoCardItem } from '../containers/InfoCardGrid';
 import StackMeta from '../containers/StackMeta';
-import type { TechnologyItem } from '../containers/TechnologyChips';
+import type { TechnologyItem } from '../../data/technologies';
 import Icon from '../displays/Icon';
 import InlineLink from '../displays/InlineLink';
 import { ProjectId, getProject, projectThumbnailSrc, resolveProjectTechnologies } from '../../data/projects';
@@ -25,7 +25,6 @@ import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
 
 export type { GalleryItem };
 export { ProjectFilmstrip, ProjectGalleryRef };
-export type { TechnologyItem } from '../containers/TechnologyChips';
 
 const AUTOPLAY_MS = 4500;
 const SWIPE_THRESHOLD = 48;
@@ -134,6 +133,7 @@ export default function ProjectPage({
 	autoplayRef.current = autoplay;
 	const chromeVisibleRef = useRef(chromeVisible);
 	chromeVisibleRef.current = chromeVisible;
+	const filmstripAutoChangeRef = useRef(false);
 
 	const { volume, muted } = mediaAudio;
 	const effectiveMuted = muted || isVideoPlaying;
@@ -241,6 +241,7 @@ export default function ProjectPage({
 	const advanceSlide = useCallback(() => {
 		if (!autoplayRef.current || !canNavigate || advancedForSlideRef.current) return;
 		advancedForSlideRef.current = true;
+		filmstripAutoChangeRef.current = true;
 		setActiveIndex((current) => (current + 1) % lightboxItems.length);
 	}, [canNavigate, lightboxItems.length]);
 
@@ -859,6 +860,7 @@ export default function ProjectPage({
 									media={lightboxItems}
 									variant="filmstrip"
 									activePath={heroPath}
+									autoActiveChangeRef={filmstripAutoChangeRef}
 									onSelect={(index) => goTo(index)}
 								/>
 							) : null}
