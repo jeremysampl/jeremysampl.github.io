@@ -1,7 +1,8 @@
 import React from 'react';
 import '../../styles/stack-meta.css';
 import ExternalLinks, { type ExternalLinksProps } from './ExternalLinks';
-import TechnologyChips, { type TechnologyItem } from './TechnologyChips';
+import TechnologyChips from './TechnologyChips';
+import { TechnologyItem } from '../../data/technologies';
 
 export type StackMetaProps = {
 	links?: ExternalLinksProps;
