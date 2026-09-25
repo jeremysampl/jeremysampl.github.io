@@ -2,6 +2,7 @@ import { type TechnologyId, getTechnology, technologyIconSrc, type TechnologyIte
 
 export type ProjectId =
 	| 'geckode'
+	| 'smb-media-viewer'
 	| 'stock-assist'
 	| 'terra-exodus'
 	| 'rc-tank'
@@ -138,7 +139,8 @@ export const projects: ProjectEntry[] = [
 			{
 				id: 'zustand',
 				featured: true,
-				description: 'State management library for the web app.',
+				description: `State management library for the web app. Synchronizes some state with Yjs to enable real-time
+					collaboration.`,
 			},
 			{
 				id: 'docker',
@@ -161,8 +163,81 @@ export const projects: ProjectEntry[] = [
 				id: 'cicd',
 				description: 'GitHub Actions pipeline for automated testing and deployment of the web app and backend services.',
 			},
+			{
+				id: 'playwright',
+				description: `Used for end-to-end testing typical user flows and edge cases. Tests are run automatically before
+					each deployment to ensure the frontend React components and the overall application are working as intended.`,
+			},
+			{
+				id: 'vitest',
+				description: `Used for unit testing the web app. Tests are run automatically before each deployment to ensure the
+					frontend React components and the overall application are working as intended.`,
+			},
+			{
+				id: 'pytest',
+				description: `Used for extensive testing of the backend Django server. All tests are run automatically before each
+					deployment to ensure the application is working as expected and catch any regressions.`,
+			},
 		],
 		website: 'https://geckode.ca/playground-editor',
+	},
+	{
+		id: 'smb-media-viewer',
+		slug: 'smb-media-viewer',
+		name: 'SMB Media Viewer',
+		title: 'Media viewer for SMB shares',
+		thumbnail: 'smb-media-viewer/desktop-gallery.png',
+		technologies: [
+			{
+				id: 'react',
+				featured: true,
+				description: 'Frontend for browsing shares, viewing media, and managing cast slideshows.',
+				children: [
+					{ id: 'typescript' },
+					{ id: 'html' },
+					{ id: 'css' },
+				],
+			},
+			{
+				id: 'nodejs',
+				featured: true,
+				description: 'Backend for authentication, indexing, thumbnails, video transcoding, serving media, and cast support.',
+				children: [
+					{
+					id: 'express',
+					description: 'Fast and lightweight HTTP API for login, browse, media streaming, admin, downloads, and casting.',
+					},
+				],
+			},
+			{
+				id: 'sqlite',
+				description: `Local databases for the media index and cache metadata (capture time, duration, thumb keys, open
+					counts, etc.).`,
+			},
+			{
+				id: 'docker',
+				featured: true,
+				description: `Compose setup for the frontend and backend images, so the app can run locally or on a server with one
+					stack.`,
+			},
+			{
+				id: 'nginx',
+				description: 'Serves the built frontend in production and proxies API requests to the backend.',
+			},
+			{
+				id: 'sharp',
+				description: 'Image processing for thumbnails and quality tiers, so media loads faster and uses less bandwidth.',
+			},
+			{
+				id: 'ffmpeg',
+				description: 'Video posters, remuxing, and transcoding for browser compatibility and lower-bandwidth quality tiers.',
+			},
+			{
+				id: 'jwt',
+				description: 'Signed session cookies and media/cast URL tokens for authentication without exposing filesystem paths.',
+			},
+		],
+		github: 'smb-media-viewer',
 	},
 	{
 		id: 'terra-exodus',

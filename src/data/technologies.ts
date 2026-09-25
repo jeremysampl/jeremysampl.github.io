@@ -1,4 +1,4 @@
-export type TechnologyCategory = 'languages' | 'frameworks' | 'tools' | 'other';
+export type TechnologyCategory = 'languages' | 'frameworks' | 'tools' | 'testing' | 'other';
 
 export type TechnologyId =
 	| 'python'
@@ -29,6 +29,7 @@ export type TechnologyId =
 	| 'git'
 	| 'mysql'
 	| 'postgresql'
+	| 'sqlite'
 	| 'rest-apis'
 	| 'cicd'
 	| 'docker'
@@ -39,9 +40,14 @@ export type TechnologyId =
 	| 'nginx'
 	| 'cursor'
 	| 'codex'
+	| 'playwright'
+	| 'vitest'
+	| 'pytest'
 	| 'phaser'
 	| 'blockly'
-	| 'woocommerce';
+	| 'woocommerce'
+	| 'sharp'
+	| 'ffmpeg';
 
 export type TechnologyChild = {
 	id: TechnologyId;
@@ -102,6 +108,7 @@ export const technologies: Technology[] = [
 	{ id: 'git', name: 'Git', category: 'tools', icon: 'git.svg' },
 	{ id: 'mysql', name: 'MySQL', category: 'tools', icon: 'mysql.png' },
 	{ id: 'postgresql', name: 'PostgreSQL', category: 'tools', icon: 'postgresql.svg' },
+	{ id: 'sqlite', name: 'SQLite', category: 'tools', icon: 'sqlite.svg' },
 	{ id: 'rest-apis', name: 'REST APIs', category: 'tools', faIcon: 'exchange' },
 	{ id: 'cicd', name: 'CI/CD', category: 'tools', faIcon: 'refresh' },
 	{ id: 'docker', name: 'Docker', category: 'tools', icon: 'docker.svg' },
@@ -113,10 +120,17 @@ export const technologies: Technology[] = [
 	{ id: 'cursor', name: 'Cursor', category: 'tools', icon: 'cursor.svg' },
 	{ id: 'codex', name: 'Codex', category: 'tools', icon: 'openai.svg' },
 
+	// Testing
+	{ id: 'playwright', name: 'Playwright', category: 'testing', icon: 'playwright.svg' },
+	{ id: 'vitest', name: 'Vitest', category: 'testing', icon: 'vitest.svg' },
+	{ id: 'pytest', name: 'pytest', category: 'testing', icon: 'pytest.svg' },
+
 	// Other
 	{ id: 'phaser', name: 'Phaser', category: 'other', icon: 'phaser.png' },
 	{ id: 'blockly', name: 'Blockly', category: 'other', icon: 'blockly.svg' },
 	{ id: 'woocommerce', name: 'WooCommerce', category: 'other', icon: 'woocommerce.svg' },
+	{ id: 'sharp', name: 'Sharp', category: 'other', icon: 'sharp.svg' },
+	{ id: 'ffmpeg', name: 'FFmpeg', category: 'other', icon: 'ffmpeg.svg' },
 ];
 
 export function getTechnology(id: TechnologyId): Technology {

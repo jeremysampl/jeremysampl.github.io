@@ -9,7 +9,7 @@ import { getProject, projectHref, projectThumbnailSrc } from '../../data/project
 
 export default function HomePage() {
 	const geckode = getProject('geckode');
-	const terraExodus = getProject('terra-exodus');
+	const smbMediaViewer = getProject('smb-media-viewer');
 
 	return (
 		<>
@@ -34,9 +34,9 @@ export default function HomePage() {
 							href={projectHref(geckode.id)}
 						/>
 						<MediaCard
-							title={terraExodus.name}
-							src={projectThumbnailSrc(terraExodus.id)}
-							href={projectHref(terraExodus.id)}
+							title={smbMediaViewer.name}
+							src={projectThumbnailSrc(smbMediaViewer.id)}
+							href={projectHref(smbMediaViewer.id)}
 						/>
 					</MediaCardGrid>
 				</div>

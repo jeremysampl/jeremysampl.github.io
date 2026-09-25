@@ -198,6 +198,7 @@ const skillDefinitions: SkillDefinition[] = [
 	},
 	{ technologyId: 'nextjs' },
 	{ technologyId: 'nodejs' },
+	{ technologyId: 'express' },
 	{ technologyId: 'jquery' },
 	{ technologyId: 'electron' },
 	{ technologyId: 'tailwindcss' },
