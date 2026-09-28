@@ -19,6 +19,7 @@
     "start": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "measure-images": "node scripts/measure-images.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

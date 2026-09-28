@@ -12,9 +12,11 @@ import {
 import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import Icon from '../displays/Icon';
+import AspectImage from '../displays/AspectImage';
 import SlidingText from '../displays/SlidingText';
 import useWindowSize from '../../hooks/useWindowSize';
 import { scrollToElementWithHeaderOffset } from '../../utils/scroll';
+import { lookupImageSize } from '../../utils/imageSize';
 import {
 	Skill,
 	SkillCategory,
@@ -732,7 +734,13 @@ export default function TechStack() {
 												>
 													<span className="orbit__icon" aria-hidden="true">
 														{skill.iconSrc ? (
-															<img src={skill.iconSrc} alt="" draggable={false} />
+															<AspectImage
+																src={skill.iconSrc}
+																alt=""
+																aspectRatio={1}
+																draggable={false}
+																className="orbit__icon-image"
+															/>
 														) : (
 															<Icon name={skill.faIcon ?? 'code'} color="var(--secondary-color)" />
 														)}
@@ -794,7 +802,13 @@ export default function TechStack() {
 								>
 									<span className="orbit__hub-icon" aria-hidden="true">
 										{activeSkill.iconSrc ? (
-											<img src={activeSkill.iconSrc} alt="" draggable={false} />
+											<AspectImage
+												src={activeSkill.iconSrc}
+												alt=""
+												aspectRatio={1}
+												draggable={false}
+												className="orbit__hub-icon-image"
+											/>
 										) : (
 											<Icon name={activeSkill.faIcon ?? 'code'} color="var(--secondary-color)" />
 										)}
@@ -811,7 +825,15 @@ export default function TechStack() {
 											<>
 												<span className="orbit__usage-icon" aria-hidden="true">
 													{resolved.thumbnail ? (
-														<img src={resolved.thumbnail} alt="" loading="lazy" draggable={false} />
+														<AspectImage
+															src={resolved.thumbnail}
+															alt=""
+															aspectRatio={lookupImageSize(resolved.thumbnail) ?? [16, 10]}
+															natural
+															draggable={false}
+															loading="lazy"
+															className="orbit__usage-thumb"
+														/>
 													) : (
 														<Icon
 															name={

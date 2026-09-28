@@ -1,5 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
+import AspectImage from '../displays/AspectImage';
 import Icon from '../displays/Icon';
+import { lookupImageSize } from '../../utils/imageSize';
 import '../../styles/global.css';
 
 export type LanguageDisplayItem = {
@@ -22,6 +24,7 @@ export default function LanguageDisplay({ languages }: { languages: LanguageDisp
 
 function CreateBox({ language }: { language: LanguageDisplayItem }) {
 	const [isHover, setIsHover] = useState(false);
+	const knownSize = lookupImageSize(language.iconSrc);
 
 	const style: CSSProperties = {
 		flexBasis: '32%',
@@ -34,14 +37,20 @@ function CreateBox({ language }: { language: LanguageDisplayItem }) {
 
 	const imgStyle: CSSProperties = {
 		width: `calc(100% - ${2 * (language.iconPadding ?? 0)}px)`,
-		padding: language.iconPadding ?? 0,
+		margin: language.iconPadding ?? 0,
 	};
 
 	return (
 		<div style={style} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
 			<h2>{language.name}</h2>
 			{language.iconSrc ? (
-				<img src={language.iconSrc} alt={language.name} style={imgStyle} />
+				<AspectImage
+					src={language.iconSrc}
+					alt={language.name}
+					aspectRatio={knownSize ?? 1}
+					natural
+					style={imgStyle}
+				/>
 			) : (
 				<div style={{ padding: '24px 0' }}>
 					<Icon name={language.faIcon ?? 'code'} size={64} color="var(--secondary-color)" />

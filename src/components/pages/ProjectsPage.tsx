@@ -4,6 +4,7 @@ import MediaFlexGrid from '../containers/MediaFlexGrid';
 import { projects, projectHref, projectThumbnailSrc } from '../../data/projects';
 import Spacer from '../containers/Spacer';
 import InlineLink from '../displays/InlineLink';
+import { imageAspectRatio } from '../../utils/imageSize';
 
 export default function ProjectsPage() {
 	return (
@@ -17,10 +18,12 @@ export default function ProjectsPage() {
 				aspectRatio="natural"
 				flex="auto"
 				getKey={(project) => project.id}
+				getAspectRatio={(project) => imageAspectRatio(project.thumbnail)}
 				renderItem={(project, _index, layout) => (
 					<MediaCard
 						title={project.name}
 						src={projectThumbnailSrc(project.id)}
+						path={project.thumbnail}
 						href={projectHref(project.id)}
 						naturalAspect={layout.naturalAspect}
 						flex={layout.flex}

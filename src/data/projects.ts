@@ -49,7 +49,7 @@ export const projects: ProjectEntry[] = [
 		slug: 'geckode',
 		legacySlugs: ['Geckode'],
 		name: 'Geckode',
-		title: 'Multi-user block coding platform',
+		title: 'Collaborative block coding platform',
 		thumbnail: 'geckode/platformer-game.png',
 		technologies: [
 			{

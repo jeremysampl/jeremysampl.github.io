@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { ExperiencePoint } from "../../data/experience";
 import { EntryCardHeader } from "./EntryCard";
 import StackMeta, { type ExternalLinksProps, type TechnologyItem } from "./StackMeta";
+import AspectImage from "../displays/AspectImage";
+import { lookupImageSize } from "../../utils/imageSize";
 import "../../styles/experience.css";
 
 export default function ExperienceDisplay({
@@ -33,13 +35,19 @@ export default function ExperienceDisplay({
 	technologies?: TechnologyItem[];
 	children?: ReactNode;
 }) {
+	const src = `/images/experience/${image}`;
+	const knownSize = lookupImageSize(src);
+
 	return (
 		<article id={id} className="experience-card">
 			<div className="entry-card">
 				<div className="entry-card__media">
-					<img
-						src={"/images/experience/" + image}
+					<AspectImage
+						src={src}
 						alt={`${name} workplace`}
+						fill
+						aspectRatio={knownSize ?? [16, 9]}
+						imgClassName="entry-card__photo"
 					/>
 				</div>
 				<div className="entry-card__body">

@@ -47,6 +47,16 @@ function normalizeRowFlex(weights: number[]): number[] {
 	return weights.map((weight) => weight / sum);
 }
 
+function seedMeasuredFlex<T>(
+	items: T[],
+	getAspectRatio?: (item: T, index: number) => number | undefined | null,
+): number[] {
+	return items.map((item, index) => {
+		const ratio = getAspectRatio?.(item, index);
+		return ratio != null && ratio > 0 ? ratio : 1;
+	});
+}
+
 /** Equal-height / weighted media rows. Shared by writeup filmstrips and the projects page. */
 export default function MediaFlexGrid<T>({
 	items,
@@ -57,6 +67,7 @@ export default function MediaFlexGrid<T>({
 	inline = false,
 	className,
 	getKey,
+	getAspectRatio,
 	renderItem,
 }: {
 	items: T[];
@@ -68,15 +79,20 @@ export default function MediaFlexGrid<T>({
 	inline?: boolean;
 	className?: string;
 	getKey: (item: T, index: number) => string | number;
+	/** Known aspect ratios so auto-flex rows can size before images load. */
+	getAspectRatio?: (item: T, index: number) => number | undefined | null;
 	renderItem: (item: T, index: number, layout: MediaFlexItemLayout) => React.ReactNode;
 }) {
 	const naturalAspect = aspectRatio === 'natural';
 	const autoFlex = flex === 'auto';
 	const itemKey = items.map((item, index) => String(getKey(item, index))).join('\0');
-	const [measuredFlex, setMeasuredFlex] = useState<number[]>(() => items.map(() => 1));
+	const [measuredFlex, setMeasuredFlex] = useState<number[]>(() =>
+		seedMeasuredFlex(items, getAspectRatio),
+	);
 
 	useEffect(() => {
-		setMeasuredFlex(items.map(() => 1));
+		setMeasuredFlex(seedMeasuredFlex(items, getAspectRatio));
+		// Only re-seed when the item set changes (itemKey), not when getAspectRatio identity changes.
 	}, [itemKey]);
 
 	const handleIntrinsicAspect = useCallback(

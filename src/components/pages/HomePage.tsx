@@ -31,11 +31,13 @@ export default function HomePage() {
 						<MediaCard
 							title={geckode.name}
 							src={projectThumbnailSrc(geckode.id)}
+							path={geckode.thumbnail}
 							href={projectHref(geckode.id)}
 						/>
 						<MediaCard
 							title={smbMediaViewer.name}
 							src={projectThumbnailSrc(smbMediaViewer.id)}
+							path={smbMediaViewer.thumbnail}
 							href={projectHref(smbMediaViewer.id)}
 						/>
 					</MediaCardGrid>

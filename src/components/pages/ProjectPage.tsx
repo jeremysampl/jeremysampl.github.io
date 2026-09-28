@@ -18,6 +18,7 @@ import type { InfoCardItem } from '../containers/InfoCardGrid';
 import StackMeta from '../containers/StackMeta';
 import type { TechnologyItem } from '../../data/technologies';
 import Icon from '../displays/Icon';
+import AspectImage from '../displays/AspectImage';
 import InlineLink from '../displays/InlineLink';
 import { ProjectId, getProject, projectThumbnailSrc, resolveProjectTechnologies } from '../../data/projects';
 import { useGalleryLightbox } from '../views/GalleryLightbox';
@@ -950,9 +951,14 @@ function HeroMedia({
 	const shouldPlayRef = useRef(shouldPlay);
 	const mutedRef = useRef(muted);
 	const onMuteRequiredRef = useRef(onMuteRequired);
+	const [videoReady, setVideoReady] = useState(false);
 	shouldPlayRef.current = shouldPlay;
 	mutedRef.current = muted;
 	onMuteRequiredRef.current = onMuteRequired;
+
+	useEffect(() => {
+		setVideoReady(false);
+	}, [src, isVideo]);
 
 	const setVideoNode = useCallback(
 		(node: HTMLVideoElement | null) => {
@@ -1072,25 +1078,41 @@ function HeroMedia({
 
 	if (isVideo) {
 		return (
-			<video
-				ref={setVideoNode}
-				className="project-card__image media-card__thumb"
-				src={src}
-				data-gallery-path={path}
-				muted={muted}
-				playsInline
-				preload="auto"
-				aria-hidden="true"
-			/>
+			<span
+				className={[
+					'aspect-image',
+					'aspect-image--fill',
+					'aspect-image--natural',
+					videoReady ? 'is-loaded' : '',
+				]
+					.filter(Boolean)
+					.join(' ')}
+			>
+				<span className="aspect-image__skeleton" aria-hidden="true" />
+				<video
+					ref={setVideoNode}
+					className="project-card__image media-card__thumb aspect-image__media"
+					src={src}
+					data-gallery-path={path}
+					muted={muted}
+					playsInline
+					preload="auto"
+					aria-hidden="true"
+					onLoadedData={() => setVideoReady(true)}
+				/>
+			</span>
 		);
 	}
 
 	return (
-		<img
-			className="project-card__image media-card__thumb"
+		<AspectImage
+			fill
+			natural
 			src={src}
-			data-gallery-path={path}
 			alt={title}
+			data-gallery-path={path}
+			imgClassName="project-card__image media-card__thumb"
+			loading="eager"
 		/>
 	);
 }

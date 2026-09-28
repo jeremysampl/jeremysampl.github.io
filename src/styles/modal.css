@@ -196,8 +196,31 @@
 	max-height: 100%;
 }
 
+.gallery-lightbox__image-host {
+	position: relative;
+	display: block;
+	background: transparent;
+}
+
+.gallery-lightbox__image-host .aspect-image__skeleton {
+	background:
+		linear-gradient(
+			110deg,
+			rgba(255, 255, 255, 0) 0%,
+			rgba(255, 255, 255, 0) 38%,
+			rgba(255, 255, 255, 0.12) 50%,
+			rgba(255, 255, 255, 0) 62%,
+			rgba(255, 255, 255, 0) 100%
+		),
+		linear-gradient(180deg, #1a1f2a 0%, #0d1018 100%);
+	background-size: 200% 100%, 100% 100%;
+	background-position: 100% 0, 0 0;
+}
+
 .gallery-lightbox__image {
 	display: block;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
 	object-position: center;
 	transform-origin: center center;

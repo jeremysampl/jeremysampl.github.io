@@ -15,6 +15,8 @@
 	overflow: hidden;
 }
 
+.entry-card__media .aspect-image__media,
+.entry-card__media .entry-card__photo,
 .entry-card__media img {
 	display: block;
 	width: 100%;
