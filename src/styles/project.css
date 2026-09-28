@@ -87,6 +87,22 @@
 	pointer-events: none;
 }
 
+.project-card__media > .aspect-image.project-card__image,
+.project-card__media > .aspect-image {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	width: auto;
+	height: auto;
+	background: transparent;
+}
+
+.project-card__media .aspect-image__media.project-card__image,
+.project-card__media .project-card__image.aspect-image__media {
+	position: absolute;
+	inset: 0;
+}
+
 .project-card__chrome {
 	position: absolute;
 	inset: 0;
@@ -663,10 +679,14 @@
 .project-gallery-ref__thumb {
 	display: block;
 	width: 100%;
-	height: auto;
-	aspect-ratio: 16 / 10;
+	height: 100%;
+	aspect-ratio: auto;
 	object-fit: cover;
 	pointer-events: none;
+}
+
+.project-gallery-ref__thumb-wrap {
+	aspect-ratio: 16 / 10;
 }
 
 .project-card__points > li .media-card-grid--filmstrip,

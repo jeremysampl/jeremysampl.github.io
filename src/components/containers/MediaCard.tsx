@@ -1,6 +1,9 @@
-import React, { type CSSProperties, type MouseEvent, useEffect, useRef } from 'react';
+import React, { type CSSProperties, type MouseEvent, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AspectImage, { cssAspectRatio } from '../displays/AspectImage';
 import Icon from '../displays/Icon';
+import { useDeferredSrc } from '../../utils/imageLoadDelay';
+import { lookupImageSize, imageAspectRatio } from '../../utils/imageSize';
 import {
 	type MediaAspectRatio,
 	type MediaMaxPerRow,
@@ -15,12 +18,6 @@ export type {
 	MediaStripAlign,
 	MediaStripAspectRatio,
 };
-
-function cssAspectRatio(value: MediaAspectRatio): string {
-	if (typeof value === 'number') return String(value);
-	if (typeof value === 'string') return value;
-	return `${value[0]} / ${value[1]}`;
-}
 
 export type MediaCardProps = {
 	title: string;
@@ -46,41 +43,105 @@ function MediaCardBody({
 	alt,
 	isVideo,
 	path,
+	naturalAspect,
 	onIntrinsicAspect,
-}: Pick<MediaCardProps, 'title' | 'src' | 'alt' | 'isVideo' | 'path' | 'onIntrinsicAspect'>) {
-	const imageRef = useRef<HTMLImageElement>(null);
-	const videoRef = useRef<HTMLVideoElement>(null);
+}: Pick<
+	MediaCardProps,
+	'title' | 'src' | 'alt' | 'isVideo' | 'path' | 'naturalAspect' | 'onIntrinsicAspect'
+>) {
+	const knownSize = lookupImageSize(path ?? src);
+	const knownRatio = imageAspectRatio(path ?? src);
 
-	useEffect(() => {
-		if (!onIntrinsicAspect) return;
-
-		if (isVideo) {
-			const video = videoRef.current;
-			if (video && video.readyState >= 1 && video.videoWidth && video.videoHeight) {
-				onIntrinsicAspect(video.videoWidth / video.videoHeight);
-			}
-			return;
-		}
-
-		const image = imageRef.current;
-		if (image?.complete && image.naturalWidth && image.naturalHeight) {
-			onIntrinsicAspect(image.naturalWidth / image.naturalHeight);
-		}
-	}, [isVideo, onIntrinsicAspect, src]);
-
-	const reportAspect = (width: number, height: number) => {
-		if (!onIntrinsicAspect || !width || !height) return;
-		onIntrinsicAspect(width / height);
-	};
+	if (isVideo) {
+		return (
+			<MediaCardVideo
+				title={title}
+				src={src}
+				path={path}
+				naturalAspect={naturalAspect}
+				knownRatio={knownRatio}
+				onIntrinsicAspect={onIntrinsicAspect}
+			/>
+		);
+	}
 
 	return (
 		<>
-			<span className="media-card__media">
-				{isVideo ? (
+			<AspectImage
+				className="media-card__media"
+				imgClassName="media-card__thumb"
+				src={src}
+				alt={alt ?? title}
+				data-gallery-path={path}
+				natural={naturalAspect}
+				aspectRatio={naturalAspect ? (knownSize ?? undefined) : undefined}
+				onIntrinsicAspect={onIntrinsicAspect}
+			/>
+			<span className="media-card__label">{title}</span>
+		</>
+	);
+}
+
+function MediaCardVideo({
+	title,
+	src,
+	path,
+	naturalAspect,
+	knownRatio,
+	onIntrinsicAspect,
+}: {
+	title: string;
+	src: string;
+	path?: string;
+	naturalAspect?: boolean;
+	knownRatio: number | null;
+	onIntrinsicAspect?: (ratio: number) => void;
+}) {
+	const deferredSrc = useDeferredSrc(src);
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		setLoaded(false);
+	}, [deferredSrc]);
+
+	useEffect(() => {
+		if (knownRatio != null) onIntrinsicAspect?.(knownRatio);
+	}, [knownRatio, onIntrinsicAspect]);
+
+	useEffect(() => {
+		const video = videoRef.current;
+		if (!video || !deferredSrc) return;
+		if (video.readyState >= 1 && video.videoWidth && video.videoHeight) {
+			setLoaded(true);
+			if (knownRatio == null) onIntrinsicAspect?.(video.videoWidth / video.videoHeight);
+		}
+	}, [deferredSrc, knownRatio, onIntrinsicAspect]);
+
+	const mediaStyle =
+		naturalAspect && knownRatio != null
+			? ({ aspectRatio: String(knownRatio) } as CSSProperties)
+			: undefined;
+
+	return (
+		<>
+			<span
+				className={[
+					'media-card__media',
+					'aspect-image',
+					naturalAspect ? 'aspect-image--natural' : '',
+					loaded ? 'is-loaded' : '',
+				]
+					.filter(Boolean)
+					.join(' ')}
+				style={mediaStyle}
+			>
+				<span className="aspect-image__skeleton" aria-hidden="true" />
+				{deferredSrc ? (
 					<video
 						ref={videoRef}
-						className="media-card__thumb"
-						src={src}
+						className="media-card__thumb aspect-image__media"
+						src={deferredSrc}
 						data-gallery-path={path}
 						muted
 						playsInline
@@ -88,30 +149,18 @@ function MediaCardBody({
 						aria-hidden="true"
 						onLoadedMetadata={(event) => {
 							const video = event.currentTarget;
-							reportAspect(video.videoWidth, video.videoHeight);
+							setLoaded(true);
+							if (knownRatio == null) {
+								onIntrinsicAspect?.(video.videoWidth / video.videoHeight);
+							}
 						}}
 					/>
-				) : (
-					<img
-						ref={imageRef}
-						className="media-card__thumb"
-						src={src}
-						data-gallery-path={path}
-						alt={alt ?? title}
-						loading="lazy"
-						onLoad={(event) => {
-							const image = event.currentTarget;
-							reportAspect(image.naturalWidth, image.naturalHeight);
-						}}
-					/>
-				)}
-				{isVideo ? (
-					<span className="media-card__play" aria-hidden="true">
-						<span className="media-card__play-icon">
-							<Icon name="play" size={22} color="#fff" style={{ transform: 'translateX(3px)' }} />
-						</span>
-					</span>
 				) : null}
+				<span className="media-card__play" aria-hidden="true">
+					<span className="media-card__play-icon">
+						<Icon name="play" size={22} color="#fff" style={{ transform: 'translateX(3px)' }} />
+					</span>
+				</span>
 			</span>
 			<span className="media-card__label">{title}</span>
 		</>
@@ -159,6 +208,7 @@ export default function MediaCard({
 			alt={alt}
 			isVideo={isVideo}
 			path={path}
+			naturalAspect={naturalAspect}
 			onIntrinsicAspect={onIntrinsicAspect}
 		/>
 	);

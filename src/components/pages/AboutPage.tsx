@@ -9,10 +9,12 @@ import {
 import { getProject, projectHref } from '../../data/projects';
 import CourseHistory from '../containers/CourseHistory';
 import { EntryCardHeader } from '../containers/EntryCard';
+import AspectImage from '../displays/AspectImage';
 import InlineLink from '../displays/InlineLink';
 import '../../styles/about.css';
 import { getExperience } from '../../data/experience';
 import { educationAnchorId } from '../../data/courses';
+import { lookupImageSize } from '../../utils/imageSize';
 
 function AboutEntryCard({
 	entry,
@@ -60,7 +62,13 @@ export default function AboutPage() {
 
 			<div className="about-intro entry-card">
 				<div className="about-intro__media">
-					<img src={aboutIntro.photo} alt={`${aboutIntro.name} profile`} />
+					<AspectImage
+						src={aboutIntro.photo}
+						alt={`${aboutIntro.name} profile`}
+						fill
+						aspectRatio={lookupImageSize(aboutIntro.photo) ?? 1}
+						imgClassName="about-intro__photo"
+					/>
 				</div>
 				<div className="about-intro__body">
 					<h2 className="about-intro__name">{aboutIntro.name}</h2>

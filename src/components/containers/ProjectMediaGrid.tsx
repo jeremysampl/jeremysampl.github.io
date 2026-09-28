@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useGalleryLightbox } from '../views/GalleryLightbox';
+import AspectImage from '../displays/AspectImage';
 import MediaCard, { MediaCardGrid, type MediaAspectRatio } from './MediaCard';
 import MediaFlexGrid, {
 	type MediaMaxPerRow,
@@ -9,6 +10,7 @@ import MediaFlexGrid, {
 } from './MediaFlexGrid';
 import type { GalleryItem } from '../../types/gallery';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
+import { lookupImageSize, imageAspectRatio } from '../../utils/imageSize';
 
 export type {
 	GalleryItem,
@@ -93,12 +95,13 @@ export function ProjectGalleryRef({
 							aria-hidden="true"
 						/>
 					) : (
-						<img
-							className="project-gallery-ref__thumb media-card__thumb"
+						<AspectImage
+							className="project-gallery-ref__thumb-wrap"
+							imgClassName="project-gallery-ref__thumb media-card__thumb"
 							src={galleryItemUrl(item)}
-							data-gallery-path={item.path}
 							alt={item.title}
-							loading="lazy"
+							data-gallery-path={item.path}
+							aspectRatio={lookupImageSize(item.path) ?? [16, 10]}
 						/>
 					)}
 				</button>
@@ -250,6 +253,7 @@ export default function ProjectMediaGrid({
 						onClick={(_, origin) => handleSelect(index, item, origin)}
 					/>
 				)}
+				getAspectRatio={(item) => imageAspectRatio(item.path)}
 			/>
 		);
 	}

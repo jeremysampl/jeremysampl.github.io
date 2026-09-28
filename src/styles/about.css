@@ -24,12 +24,12 @@
 	overflow: hidden;
 }
 
-.about-intro__media img {
-	position: absolute;
-	inset: 0;
-	display: block;
-	width: 100%;
-	height: 100%;
+.about-intro__media .aspect-image {
+	border-radius: 0;
+}
+
+.about-intro__media .aspect-image__media,
+.about-intro__media .about-intro__photo {
 	object-fit: cover;
 	object-position: center top;
 }

@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import type { GalleryItem } from '../../types/gallery';
 import { galleryItemUrl, isGalleryVideo } from '../../types/gallery';
+import AspectImage from '../displays/AspectImage';
 import '../../styles/modal.css';
 
 export type { GalleryItem };
@@ -1733,13 +1734,16 @@ function LightboxOverlay({
 										onVideoRef={slide.role === 'active' ? setActiveVideoRef : undefined}
 									/>
 								) : (
-									<img
-										ref={slide.role === 'active' ? imgRef : undefined}
-										className="gallery-lightbox__image"
+									<AspectImage
+										natural
+										className="gallery-lightbox__image-host"
+										imgClassName="gallery-lightbox__image"
 										src={galleryItemUrl(slide.item)}
 										alt={slide.item.title}
+										imgRef={slide.role === 'active' ? imgRef : undefined}
+										imgStyle={slide.role === 'active' ? activeImageStyle : undefined}
 										draggable={false}
-										style={slide.role === 'active' ? activeImageStyle : undefined}
+										loading={slide.role === 'active' ? 'eager' : 'lazy'}
 									/>
 								)}
 							</div>

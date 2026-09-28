@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Icon from '../displays/Icon';
+import AspectImage from '../displays/AspectImage';
 import AppModal from './AppModal';
 import {
 	type TechnologyId,
@@ -57,7 +58,11 @@ function TechIcon({
 	size?: number;
 }) {
 	if (iconSrc) {
-		return <img src={iconSrc} alt="" />;
+		return (
+			<span className="tech-icon">
+				<AspectImage src={iconSrc} alt="" fill aspectRatio={1} />
+			</span>
+		);
 	}
 	return <Icon name={faIcon ?? 'code'} size={size} color="var(--secondary-color)" />;
 }

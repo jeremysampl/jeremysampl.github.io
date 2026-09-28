@@ -223,10 +223,29 @@ button.tech-chip:focus-visible {
 	overflow: hidden;
 }
 
-.tech-chip__icon img {
+.tech-icon {
+	position: relative;
+	display: block;
+	flex-shrink: 0;
+	overflow: hidden;
+	background: transparent;
+}
+
+.tech-icon > .aspect-image {
+	background: transparent;
+}
+
+.tech-icon .aspect-image__media {
+	object-fit: contain;
+	object-position: center;
+}
+
+.tech-chip__icon > img,
+.tech-chip__icon > .tech-icon {
 	width: 18px;
 	height: 18px;
 	object-fit: contain;
+	background: transparent;
 }
 
 .tech-chip__name {
@@ -281,6 +300,7 @@ button.tech-chip:focus-visible {
 	scroll-margin: 10px;
 	cursor: pointer;
 	transition: var(--transition-interactive);
+	-webkit-tap-highlight-color: transparent;
 }
 
 .tech-modal__item:hover {
@@ -316,10 +336,12 @@ button.tech-chip:focus-visible {
 	overflow: hidden;
 }
 
-.tech-modal__icon img {
+.tech-modal__icon > img,
+.tech-modal__icon > .tech-icon {
 	width: 24px;
 	height: 24px;
 	object-fit: contain;
+	background: transparent;
 }
 
 .tech-modal__copy {
@@ -384,10 +406,12 @@ button.tech-chip:focus-visible {
 	overflow: hidden;
 }
 
-.tech-modal__child-icon img {
+.tech-modal__child-icon > img,
+.tech-modal__child-icon > .tech-icon {
 	width: 18px;
 	height: 18px;
 	object-fit: contain;
+	background: transparent;
 }
 
 .tech-modal__child-copy {
